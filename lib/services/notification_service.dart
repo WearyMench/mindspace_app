@@ -7,32 +7,37 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    // Inicializar timezone
-    tz.initializeTimeZones();
+    try {
+      // Inicializar timezone
+      tz.initializeTimeZones();
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/launcher_icon');
 
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-          requestAlertPermission: true,
-          requestBadgePermission: true,
-          requestSoundPermission: true,
-        );
+      const DarwinInitializationSettings initializationSettingsIOS =
+          DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: initializationSettingsIOS,
-        );
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+          );
 
-    await _notifications.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onNotificationTapped,
-    );
+      await _notifications.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: _onNotificationTapped,
+      );
 
-    // Solicitar permisos para Android 13+
-    await _requestPermissions();
+      // Solicitar permisos para Android 13+
+      await _requestPermissions();
+    } catch (e) {
+      print('Error al inicializar notificaciones: $e');
+      // No lanzar el error, solo registrar y continuar
+    }
   }
 
   static Future<void> _requestPermissions() async {
@@ -65,7 +70,7 @@ class NotificationService {
           channelDescription: 'Recordatorios para registrar tu estado de ánimo',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -92,7 +97,7 @@ class NotificationService {
           channelDescription: 'Recordatorios para meditar',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -119,7 +124,7 @@ class NotificationService {
           channelDescription: 'Recordatorios para escribir en el diario',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -145,7 +150,7 @@ class NotificationService {
           channelDescription: 'Notificaciones de logros y rachas',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       payload: 'achievement',
@@ -165,7 +170,7 @@ class NotificationService {
           channelDescription: 'Reportes de progreso semanal',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       payload: 'weekly_report',
@@ -236,7 +241,7 @@ class NotificationService {
           channelDescription: 'Notificaciones generales de la aplicación',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
         ),
       ),
       payload: payload,

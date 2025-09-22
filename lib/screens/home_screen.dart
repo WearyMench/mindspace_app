@@ -38,11 +38,11 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildQuickActions(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildStatsOverview(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildRecentActivity(context),
               ],
             ),
@@ -142,7 +142,7 @@ class HomeScreen extends StatelessWidget {
                   .fadeIn(duration: 600.ms, delay: 500.ms)
                   .slideX(begin: -0.2),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: const MeditationQuickStart()
                   .animate()
@@ -151,7 +151,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         const JournalQuickEntry()
             .animate()
             .fadeIn(duration: 600.ms, delay: 700.ms)
@@ -324,7 +324,7 @@ class HomeScreen extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: GradientCard(
         onTap: onTap,
         child: Padding(

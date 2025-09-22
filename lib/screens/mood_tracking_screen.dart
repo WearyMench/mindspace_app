@@ -42,15 +42,15 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildQuickEntry(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildTimeRangeSelector(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildMoodChart(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildMoodStats(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildRecentEntries(context),
               ],
             ),
@@ -342,41 +342,55 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
 
         return Consumer<LanguageService>(
           builder: (context, languageService, child) {
-            return Row(
+            return Column(
                   children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        title: languageService.getLocalizedText('average'),
-                        value: stats['averageMood'].toStringAsFixed(1),
-                        subtitle: 'de 5.0',
-                        icon: Icons.trending_up,
-                        color: AppColors.secondaryBlue,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        title: languageService.getLocalizedText('streak'),
-                        value: stats['streak'].toString(),
-                        subtitle: languageService.getLocalizedText(
-                          'streak_days',
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            context,
+                            title: languageService.getLocalizedText('average'),
+                            value: stats['averageMood'].toStringAsFixed(1),
+                            subtitle: 'de 5.0',
+                            icon: Icons.trending_up,
+                            color: AppColors.secondaryBlue,
+                          ),
                         ),
-                        icon: Icons.local_fire_department,
-                        color: AppColors.accentOrange,
-                      ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildStatCard(
+                            context,
+                            title: languageService.getLocalizedText('streak'),
+                            value: stats['streak'].toString(),
+                            subtitle: languageService.getLocalizedText(
+                              'streak_days',
+                            ),
+                            icon: Icons.local_fire_department,
+                            color: AppColors.accentOrange,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatCard(
-                        context,
-                        title: languageService.getLocalizedText('total'),
-                        value: stats['totalEntries'].toString(),
-                        subtitle: languageService.getLocalizedText('records'),
-                        icon: Icons.analytics,
-                        color: AppColors.primaryPurple,
-                      ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            context,
+                            title: languageService.getLocalizedText('total'),
+                            value: stats['totalEntries'].toString(),
+                            subtitle: languageService.getLocalizedText(
+                              'records',
+                            ),
+                            icon: Icons.analytics,
+                            color: AppColors.primaryPurple,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        const Expanded(
+                          child: SizedBox(),
+                        ), // Empty space for balance
+                      ],
                     ),
                   ],
                 )
@@ -399,49 +413,58 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
   }) {
     return GradientCard(
       gradientColors: [color.withOpacity(0.1), color.withOpacity(0.05)],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(icon, color: color, size: 14),
                 ),
-                child: Icon(icon, color: color, size: 16),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withOpacity(0.7),
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -528,7 +551,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
 
   Widget _buildMoodEntryItem(BuildContext context, MoodEntry entry) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: GradientCard(
         child: Padding(
           padding: const EdgeInsets.all(16),

@@ -47,13 +47,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildUserStats(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildSettingsSection(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildDataSection(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildAboutSection(context),
               ],
             ),
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Theme.of(context).colorScheme.primary,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 20),
                         Expanded(
                           child: _buildStatItem(
                             context,
@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 20),
                         Expanded(
                           child: _buildStatItem(
                             context,
@@ -588,37 +588,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     VoidCallback? onTap,
     Color? textColor,
   }) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: (textColor ?? Theme.of(context).colorScheme.secondary)
-              .withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: (textColor ?? Theme.of(context).colorScheme.secondary)
+                .withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: textColor ?? Theme.of(context).colorScheme.secondary,
+            size: 20,
+          ),
         ),
-        child: Icon(
-          icon,
-          color: textColor ?? Theme.of(context).colorScheme.secondary,
-          size: 20,
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: textColor ?? Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        subtitle: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color:
+                textColor?.withOpacity(0.7) ??
+                Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+          ),
+        ),
+        trailing: trailing,
+        onTap: onTap,
       ),
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: textColor ?? Theme.of(context).colorScheme.onSurface,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color:
-              textColor?.withOpacity(0.7) ??
-              Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-        ),
-      ),
-      trailing: trailing,
-      onTap: onTap,
     );
   }
 

@@ -21,8 +21,6 @@ class _MeditationScreenState extends State<MeditationScreen>
   late AnimationController _pulseController;
   Timer? _meditationTimer;
   Duration _remainingTime = const Duration(minutes: 5);
-  bool _isMeditating = false;
-  bool _isPaused = false;
 
   @override
   void initState() {
@@ -67,13 +65,13 @@ class _MeditationScreenState extends State<MeditationScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildQuickStart(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildMeditationTypes(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildRecentSessions(context),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 _buildMeditationStats(context),
               ],
             ),
@@ -288,7 +286,7 @@ class _MeditationScreenState extends State<MeditationScreen>
 
   Widget _buildSessionItem(BuildContext context, MeditationSession session) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: GradientCard(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -376,58 +374,68 @@ class _MeditationScreenState extends State<MeditationScreen>
       builder: (context, meditationProvider, child) {
         final stats = meditationProvider.getMeditationStatistics();
 
-        return Row(
+        return Column(
           children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('sessions'),
-                value: stats['totalSessions'].toString(),
-                subtitle: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('completed'),
-                icon: Icons.self_improvement,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    title: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('sessions'),
+                    value: stats['totalSessions'].toString(),
+                    subtitle: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('completed'),
+                    icon: Icons.self_improvement,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    title: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('time'),
+                    value:
+                        '${stats['totalMinutes']}${Provider.of<LanguageService>(context, listen: false).getLocalizedText('minutes')}',
+                    subtitle: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('total'),
+                    icon: Icons.timer,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('time'),
-                value:
-                    '${stats['totalMinutes']}${Provider.of<LanguageService>(context, listen: false).getLocalizedText('minutes')}',
-                subtitle: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('total'),
-                icon: Icons.timer,
-                color: Theme.of(context).colorScheme.tertiary,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('streak'),
-                value: stats['streak'].toString(),
-                subtitle: Provider.of<LanguageService>(
-                  context,
-                  listen: false,
-                ).getLocalizedText('days'),
-                icon: Icons.local_fire_department,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    context,
+                    title: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('streak'),
+                    value: stats['streak'].toString(),
+                    subtitle: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('days'),
+                    icon: Icons.local_fire_department,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Expanded(child: SizedBox()), // Empty space for balance
+              ],
             ),
           ],
         ).animate().fadeIn(duration: 600.ms, delay: 1000.ms).slideY(begin: 0.2);
@@ -445,49 +453,58 @@ class _MeditationScreenState extends State<MeditationScreen>
   }) {
     return GradientCard(
       gradientColors: [color.withOpacity(0.1), color.withOpacity(0.05)],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(icon, color: color, size: 14),
                 ),
-                child: Icon(icon, color: color, size: 16),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withOpacity(0.7),
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -512,7 +529,6 @@ class _MeditationScreenState extends State<MeditationScreen>
     DifficultyLevel difficulty,
   ) {
     setState(() {
-      _isMeditating = true;
       _remainingTime = duration;
     });
 
@@ -571,11 +587,6 @@ class _MeditationScreenState extends State<MeditationScreen>
       listen: false,
     ).completeMeditationSession(actualDuration: _remainingTime);
 
-    setState(() {
-      _isMeditating = false;
-      _isPaused = false;
-    });
-
     Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -597,11 +608,6 @@ class _MeditationScreenState extends State<MeditationScreen>
       context,
       listen: false,
     ).cancelMeditationSession();
-
-    setState(() {
-      _isMeditating = false;
-      _isPaused = false;
-    });
 
     Navigator.pop(context);
   }

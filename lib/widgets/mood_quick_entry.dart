@@ -119,78 +119,90 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
           top: 24,
           bottom: MediaQuery.of(context).viewInsets.bottom + 24,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(2),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Consumer<LanguageService>(
-              builder: (context, languageService, child) {
-                return Text(
-                  languageService.getLocalizedText('how_do_you_feel'),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            _buildMoodSelector(),
-            const SizedBox(height: 24),
-            if (selectedMood != null) _buildCategoryRatings(),
-            const SizedBox(height: 24),
-            _buildActionButtons(),
-          ],
+              const SizedBox(height: 24),
+              Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    languageService.getLocalizedText('how_do_you_feel'),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              _buildMoodSelector(),
+              const SizedBox(height: 20),
+              if (selectedMood != null) _buildCategoryRatings(),
+              const SizedBox(height: 20),
+              _buildActionButtons(),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildMoodSelector() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: MoodLevel.values.map((mood) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1.0,
+      ),
+      itemCount: MoodLevel.values.length,
+      itemBuilder: (context, index) {
+        final mood = MoodLevel.values[index];
         final isSelected = selectedMood == mood;
+
         return GestureDetector(
           onTap: () => setState(() => selectedMood = mood),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isSelected
                   ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
                   : Colors.transparent,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(
-                        context,
-                      ).colorScheme.onSurfaceVariant.withOpacity(0.3),
+                    : Theme.of(context).colorScheme.outline.withOpacity(0.3),
                 width: isSelected ? 2 : 1,
               ),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   mood.icon,
-                  size: 32,
-                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Consumer<LanguageService>(
                   builder: (context, languageService, child) {
                     return Text(
@@ -203,6 +215,9 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
                             ? FontWeight.w600
                             : FontWeight.normal,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     );
                   },
                 ),
@@ -210,7 +225,7 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
             ),
           ),
         );
-      }).toList(),
+      },
     );
   }
 
@@ -223,13 +238,13 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
             return Text(
               languageService.getLocalizedText('additional_details'),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
               ),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         ...MoodCategory.values.map(
           (category) => _buildCategoryRating(category),
         ),
@@ -250,7 +265,8 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
                 return Text(
                   _getLocalizedMoodCategoryLabel(category, languageService),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
                   ),
                 );
               },

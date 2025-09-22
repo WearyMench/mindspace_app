@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui' as ui;
 
 class LanguageService extends ChangeNotifier {
-  Locale _currentLocale = const Locale('es', 'ES');
+  Locale _currentLocale = const Locale('en', 'US');
 
   // Supported locales
   final List<Locale> supportedLocales = const [
-    Locale('es', 'ES'), // Spanish
     Locale('en', 'US'), // English
+    Locale('es', 'ES'), // Spanish
     Locale('fr', 'FR'), // French
     Locale('de', 'DE'), // German
     Locale('it', 'IT'), // Italian
@@ -27,9 +28,19 @@ class LanguageService extends ChangeNotifier {
 
   Future<void> _loadSavedLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString('language_code') ?? 'es';
-    final countryCode = prefs.getString('country_code') ?? 'ES';
-    _currentLocale = Locale(languageCode, countryCode);
+    final savedLanguageCode = prefs.getString('language_code');
+    final savedCountryCode = prefs.getString('country_code');
+
+    if (savedLanguageCode != null && savedCountryCode != null) {
+      // Usar idioma guardado si existe
+      _currentLocale = Locale(savedLanguageCode, savedCountryCode);
+    } else {
+      // Primera vez: detectar idioma del sistema
+      _currentLocale = _detectSystemLanguage();
+      // Guardar la detección automática
+      await prefs.setString('language_code', _currentLocale.languageCode);
+      await prefs.setString('country_code', _currentLocale.countryCode ?? '');
+    }
     notifyListeners();
   }
 
@@ -39,6 +50,49 @@ class LanguageService extends ChangeNotifier {
     await prefs.setString('language_code', locale.languageCode);
     await prefs.setString('country_code', locale.countryCode ?? '');
     notifyListeners();
+  }
+
+  /// Detecta el idioma del sistema y retorna el más apropiado
+  Locale _detectSystemLanguage() {
+    // Obtener idiomas del sistema
+    final systemLocales = ui.PlatformDispatcher.instance.locales;
+
+    if (systemLocales.isNotEmpty) {
+      final systemLocale = systemLocales.first;
+      final systemLanguageCode = systemLocale.languageCode.toLowerCase();
+
+      // Buscar si el idioma del sistema está soportado
+      for (final supportedLocale in supportedLocales) {
+        if (supportedLocale.languageCode.toLowerCase() == systemLanguageCode) {
+          return supportedLocale;
+        }
+      }
+
+      // Si no está soportado, buscar idiomas similares
+      switch (systemLanguageCode) {
+        case 'es':
+        case 'es-':
+          return const Locale('es', 'ES');
+        case 'fr':
+        case 'fr-':
+          return const Locale('fr', 'FR');
+        case 'de':
+        case 'de-':
+          return const Locale('de', 'DE');
+        case 'it':
+        case 'it-':
+          return const Locale('it', 'IT');
+        case 'pt':
+        case 'pt-':
+          return const Locale('pt', 'PT');
+        default:
+          // Fallback a inglés si no se encuentra coincidencia
+          return const Locale('en', 'US');
+      }
+    }
+
+    // Fallback a inglés si no se puede detectar
+    return const Locale('en', 'US');
   }
 
   String getLocalizedText(String key) {
