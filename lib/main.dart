@@ -11,6 +11,7 @@ import 'screens/meditation_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/mood_tracking_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/statistics_screen.dart';
 import 'providers/mood_provider.dart';
 import 'providers/meditation_provider.dart';
 import 'providers/journal_provider.dart';
@@ -19,6 +20,7 @@ import 'services/database_service.dart';
 import 'services/language_service.dart';
 import 'services/theme_service.dart';
 import 'widgets/loading_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -129,6 +131,10 @@ final GoRouter _router = GoRouter(
       path: '/',
       builder: (context, state) => const LoadingScreen(child: HomeScreen()),
     ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return MainNavigationWrapper(child: child);
@@ -150,6 +156,10 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/statistics',
+          builder: (context, state) => const StatisticsScreen(),
         ),
       ],
     ),

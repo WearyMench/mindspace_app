@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../constants/app_colors.dart';
 import '../providers/mood_provider.dart';
@@ -8,6 +9,7 @@ import '../providers/meditation_provider.dart';
 import '../providers/journal_provider.dart';
 import '../services/language_service.dart';
 import '../widgets/gradient_card.dart';
+import '../widgets/advanced_analytics_widget.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -34,12 +36,32 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(context),
-              _buildTabSelector(context),
-              Expanded(child: _buildTabContent(context)),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  _buildHeader(context),
+                  _buildTabSelector(context),
+                  Expanded(
+                    child: constraints.maxWidth > 600
+                        ? Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: _buildTabContent(context),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                flex: 1,
+                                child: _buildSidePanel(context),
+                              ),
+                            ],
+                          )
+                        : _buildTabContent(context),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -54,7 +76,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           Row(
             children: [
               IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => context.go('/home'),
                 icon: const Icon(Icons.arrow_back),
                 color: Theme.of(context).colorScheme.onBackground,
               ),
@@ -139,6 +161,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   languageService.getLocalizedText('journal_tab'),
                   2,
                 ),
+                _buildTabButton(context, 'Análisis Inteligente', 3),
               ],
             );
           },
@@ -182,6 +205,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         return _buildMeditationStatistics(context);
       case 2:
         return _buildJournalStatistics(context);
+      case 3:
+        return _buildAdvancedAnalytics(context);
       default:
         return _buildMoodStatistics(context);
     }
@@ -883,5 +908,82 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       );
     }
     return bars;
+  }
+
+  Widget _buildAdvancedAnalytics(BuildContext context) {
+    return const Padding(
+          padding: EdgeInsets.all(20),
+          child: AdvancedAnalyticsWidget(),
+        )
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 200.ms)
+        .slideY(begin: 0.2)
+        .scale(begin: const Offset(0.95, 0.95));
+  }
+
+  Widget _buildSidePanel(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Resumen Rápido',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2),
+          const SizedBox(height: 16),
+          Consumer<MoodProvider>(
+            builder: (context, moodProvider, child) {
+              final stats = moodProvider.getMoodStatistics();
+              return GradientCard(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Estado de Ánimo',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Promedio: ${stats['averageMood'].toStringAsFixed(1)}',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
+                                ),
+                          ),
+                          Text(
+                            'Entradas: ${stats['totalEntries']}',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .animate()
+                  .fadeIn(duration: 600.ms, delay: 200.ms)
+                  .scale(begin: const Offset(0.95, 0.95));
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

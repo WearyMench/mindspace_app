@@ -22,7 +22,7 @@ class ExportScreen extends StatefulWidget {
 class _ExportScreenState extends State<ExportScreen> {
   bool _isExporting = false;
   String _exportStatus = '';
-  List<String> _selectedDataTypes = ['mood', 'meditation', 'journal'];
+  final List<String> _selectedDataTypes = ['mood', 'meditation', 'journal'];
 
   @override
   Widget build(BuildContext context) {

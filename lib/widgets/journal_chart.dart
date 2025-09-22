@@ -197,7 +197,7 @@ class JournalChart extends StatelessWidget {
         _buildStatItem(
           context,
           'Promedio',
-          '${averageWords.toStringAsFixed(0)}',
+          averageWords.toStringAsFixed(0),
           Icons.analytics,
           AppColors.secondaryTeal,
         ),

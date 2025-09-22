@@ -11,6 +11,10 @@ import '../widgets/mood_quick_entry.dart';
 import '../widgets/meditation_quick_start.dart';
 import '../widgets/journal_quick_entry.dart';
 import '../widgets/stats_overview.dart';
+import '../widgets/smart_insights_widget.dart';
+import '../widgets/wellness_metrics_widget.dart';
+import '../widgets/ai_recommendations_widget.dart';
+import '../widgets/mood_prediction_widget.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -32,20 +36,127 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 20),
-                _buildQuickActions(context),
-                const SizedBox(height: 20),
-                _buildStatsOverview(context),
-                const SizedBox(height: 20),
-                _buildRecentActivity(context),
-              ],
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: EdgeInsets.all(constraints.maxWidth > 600 ? 32 : 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(context),
+                    const SizedBox(height: 24),
+
+                    // Sección principal con layout responsivo
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWideScreen = constraints.maxWidth > 800;
+
+                        if (isWideScreen) {
+                          // Layout de 2 columnas para pantallas muy anchas
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Columna izquierda - Métricas y AI
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  children: [
+                                    _buildWellnessMetrics(context),
+                                    const SizedBox(height: 20),
+                                    _buildMoodPrediction(context)
+                                        .animate()
+                                        .fadeIn(duration: 600.ms, delay: 200.ms)
+                                        .slideY(begin: 0.2),
+                                    const SizedBox(height: 20),
+                                    _buildAIRecommendations(context)
+                                        .animate()
+                                        .fadeIn(duration: 600.ms, delay: 400.ms)
+                                        .slideY(begin: 0.2),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              // Columna derecha - Acciones y insights
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    _buildQuickActions(context),
+                                    const SizedBox(height: 20),
+                                    _buildSmartInsights(context)
+                                        .animate()
+                                        .fadeIn(duration: 600.ms, delay: 600.ms)
+                                        .slideY(begin: 0.2),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          // Layout de una columna para pantallas normales
+                          return Column(
+                            children: [
+                              _buildQuickActions(context),
+                              const SizedBox(height: 20),
+                              _buildWellnessMetrics(context),
+                              const SizedBox(height: 20),
+                              _buildMoodPrediction(context)
+                                  .animate()
+                                  .fadeIn(duration: 600.ms, delay: 200.ms)
+                                  .slideY(begin: 0.2),
+                              const SizedBox(height: 20),
+                              _buildAIRecommendations(context)
+                                  .animate()
+                                  .fadeIn(duration: 600.ms, delay: 400.ms)
+                                  .slideY(begin: 0.2),
+                              const SizedBox(height: 20),
+                              _buildSmartInsights(context)
+                                  .animate()
+                                  .fadeIn(duration: 600.ms, delay: 600.ms)
+                                  .slideY(begin: 0.2),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Sección de estadísticas y actividad reciente
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWideScreen = constraints.maxWidth > 600;
+
+                        if (isWideScreen) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: _buildStatsOverview(context),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                flex: 1,
+                                child: _buildRecentActivity(context),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              _buildStatsOverview(context),
+                              const SizedBox(height: 20),
+                              _buildRecentActivity(context),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -65,145 +176,253 @@ class HomeScreen extends StatelessWidget {
       greetingKey = 'good_evening';
     }
 
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Consumer<LanguageService>(
-                builder: (context, languageService, child) {
-                  return Text(
-                    languageService.getLocalizedText(greetingKey),
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  );
-                },
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
-              const SizedBox(height: 8),
-              Consumer<LanguageService>(
+    return GradientCard(
+      gradientColors: [
+        Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.4),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Consumer<LanguageService>(
                     builder: (context, languageService, child) {
                       return Text(
-                        languageService.getLocalizedText('how_are_you_feeling'),
-                        style: Theme.of(context).textTheme.headlineMedium
+                        languageService.getLocalizedText(greetingKey),
+                        style: Theme.of(context).textTheme.headlineLarge
                             ?.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onBackground.withOpacity(0.7),
-                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.w300,
                             ),
                       );
                     },
-                  )
-                  .animate()
-                  .fadeIn(duration: 600.ms, delay: 200.ms)
-                  .slideY(begin: -0.2),
-            ],
-          ),
+                  ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+                  const SizedBox(height: 4),
+                  Consumer<LanguageService>(
+                        builder: (context, languageService, child) {
+                          return Text(
+                            languageService.getLocalizedText(
+                              'how_are_you_feeling',
+                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.7),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                          );
+                        },
+                      )
+                      .animate()
+                      .fadeIn(duration: 600.ms, delay: 200.ms)
+                      .slideY(begin: -0.2),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+            ).animate().fadeIn(duration: 600.ms, delay: 400.ms).scale(),
+          ],
         ),
-        IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchScreen()),
-            );
-          },
-          icon: const Icon(Icons.search),
-          iconSize: 28,
-          color: Theme.of(context).colorScheme.primary,
-        ).animate().fadeIn(duration: 600.ms, delay: 400.ms).scale(),
-      ],
+      ),
     );
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Consumer<LanguageService>(
-          builder: (context, languageService, child) {
-            return Text(
-              languageService.getLocalizedText('quick_actions'),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.w600,
-              ),
-            );
-          },
-        ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
-        const SizedBox(height: 16),
-        Row(
+    return GradientCard(
+      gradientColors: [
+        Theme.of(context).colorScheme.primary.withOpacity(0.05),
+        Theme.of(context).colorScheme.primary.withOpacity(0.02),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: const MoodQuickEntry()
-                  .animate()
-                  .fadeIn(duration: 600.ms, delay: 500.ms)
-                  .slideX(begin: -0.2),
+            Row(
+              children: [
+                Icon(
+                  Icons.flash_on,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('quick_actions'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: const MoodQuickEntry()
+                      .animate()
+                      .fadeIn(duration: 600.ms, delay: 500.ms)
+                      .slideX(begin: -0.2),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: const MeditationQuickStart()
+                      .animate()
+                      .fadeIn(duration: 600.ms, delay: 600.ms)
+                      .slideX(begin: 0.2),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: const MeditationQuickStart()
-                  .animate()
-                  .fadeIn(duration: 600.ms, delay: 600.ms)
-                  .slideX(begin: 0.2),
-            ),
+            const SizedBox(height: 12),
+            const JournalQuickEntry()
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 700.ms)
+                .slideY(begin: 0.2),
           ],
         ),
-        const SizedBox(height: 16),
-        const JournalQuickEntry()
-            .animate()
-            .fadeIn(duration: 600.ms, delay: 700.ms)
-            .slideY(begin: 0.2),
-      ],
+      ),
     );
   }
 
+  Widget _buildWellnessMetrics(BuildContext context) {
+    return const WellnessMetricsWidget()
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 600.ms)
+        .slideY(begin: 0.2);
+  }
+
+  Widget _buildMoodPrediction(BuildContext context) {
+    return const MoodPredictionWidget()
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 600.ms)
+        .slideY(begin: 0.2);
+  }
+
+  Widget _buildAIRecommendations(BuildContext context) {
+    return const AIRecommendationsWidget()
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 700.ms)
+        .slideY(begin: 0.2);
+  }
+
+  Widget _buildSmartInsights(BuildContext context) {
+    return const SmartInsightsWidget()
+        .animate()
+        .fadeIn(duration: 600.ms, delay: 800.ms)
+        .slideY(begin: 0.2);
+  }
+
   Widget _buildStatsOverview(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Consumer<LanguageService>(
-          builder: (context, languageService, child) {
-            return Text(
-              languageService.getLocalizedText('progress_title'),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.w600,
-              ),
-            ).animate().fadeIn(duration: 600.ms, delay: 800.ms);
-          },
-        ),
-        const SizedBox(height: 16),
-        const StatsOverview()
-            .animate()
-            .fadeIn(duration: 600.ms, delay: 900.ms)
-            .slideY(begin: 0.2),
+    return GradientCard(
+      gradientColors: [
+        Theme.of(context).colorScheme.tertiary.withOpacity(0.05),
+        Theme.of(context).colorScheme.tertiary.withOpacity(0.02),
       ],
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.analytics,
+                  color: Theme.of(context).colorScheme.tertiary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('progress_title'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ).animate().fadeIn(duration: 600.ms, delay: 800.ms),
+            const SizedBox(height: 16),
+            const StatsOverview()
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 900.ms)
+                .slideY(begin: 0.2),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildRecentActivity(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Consumer<LanguageService>(
-          builder: (context, languageService, child) {
-            return Text(
-              languageService.getLocalizedText('recent_activity'),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontWeight: FontWeight.w600,
-              ),
-            );
-          },
-        ).animate().fadeIn(duration: 600.ms, delay: 1000.ms),
-        const SizedBox(height: 16),
-        _buildActivityList(
-          context,
-        ).animate().fadeIn(duration: 600.ms, delay: 1100.ms).slideY(begin: 0.2),
+    return GradientCard(
+      gradientColors: [
+        Theme.of(context).colorScheme.secondary.withOpacity(0.05),
+        Theme.of(context).colorScheme.secondary.withOpacity(0.02),
       ],
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.timeline,
+                  color: Theme.of(context).colorScheme.secondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('recent_activity'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ).animate().fadeIn(duration: 600.ms, delay: 1000.ms),
+            const SizedBox(height: 16),
+            _buildActivityList(context)
+                .animate()
+                .fadeIn(duration: 600.ms, delay: 1100.ms)
+                .slideY(begin: 0.2),
+          ],
+        ),
+      ),
     );
   }
 

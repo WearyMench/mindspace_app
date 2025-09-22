@@ -1,4 +1,4 @@
-package com.mindspace.app.mindspace_app
+package com.mindspace.wellness
 
 import io.flutter.embedding.android.FlutterActivity
 

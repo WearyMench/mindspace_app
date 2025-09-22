@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'smart_notification_service.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications =
@@ -34,6 +35,9 @@ class NotificationService {
 
       // Solicitar permisos para Android 13+
       await _requestPermissions();
+
+      // Inicializar notificaciones inteligentes
+      await SmartNotificationService.initialize();
     } catch (e) {
       print('Error al inicializar notificaciones: $e');
       // No lanzar el error, solo registrar y continuar
@@ -246,5 +250,34 @@ class NotificationService {
       ),
       payload: payload,
     );
+  }
+
+  // Programar notificaciones inteligentes
+  static Future<void> scheduleSmartNotifications() async {
+    await SmartNotificationService.scheduleSmartNotifications();
+  }
+
+  // Enviar notificación inmediata inteligente
+  static Future<void> sendSmartNotification({
+    required String title,
+    required String body,
+    required String type,
+  }) async {
+    await SmartNotificationService.sendImmediateNotification(
+      title: title,
+      body: body,
+      type: type,
+    );
+  }
+
+  // Cancelar notificaciones inteligentes
+  static Future<void> cancelSmartNotifications() async {
+    await SmartNotificationService.cancelAllNotifications();
+  }
+
+  // Obtener notificaciones pendientes
+  static Future<List<PendingNotificationRequest>>
+  getPendingNotifications() async {
+    return await SmartNotificationService.getPendingNotifications();
   }
 }

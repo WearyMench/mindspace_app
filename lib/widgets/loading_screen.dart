@@ -5,6 +5,7 @@ import '../providers/mood_provider.dart';
 import '../providers/meditation_provider.dart';
 import '../providers/journal_provider.dart';
 import '../constants/app_colors.dart';
+import '../services/user_preferences_service.dart';
 
 class LoadingScreen extends StatefulWidget {
   final Widget child;
@@ -63,9 +64,17 @@ class _LoadingScreenState extends State<LoadingScreen>
       // Esperar un poco para mostrar la animación
       await Future.delayed(const Duration(milliseconds: 2000));
 
-      // Navegar a la pantalla principal usando GoRouter
+      // Verificar si el onboarding está completo
+      final isOnboardingCompleted =
+          await UserPreferencesService.isOnboardingCompleted();
+
+      // Navegar según el estado del onboarding
       if (mounted) {
-        context.go('/home');
+        if (isOnboardingCompleted) {
+          context.go('/home');
+        } else {
+          context.go('/onboarding');
+        }
       }
     } catch (e) {
       // Manejar errores de inicialización

@@ -173,6 +173,22 @@ class LanguageService extends ChangeNotifier {
         return 'Buscar';
       case 'statistics':
         return 'Estadísticas';
+      case 'insights':
+        return 'Insights';
+      case 'wellness_metrics':
+        return 'Métricas de Bienestar';
+      case 'wellness_score':
+        return 'Puntuación de Bienestar';
+      case 'based_on_activity':
+        return 'Basado en tu actividad reciente';
+      case 'analyzing_data':
+        return 'Analizando tus datos...';
+      case 'no_insights_yet':
+        return 'Aún no hay insights';
+      case 'start_using_app':
+        return 'Comienza a usar la app para obtener insights personalizados';
+      case 'refresh':
+        return 'Actualizar';
 
       // Navigation
       case 'navigation_home':
