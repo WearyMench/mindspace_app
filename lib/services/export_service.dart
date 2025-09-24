@@ -290,7 +290,7 @@ class ExportService {
       }
     } catch (e) {
       // Ignorar errores de limpieza
-      print('Error cleaning up old exports: $e');
+      // print('Error cleaning up old exports: $e');
     }
   }
 }

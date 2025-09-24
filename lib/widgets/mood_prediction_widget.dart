@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../services/ai_insights_service.dart';
 import '../widgets/gradient_card.dart';
+import '../services/language_service.dart';
 import '../providers/mood_provider.dart';
 import '../providers/meditation_provider.dart';
 import '../providers/journal_provider.dart';
@@ -23,6 +24,42 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
   void initState() {
     super.initState();
     _loadPrediction();
+  }
+
+  String _localizeRecommendation(String text, LanguageService languageService) {
+    // Map simple Spanish phrases to keys; fallback to original text
+    final mapping = {
+      'Necesitas más datos para hacer predicciones precisas': languageService
+          .getLocalizedText('rec_need_more_data'),
+      'Tu estado de ánimo está mejorando. ¡Sigue con las actividades que te hacen sentir bien!':
+          languageService.getLocalizedText('rec_mood_improving'),
+      'Notamos una tendencia a la baja. Te sugerimos probar técnicas de relajación o hablar con alguien de confianza.':
+          languageService.getLocalizedText('rec_mood_declining'),
+      'Tu estado de ánimo se mantiene estable. Es un buen momento para explorar nuevas actividades de bienestar.':
+          languageService.getLocalizedText('rec_mood_stable'),
+    };
+    return mapping[text] ?? text;
+  }
+
+  String _localizeFactor(String text, LanguageService languageService) {
+    final mapping = {
+      'Tendencia positiva en los últimos días': languageService
+          .getLocalizedText('factor_positive_trend'),
+      'Tendencia negativa en los últimos días': languageService
+          .getLocalizedText('factor_negative_trend'),
+      'Estado de ánimo estable': languageService.getLocalizedText(
+        'factor_stable_mood',
+      ),
+      'La meditación mejora tu estado de ánimo': languageService
+          .getLocalizedText('factor_meditation_helps'),
+      'Escribir en tu diario te ayuda a procesar emociones': languageService
+          .getLocalizedText('factor_journaling_helps'),
+      'Tienes tendencia a sentirte mejor en diciembre': languageService
+          .getLocalizedText('factor_december_better'),
+      'Tienes tendencia a sentirte mejor en enero': languageService
+          .getLocalizedText('factor_january_better'),
+    };
+    return mapping[text] ?? text;
   }
 
   Future<void> _loadPrediction() async {
@@ -49,6 +86,7 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
         recentMoods: recentMoods,
         recentSessions: recentSessions,
         recentJournals: recentJournals,
+        languageService: Provider.of<LanguageService>(context, listen: false),
       );
 
       setState(() {
@@ -83,21 +121,28 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
                       size: 24,
                     )
                     .animate()
-                    .scale(duration: 600.ms, curve: Curves.elasticOut)
+                    .scale(duration: 300.ms, curve: Curves.easeOut)
                     .then()
                     .shimmer(
-                      duration: 2000.ms,
+                      duration: 1000.ms,
                       color: Theme.of(
                         context,
                       ).colorScheme.primary.withOpacity(0.3),
                     ),
                 const SizedBox(width: 12),
-                Text(
-                      'Predicción Avanzada',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+                Consumer<LanguageService>(
+                      builder: (context, languageService, child) {
+                        return Text(
+                          languageService.getLocalizedText(
+                            'advanced_prediction',
+                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        );
+                      },
                     )
                     .animate()
                     .fadeIn(duration: 800.ms, delay: 200.ms)
@@ -112,8 +157,19 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
-                                      'Predicción actualizada${_prediction != null ? ' (${_prediction!.confidence.toStringAsFixed(0)}% confianza)' : ''}',
+                                    content: Consumer<LanguageService>(
+                                      builder: (context, languageService, child) {
+                                        final conf = _prediction?.confidence;
+                                        final confText = conf != null
+                                            ? ' (${conf.toStringAsFixed(0)}%)'
+                                            : '';
+                                        return Text(
+                                          languageService.getLocalizedText(
+                                                'prediction_updated',
+                                              ) +
+                                              confText,
+                                        );
+                                      },
                                     ),
                                     duration: const Duration(seconds: 2),
                                   ),
@@ -127,7 +183,10 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.refresh),
-                      tooltip: 'Actualizar predicción',
+                      tooltip: Provider.of<LanguageService>(
+                        context,
+                        listen: false,
+                      ).getLocalizedText('refresh_prediction'),
                     )
                     .animate()
                     .scale(duration: 200.ms)
@@ -171,11 +230,17 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
             .rotate(duration: 1000.ms),
         const SizedBox(width: 16),
         Expanded(
-          child: Text(
-            'Analizando tus patrones...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+          child: Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('analyzing_patterns'),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.7),
+                ),
+              );
+            },
           ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2),
         ),
       ],
@@ -191,19 +256,29 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
         ),
         const SizedBox(height: 16),
-        Text(
-          'No hay suficientes datos',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return Text(
+              languageService.getLocalizedText('not_enough_data'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 8),
-        Text(
-          'Usa la app más frecuentemente para obtener predicciones precisas',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-          ),
-          textAlign: TextAlign.center,
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return Text(
+              languageService.getLocalizedText(
+                'use_app_for_better_predictions',
+              ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              ),
+              textAlign: TextAlign.center,
+            );
+          },
         ),
         const SizedBox(height: 16),
         ElevatedButton.icon(
@@ -211,7 +286,12 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
             context.go('/mood');
           },
           icon: const Icon(Icons.add),
-          label: const Text('Registrar Estado de Ánimo'),
+          label: Text(
+            Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('log_mood'),
+          ),
         ),
       ],
     );
@@ -270,23 +350,31 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Tendencia: $label',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+              Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    '${languageService.getLocalizedText('trend')}: $label',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 4),
               Row(
                 children: [
-                  Text(
-                    'Confianza: ${(confidence * 100).toInt()}%',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.7),
-                    ),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        '${languageService.getLocalizedText('confidence')}: ${(confidence * 100).toInt()}%',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(width: 8),
                   Container(
@@ -334,22 +422,35 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
                 size: 20,
               ),
               const SizedBox(width: 8),
-              Text(
-                'Recomendación',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+              Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    languageService.getLocalizedText('recommendation'),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            _prediction!.recommendation,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-              height: 1.4,
-            ),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                _localizeRecommendation(
+                  _prediction!.recommendation,
+                  languageService,
+                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.8),
+                  height: 1.4,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -360,12 +461,16 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Factores identificados',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return Text(
+              languageService.getLocalizedText('identified_factors'),
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -391,12 +496,16 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    factor,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        _localizeFactor(factor, languageService),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -434,21 +543,29 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Predicción próxima semana',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('next_week_prediction'),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  'Estado de ánimo esperado: ${moodLevel.label}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withOpacity(0.8),
-                  ),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      '${languageService.getLocalizedText('expected_mood')}: ${moodLevel.label}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.8),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -528,7 +645,12 @@ class _MoodPredictionWidgetState extends State<MoodPredictionWidget> {
           context.go('/statistics');
         },
         icon: const Icon(Icons.analytics),
-        label: const Text('Ver Análisis Detallado'),
+        label: Text(
+          Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('view_detailed_analysis'),
+        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,

@@ -135,4 +135,7 @@ class MeditationSession {
     if (actualDuration == null) return 0.0;
     return (actualDuration!.inSeconds / duration.inSeconds).clamp(0.0, 1.0);
   }
+
+  // Getter for compatibility with statistics chart
+  DateTime get date => completedAt;
 }

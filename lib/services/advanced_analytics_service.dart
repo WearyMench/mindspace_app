@@ -1,6 +1,7 @@
 import '../models/mood_entry.dart';
 import '../models/meditation_session.dart';
 import '../models/journal_entry.dart';
+import 'language_service.dart';
 
 class AdvancedAnalyticsService {
   // Análisis de correlaciones entre diferentes métricas
@@ -8,6 +9,7 @@ class AdvancedAnalyticsService {
     required List<MoodEntry> moods,
     required List<MeditationSession> sessions,
     required List<JournalEntry> journals,
+    LanguageService? languageService,
   }) async {
     final correlations = <String, double>{};
 
@@ -36,7 +38,7 @@ class AdvancedAnalyticsService {
     return CorrelationAnalysis(
       correlations: correlations,
       strongestCorrelation: _findStrongestCorrelation(correlations),
-      insights: _generateCorrelationInsights(correlations),
+      insights: _generateCorrelationInsights(correlations, languageService),
     );
   }
 
@@ -45,11 +47,17 @@ class AdvancedAnalyticsService {
     required List<MoodEntry> moods,
     required List<MeditationSession> sessions,
     required List<JournalEntry> journals,
+    LanguageService? languageService,
   }) async {
     final patterns = <String, Map<String, double>>{};
 
     // Patrones por día de la semana
-    patterns['weekly'] = _analyzeWeeklyPatterns(moods, sessions, journals);
+    patterns['weekly'] = _analyzeWeeklyPatterns(
+      moods,
+      sessions,
+      journals,
+      languageService,
+    );
 
     // Patrones por hora del día
     patterns['hourly'] = _analyzeHourlyPatterns(moods, sessions, journals);
@@ -59,9 +67,12 @@ class AdvancedAnalyticsService {
 
     return TemporalPatterns(
       patterns: patterns,
-      bestDays: _findBestDays(patterns['weekly']!),
+      bestDays: _findBestDays(patterns['weekly']!, languageService),
       bestHours: _findBestHours(patterns['hourly']!),
-      seasonalInsights: _generateSeasonalInsights(patterns['seasonal']!),
+      seasonalInsights: _generateSeasonalInsights(
+        patterns['seasonal']!,
+        languageService,
+      ),
     );
   }
 
@@ -70,6 +81,7 @@ class AdvancedAnalyticsService {
     required List<MoodEntry> moods,
     required List<MeditationSession> sessions,
     required List<JournalEntry> journals,
+    LanguageService? languageService,
   }) async {
     final now = DateTime.now();
     final last30Days = now.subtract(const Duration(days: 30));
@@ -109,6 +121,7 @@ class AdvancedAnalyticsService {
         moodProgress,
         meditationProgress,
         journalProgress,
+        languageService,
       ),
       recommendations: _generateProgressRecommendations(
         moodProgress,
@@ -123,14 +136,21 @@ class AdvancedAnalyticsService {
     required List<MoodEntry> moods,
     required List<MeditationSession> sessions,
     required List<JournalEntry> journals,
+    LanguageService? languageService,
   }) async {
     final wellnessScore = _calculateWellnessScore(moods, sessions, journals);
     final wellnessFactors = _analyzeWellnessFactors(moods, sessions, journals);
-    final riskFactors = _identifyRiskFactors(moods, sessions, journals);
+    final riskFactors = _identifyRiskFactors(
+      moods,
+      sessions,
+      journals,
+      languageService,
+    );
     final protectiveFactors = _identifyProtectiveFactors(
       moods,
       sessions,
       journals,
+      languageService,
     );
 
     return WellnessAnalysis(
@@ -308,16 +328,17 @@ class AdvancedAnalyticsService {
     List<MoodEntry> moods,
     List<MeditationSession> sessions,
     List<JournalEntry> journals,
+    LanguageService? languageService,
   ) {
     final weeklyData = <String, List<double>>{};
     final days = [
-      'Lunes',
-      'Martes',
-      'Miércoles',
-      'Jueves',
-      'Viernes',
-      'Sábado',
-      'Domingo',
+      languageService?.getLocalizedText('monday') ?? 'Lunes',
+      languageService?.getLocalizedText('tuesday') ?? 'Martes',
+      languageService?.getLocalizedText('wednesday') ?? 'Miércoles',
+      languageService?.getLocalizedText('thursday') ?? 'Jueves',
+      languageService?.getLocalizedText('friday') ?? 'Viernes',
+      languageService?.getLocalizedText('saturday') ?? 'Sábado',
+      languageService?.getLocalizedText('sunday') ?? 'Domingo',
     ];
 
     for (int i = 0; i < 7; i++) {
@@ -549,31 +570,45 @@ class AdvancedAnalyticsService {
 
   static List<String> _generateCorrelationInsights(
     Map<String, double> correlations,
+    LanguageService? languageService,
   ) {
     final insights = <String>[];
 
     if (correlations['meditation_mood']! > 0.5) {
       insights.add(
-        'La meditación tiene un impacto positivo en tu estado de ánimo',
+        languageService?.getLocalizedText('insight_meditation_positive') ??
+            'La meditación tiene un impacto positivo en tu estado de ánimo',
       );
     }
 
     if (correlations['journal_mood']! > 0.3) {
-      insights.add('Escribir en tu diario te ayuda a procesar emociones');
+      insights.add(
+        languageService?.getLocalizedText('insight_journal_emotions') ??
+            'Escribir en tu diario te ayuda a procesar emociones',
+      );
     }
 
     if (correlations['usage_mood']! > 0.4) {
-      insights.add('El uso frecuente de la app mejora tu bienestar general');
+      insights.add(
+        languageService?.getLocalizedText('insight_app_usage_wellness') ??
+            'El uso frecuente de la app mejora tu bienestar general',
+      );
     }
 
     if (correlations['time_mood']! > 0.6) {
-      insights.add('Tienes horarios específicos donde te sientes mejor');
+      insights.add(
+        languageService?.getLocalizedText('insight_specific_schedules') ??
+            'Tienes horarios específicos donde te sientes mejor',
+      );
     }
 
     return insights;
   }
 
-  static List<String> _findBestDays(Map<String, double> weeklyPatterns) {
+  static List<String> _findBestDays(
+    Map<String, double> weeklyPatterns,
+    LanguageService? languageService,
+  ) {
     final sortedDays = weeklyPatterns.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -589,6 +624,7 @@ class AdvancedAnalyticsService {
 
   static List<String> _generateSeasonalInsights(
     Map<String, double> seasonalPatterns,
+    LanguageService? languageService,
   ) {
     final insights = <String>[];
 
@@ -597,7 +633,10 @@ class AdvancedAnalyticsService {
 
     if (sortedMonths.isNotEmpty) {
       final bestMonth = sortedMonths.first;
-      insights.add('Te sientes mejor en ${bestMonth.key}');
+      final message =
+          languageService?.getLocalizedText('feel_better_in') ??
+          'Te sientes mejor en';
+      insights.add('$message ${bestMonth.key}');
     }
 
     return insights;
@@ -631,19 +670,31 @@ class AdvancedAnalyticsService {
     ProgressMetrics mood,
     ProgressMetrics meditation,
     ProgressMetrics journal,
+    LanguageService? languageService,
   ) {
     final achievements = <String>[];
 
     if (mood.trend == ProgressTrend.improving) {
-      achievements.add('Mejora en estado de ánimo');
+      achievements.add(
+        languageService?.getLocalizedText('achievement_mood_improvement') ??
+            'Mejora en estado de ánimo',
+      );
     }
 
     if (meditation.trend == ProgressTrend.improving) {
-      achievements.add('Mayor consistencia en meditación');
+      achievements.add(
+        languageService?.getLocalizedText(
+              'achievement_meditation_consistency',
+            ) ??
+            'Mayor consistencia en meditación',
+      );
     }
 
     if (journal.trend == ProgressTrend.improving) {
-      achievements.add('Más actividad en el diario');
+      achievements.add(
+        languageService?.getLocalizedText('achievement_journal_activity') ??
+            'Más actividad en el diario',
+      );
     }
 
     return achievements;
@@ -711,6 +762,7 @@ class AdvancedAnalyticsService {
     List<MoodEntry> moods,
     List<MeditationSession> sessions,
     List<JournalEntry> journals,
+    LanguageService? languageService,
   ) {
     final riskFactors = <String>[];
 
@@ -723,16 +775,25 @@ class AdvancedAnalyticsService {
           recentMoods.reduce((a, b) => a + b) / recentMoods.length;
 
       if (avgRecentMood < 2.5) {
-        riskFactors.add('Estado de ánimo bajo reciente');
+        riskFactors.add(
+          languageService?.getLocalizedText('risk_recent_low_mood') ??
+              'Estado de ánimo bajo reciente',
+        );
       }
     }
 
     if (sessions.length < 3) {
-      riskFactors.add('Baja frecuencia de meditación');
+      riskFactors.add(
+        languageService?.getLocalizedText('risk_low_meditation_frequency') ??
+            'Baja frecuencia de meditación',
+      );
     }
 
     if (journals.length < 5) {
-      riskFactors.add('Poca actividad en el diario');
+      riskFactors.add(
+        languageService?.getLocalizedText('risk_low_journal_activity') ??
+            'Poca actividad en el diario',
+      );
     }
 
     return riskFactors;
@@ -742,15 +803,22 @@ class AdvancedAnalyticsService {
     List<MoodEntry> moods,
     List<MeditationSession> sessions,
     List<JournalEntry> journals,
+    LanguageService? languageService,
   ) {
     final protectiveFactors = <String>[];
 
     if (sessions.length >= 7) {
-      protectiveFactors.add('Práctica regular de meditación');
+      protectiveFactors.add(
+        languageService?.getLocalizedText('protective_regular_meditation') ??
+            'Práctica regular de meditación',
+      );
     }
 
     if (journals.length >= 10) {
-      protectiveFactors.add('Reflexión regular en el diario');
+      protectiveFactors.add(
+        languageService?.getLocalizedText('protective_regular_journaling') ??
+            'Reflexión regular en el diario',
+      );
     }
 
     if (moods.isNotEmpty) {
@@ -758,7 +826,10 @@ class AdvancedAnalyticsService {
           moods.map((m) => m.overallMood.value).reduce((a, b) => a + b) /
           moods.length;
       if (avgMood >= 4.0) {
-        protectiveFactors.add('Estado de ánimo positivo general');
+        protectiveFactors.add(
+          languageService?.getLocalizedText('protective_positive_mood') ??
+              'Estado de ánimo positivo general',
+        );
       }
     }
 

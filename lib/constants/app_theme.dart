@@ -224,30 +224,30 @@ class AppTheme {
         }),
         trackColor: MaterialStateProperty.resolveWith<Color>((states) {
           if (states.contains(MaterialState.selected)) {
-            return AppColors.primaryPurple.withOpacity(0.3);
+            return AppColors.primaryPurple.withValues(alpha: 0.3);
           }
-          return Colors.grey.withOpacity(0.3);
+          return Colors.grey.withValues(alpha: 0.3);
         }),
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: AppColors.primaryPurple,
-        inactiveTrackColor: Colors.grey.withOpacity(0.3),
+        inactiveTrackColor: Colors.grey.withValues(alpha: 0.3),
         thumbColor: AppColors.primaryPurple,
-        overlayColor: AppColors.primaryPurple.withOpacity(0.2),
+        overlayColor: AppColors.primaryPurple.withValues(alpha: 0.2),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.primaryPurple,
-        linearTrackColor: Colors.grey.withOpacity(0.3),
-        circularTrackColor: Colors.grey.withOpacity(0.3),
+        linearTrackColor: Colors.grey.withValues(alpha: 0.3),
+        circularTrackColor: Colors.grey.withValues(alpha: 0.3),
       ),
       dividerTheme: DividerThemeData(
-        color: AppColors.textTertiary.withOpacity(0.2),
+        color: AppColors.textTertiary.withValues(alpha: 0.2),
         thickness: 1,
         space: 1,
       ),
       listTileTheme: ListTileThemeData(
         tileColor: AppColors.surface,
-        selectedTileColor: AppColors.primaryPurple.withOpacity(0.1),
+        selectedTileColor: AppColors.primaryPurple.withValues(alpha: 0.1),
         textColor: AppColors.textPrimary,
         iconColor: AppColors.textSecondary,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -255,7 +255,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.surfaceVariant,
-        selectedColor: AppColors.primaryPurple.withOpacity(0.2),
+        selectedColor: AppColors.primaryPurple.withValues(alpha: 0.2),
         labelStyle: GoogleFonts.inter(color: AppColors.textPrimary),
         secondaryLabelStyle: GoogleFonts.inter(color: AppColors.textSecondary),
         brightness: Brightness.light,
@@ -404,7 +404,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.darkSurfaceVariant,
         elevation: 4,
-        shadowColor: Colors.black.withOpacity(0.3),
+        shadowColor: Colors.black.withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: const EdgeInsets.all(8),
       ),
@@ -517,30 +517,30 @@ class AppTheme {
         }),
         trackColor: MaterialStateProperty.resolveWith<Color>((states) {
           if (states.contains(MaterialState.selected)) {
-            return AppColors.primaryPurple.withOpacity(0.3);
+            return AppColors.primaryPurple.withValues(alpha: 0.3);
           }
-          return Colors.grey.withOpacity(0.3);
+          return Colors.grey.withValues(alpha: 0.3);
         }),
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: AppColors.primaryPurple,
-        inactiveTrackColor: Colors.grey.withOpacity(0.3),
+        inactiveTrackColor: Colors.grey.withValues(alpha: 0.3),
         thumbColor: AppColors.primaryPurple,
-        overlayColor: AppColors.primaryPurple.withOpacity(0.2),
+        overlayColor: AppColors.primaryPurple.withValues(alpha: 0.2),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.primaryPurple,
-        linearTrackColor: Colors.grey.withOpacity(0.3),
-        circularTrackColor: Colors.grey.withOpacity(0.3),
+        linearTrackColor: Colors.grey.withValues(alpha: 0.3),
+        circularTrackColor: Colors.grey.withValues(alpha: 0.3),
       ),
       dividerTheme: DividerThemeData(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         thickness: 1,
         space: 1,
       ),
       listTileTheme: ListTileThemeData(
         tileColor: AppColors.darkSurfaceVariant,
-        selectedTileColor: AppColors.primaryPurple.withOpacity(0.1),
+        selectedTileColor: AppColors.primaryPurple.withValues(alpha: 0.1),
         textColor: AppColors.darkOnSurface,
         iconColor: AppColors.darkOnSurfaceVariant,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -548,7 +548,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.darkSurfaceVariant,
-        selectedColor: AppColors.primaryPurple.withOpacity(0.2),
+        selectedColor: AppColors.primaryPurple.withValues(alpha: 0.2),
         labelStyle: GoogleFonts.inter(color: AppColors.darkOnSurface),
         secondaryLabelStyle: GoogleFonts.inter(
           color: AppColors.darkOnSurfaceVariant,

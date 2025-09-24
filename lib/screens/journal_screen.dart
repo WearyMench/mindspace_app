@@ -24,16 +24,7 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-            ],
-          ),
-        ),
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: Column(
             children: [
@@ -77,7 +68,7 @@ class _JournalScreenState extends State<JournalScreen> {
                               ),
                         );
                       },
-                    ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+                    ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1),
                     const SizedBox(height: 8),
                     Consumer<LanguageService>(
                           builder: (context, languageService, child) {
@@ -95,8 +86,8 @@ class _JournalScreenState extends State<JournalScreen> {
                           },
                         )
                         .animate()
-                        .fadeIn(duration: 600.ms, delay: 200.ms)
-                        .slideY(begin: -0.2),
+                        .fadeIn(duration: 300.ms, delay: 100.ms)
+                        .slideY(begin: -0.1),
                   ],
                 ),
               ),
@@ -106,8 +97,8 @@ class _JournalScreenState extends State<JournalScreen> {
           const SizedBox(height: 16),
           const JournalQuickEntry()
               .animate()
-              .fadeIn(duration: 600.ms, delay: 400.ms)
-              .slideY(begin: 0.2),
+              .fadeIn(duration: 400.ms, delay: 150.ms)
+              .slideY(begin: 0.1),
         ],
       ),
     );
@@ -176,7 +167,7 @@ class _JournalScreenState extends State<JournalScreen> {
           _buildCategoryFilter(context),
         ],
       ),
-    ).animate().fadeIn(duration: 600.ms, delay: 600.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 300.ms, delay: 225.ms).slideY(begin: 0.1);
   }
 
   Widget _buildSearchBar(BuildContext context) {
@@ -206,38 +197,40 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Widget _buildCategoryFilter(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          Consumer<LanguageService>(
+    final categories = [null, ...JournalCategory.values];
+    return SizedBox(
+      height: 44,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          if (category == null) {
+            return Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildCategoryChip(
+                  context,
+                  label: languageService.getLocalizedText('all'),
+                  isSelected: _selectedCategory == null,
+                  onTap: () => setState(() => _selectedCategory = null),
+                );
+              },
+            );
+          }
+          return Consumer<LanguageService>(
             builder: (context, languageService, child) {
               return _buildCategoryChip(
                 context,
-                label: languageService.getLocalizedText('all'),
-                isSelected: _selectedCategory == null,
-                onTap: () => setState(() => _selectedCategory = null),
+                label: _getLocalizedCategoryName(category, languageService),
+                icon: category.icon,
+                isSelected: _selectedCategory == category,
+                onTap: () => setState(() => _selectedCategory = category),
               );
             },
-          ),
-          const SizedBox(width: 8),
-          ...JournalCategory.values.map(
-            (category) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Consumer<LanguageService>(
-                builder: (context, languageService, child) {
-                  return _buildCategoryChip(
-                    context,
-                    label: _getLocalizedCategoryName(category, languageService),
-                    icon: category.icon,
-                    isSelected: _selectedCategory == category,
-                    onTap: () => setState(() => _selectedCategory = category),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -253,7 +246,7 @@ class _JournalScreenState extends State<JournalScreen> {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
               ? Theme.of(context).colorScheme.primary
@@ -273,14 +266,18 @@ class _JournalScreenState extends State<JournalScreen> {
               Icon(
                 icon,
                 size: 16,
-                color: Theme.of(context).colorScheme.primary,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(width: 6),
             ],
             Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: isSelected ? Colors.white : AppColors.textPrimary,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSurface,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -318,7 +315,7 @@ class _JournalScreenState extends State<JournalScreen> {
           child: _selectedView == 0
               ? _buildListView(context, entries)
               : _buildGridView(context, entries),
-        ).animate().fadeIn(duration: 600.ms, delay: 800.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 300.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -403,69 +400,84 @@ class _JournalScreenState extends State<JournalScreen> {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms, delay: 800.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 400.ms, delay: 300.ms).slideY(begin: 0.1);
   }
 
   Widget _buildListView(BuildContext context, List<JournalEntry> entries) {
-    return ListView.builder(
+    return ListView.separated(
       itemCount: entries.length,
+      separatorBuilder: (context, index) => Divider(
+        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.12),
+        height: 1,
+        indent: 8,
+        endIndent: 8,
+      ),
       itemBuilder: (context, index) {
         final entry = entries[index];
-        return _buildJournalEntryCard(context, entry);
+        return _buildJournalEntryListItem(context, entry);
       },
     );
   }
 
   Widget _buildGridView(BuildContext context, List<JournalEntry> entries) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: entries.length,
-      itemBuilder: (context, index) {
-        final entry = entries[index];
-        return _buildJournalEntryGridCard(context, entry);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const spacing = 12.0;
+        const minTileWidth = 180.0;
+        int crossAxisCount = (constraints.maxWidth / (minTileWidth + spacing))
+            .floor()
+            .clamp(2, 4);
+        final childAspectRatio = 1.05;
+
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: spacing,
+            mainAxisSpacing: spacing,
+            childAspectRatio: childAspectRatio,
+          ),
+          itemCount: entries.length,
+          itemBuilder: (context, index) {
+            final entry = entries[index];
+            return _buildJournalEntryGridCard(context, entry);
+          },
+        );
       },
     );
   }
 
-  Widget _buildJournalEntryCard(BuildContext context, JournalEntry entry) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: GradientCard(
-        onTap: () => _showJournalDetail(context, entry),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+  Widget _buildJournalEntryListItem(BuildContext context, JournalEntry entry) {
+    return InkWell(
+      onTap: () => _showJournalDetail(context, entry),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                entry.category.icon,
+                size: 18,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      entry.category.icon,
-                      size: 20,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
                           entry.title,
-                          style: Theme.of(context).textTheme.titleMedium
+                          style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(
                                   context,
@@ -475,80 +487,64 @@ class _JournalScreenState extends State<JournalScreen> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 4),
-                        Consumer<LanguageService>(
-                          builder: (context, languageService, child) {
-                            return Text(
-                              _getLocalizedCategoryName(
-                                entry.category,
-                                languageService,
-                              ),
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onBackground.withOpacity(0.7),
-                                  ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    '${entry.createdAt.day}/${entry.createdAt.month}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                entry.preview,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  if (entry.moodTags.isNotEmpty) ...[
-                    ...entry.moodTags
-                        .take(3)
-                        .map(
-                          (tag) => Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: Icon(
-                              tag.icon,
-                              size: 16,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                    const SizedBox(width: 8),
-                  ],
-                  const Spacer(),
-                  Consumer<LanguageService>(
-                    builder: (context, languageService, child) {
-                      return Text(
-                        '${entry.wordCount} ${languageService.getLocalizedText('words')}',
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${entry.createdAt.day}/${entry.createdAt.month}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(
                             context,
                           ).colorScheme.onSurfaceVariant.withOpacity(0.6),
                         ),
-                      );
-                    },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    entry.preview,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      if (entry.moodTags.isNotEmpty)
+                        Row(
+                          children: entry.moodTags.take(2).map((tag) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Icon(
+                                tag.icon,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      const Spacer(),
+                      Consumer<LanguageService>(
+                        builder: (context, languageService, child) {
+                          return Text(
+                            '${entry.wordCount} ${languageService.getLocalizedText('words')}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant
+                                      .withOpacity(0.6),
+                                ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -558,28 +554,50 @@ class _JournalScreenState extends State<JournalScreen> {
     return GradientCard(
       onTap: () => _showJournalDetail(context, entry),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(
-                  entry.category.icon,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.primary,
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    entry.category.icon,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 const Spacer(),
-                Text(
-                  '${entry.createdAt.day}',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${entry.createdAt.day}/${entry.createdAt.month}',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withOpacity(0.8),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               entry.title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -589,32 +607,41 @@ class _JournalScreenState extends State<JournalScreen> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
               entry.preview,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              maxLines: 4,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const Spacer(),
-            if (entry.moodTags.isNotEmpty)
-              Row(
-                children: entry.moodTags
-                    .take(3)
-                    .map(
-                      (tag) => Padding(
+            Row(
+              children: [
+                if (entry.moodTags.isNotEmpty)
+                  Row(
+                    children: entry.moodTags.take(2).map((tag) {
+                      return Padding(
                         padding: const EdgeInsets.only(right: 4),
                         child: Icon(
                           tag.icon,
                           size: 14,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                      ),
-                    )
-                    .toList(),
-              ),
+                      );
+                    }).toList(),
+                  ),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -688,33 +715,7 @@ class _JournalScreenState extends State<JournalScreen> {
     }
   }
 
-  String _getLocalizedMoodTagLabel(
-    MoodTag tag,
-    LanguageService languageService,
-  ) {
-    switch (tag) {
-      case MoodTag.happy:
-        return languageService.getLocalizedText('mood_happy');
-      case MoodTag.sad:
-        return languageService.getLocalizedText('mood_sad');
-      case MoodTag.excited:
-        return languageService.getLocalizedText('mood_excited');
-      case MoodTag.anxious:
-        return languageService.getLocalizedText('mood_anxious');
-      case MoodTag.calm:
-        return languageService.getLocalizedText('mood_calm');
-      case MoodTag.angry:
-        return languageService.getLocalizedText('mood_angry');
-      case MoodTag.grateful:
-        return languageService.getLocalizedText('mood_grateful');
-      case MoodTag.confused:
-        return languageService.getLocalizedText('mood_confused');
-      case MoodTag.hopeful:
-        return languageService.getLocalizedText('mood_hopeful');
-      case MoodTag.nostalgic:
-        return languageService.getLocalizedText('mood_nostalgic');
-    }
-  }
+  // Removed unused _getLocalizedMoodTagLabel to keep file compact
 }
 
 class JournalEditorScreen extends StatefulWidget {

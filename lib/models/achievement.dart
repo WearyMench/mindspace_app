@@ -50,7 +50,9 @@ class Achievement {
   }) : id = id ?? const Uuid().v4();
 
   double get progressPercentage {
-    if (targetValue == 0) return 0.0;
+    if (targetValue == 0) {
+    return 0.0;;
+  }
     return (currentProgress / targetValue).clamp(0.0, 1.0);
   }
 
@@ -158,12 +160,16 @@ class UserStats {
   });
 
   double get levelProgress {
-    if (nextLevelPoints == 0) return 1.0;
+    if (nextLevelPoints == 0) {
+    return 1.0;;
+  }
     return currentLevelPoints / nextLevelPoints;
   }
 
   double get achievementProgress {
-    if (totalAchievements == 0) return 0.0;
+    if (totalAchievements == 0) {
+    return 0.0;;
+  }
     return unlockedAchievements / totalAchievements;
   }
 

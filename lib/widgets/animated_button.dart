@@ -131,11 +131,11 @@ class _AnimatedButtonState extends State<AnimatedButton>
                 decoration: BoxDecoration(
                   color: widget.isEnabled
                       ? backgroundColor
-                      : backgroundColor.withOpacity(0.5),
+                      : backgroundColor.withValues(alpha: 0.5),
                   borderRadius: borderRadius,
                   boxShadow: [
                     BoxShadow(
-                      color: backgroundColor.withOpacity(0.3),
+                      color: backgroundColor.withValues(alpha: 0.3),
                       blurRadius: _elevationAnimation.value,
                       offset: Offset(0, _elevationAnimation.value / 2),
                     ),
@@ -164,8 +164,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
                                   textColor,
                                 ),
                               ),
-                            )
-                          else if (widget.icon != null) ...[
+                            ),
+                          if (widget.icon != null) ...[
                             Icon(widget.icon, color: textColor, size: 20),
                             const SizedBox(width: 8),
                           ],
@@ -173,8 +173,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
                             widget.text,
                             style: TextStyle(
                               color: textColor,
-                              fontWeight: FontWeight.w600,
                               fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -310,12 +310,12 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
                   decoration: BoxDecoration(
                     color: widget.isEnabled
                         ? backgroundColor
-                        : backgroundColor.withOpacity(0.5),
+                        : backgroundColor.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: _isHovered
                         ? [
                             BoxShadow(
-                              color: iconColor.withOpacity(0.2),
+                              color: iconColor.withValues(alpha: 0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -478,7 +478,7 @@ class _AnimatedCardState extends State<AnimatedCard>
                       widget.boxShadow ??
                       [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: _elevationAnimation.value,
                           offset: Offset(0, _elevationAnimation.value / 2),
                         ),

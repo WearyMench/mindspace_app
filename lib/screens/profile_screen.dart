@@ -22,24 +22,17 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _reminderTime = 20; // 20:00
-  bool _weeklyReports = true;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-            ],
-          ),
-        ),
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -77,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1),
         const SizedBox(height: 8),
         Consumer<LanguageService>(
           builder: (context, languageService, child) {
@@ -90,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms, delay: 100.ms).slideY(begin: -0.1),
       ],
     );
   }
@@ -210,7 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-        ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 150.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -275,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms, delay: 600.ms),
+        ).animate().fadeIn(duration: 300.ms, delay: 225.ms),
         const SizedBox(height: 16),
         GradientCard(
           child: Column(
@@ -328,22 +321,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
-              _buildDivider(),
-              Consumer<LanguageService>(
-                builder: (context, languageService, child) {
-                  return _buildSettingItem(
-                    context,
-                    icon: Icons.schedule,
-                    title: languageService.getLocalizedText('reminder_time'),
-                    subtitle: '${_reminderTime.toString().padLeft(2, '0')}:00',
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () => _showTimePicker(context),
-                  );
-                },
-              ),
             ],
           ),
-        ).animate().fadeIn(duration: 600.ms, delay: 700.ms).slideY(begin: 0.2),
+        ).animate().fadeIn(duration: 400.ms, delay: 300.ms).slideY(begin: 0.1),
       ],
     );
   }
@@ -360,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.bold,
               ),
-            ).animate().fadeIn(duration: 600.ms, delay: 800.ms);
+            ).animate().fadeIn(duration: 300.ms, delay: 375.ms);
           },
         ),
         const SizedBox(height: 16),
@@ -407,25 +387,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       );
                     },
-                  );
-                },
-              ),
-              _buildDivider(),
-              Consumer<LanguageService>(
-                builder: (context, languageService, child) {
-                  return _buildSettingItem(
-                    context,
-                    icon: Icons.analytics,
-                    title: languageService.getLocalizedText('weekly_reports'),
-                    subtitle: languageService.getLocalizedText(
-                      'weekly_reports_subtitle',
-                    ),
-                    trailing: Switch(
-                      value: _weeklyReports,
-                      onChanged: (value) =>
-                          setState(() => _weeklyReports = value),
-                      activeColor: Theme.of(context).colorScheme.secondary,
-                    ),
                   );
                 },
               ),
@@ -491,7 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-        ).animate().fadeIn(duration: 600.ms, delay: 900.ms).slideY(begin: 0.2),
+        ).animate().fadeIn(duration: 400.ms, delay: 450.ms).slideY(begin: 0.1),
       ],
     );
   }
@@ -508,7 +469,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.bold,
               ),
-            ).animate().fadeIn(duration: 600.ms, delay: 1000.ms);
+            ).animate().fadeIn(duration: 300.ms, delay: 525.ms);
           },
         ),
         const SizedBox(height: 16),
@@ -574,7 +535,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-        ).animate().fadeIn(duration: 600.ms, delay: 1100.ms).slideY(begin: 0.2),
+        ).animate().fadeIn(duration: 400.ms, delay: 600.ms).slideY(begin: 0.1),
       ],
     );
   }
@@ -1062,17 +1023,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case AppThemeMode.system:
         return languageService.getLocalizedText('system_theme');
     }
-  }
-
-  void _showTimePicker(BuildContext context) {
-    showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: _reminderTime, minute: 0),
-    ).then((time) {
-      if (time != null) {
-        setState(() => _reminderTime = time.hour);
-      }
-    });
   }
 
   void _showDeleteAccountDialog(BuildContext context) {

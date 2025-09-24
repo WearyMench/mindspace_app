@@ -230,7 +230,7 @@ class BackupService {
       }
     } catch (e) {
       // Ignorar errores de limpieza
-      print('Error al limpiar backups antiguos: $e');
+      // print('Error al limpiar backups antiguos: $e');
     }
   }
 
@@ -259,7 +259,6 @@ class BackupService {
           // Verificar si ya existe
           final existing = await _databaseService.getAllMoodEntries();
           if (existing.any((e) => e.id == entry.id)) {
-            skipped++;
             continue;
           }
         }
@@ -297,7 +296,6 @@ class BackupService {
           // Verificar si ya existe
           final existing = await _databaseService.getAllMeditationSessions();
           if (existing.any((s) => s.id == session.id)) {
-            skipped++;
             continue;
           }
         }
@@ -333,7 +331,6 @@ class BackupService {
           // Verificar si ya existe
           final existing = await _databaseService.getAllJournalEntries();
           if (existing.any((e) => e.id == entry.id)) {
-            skipped++;
             continue;
           }
         }

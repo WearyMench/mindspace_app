@@ -53,6 +53,7 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
         recentMoods: recentMoods,
         recentSessions: recentSessions,
         recentJournals: recentJournals,
+        languageService: Provider.of<LanguageService>(context, listen: false),
       );
 
       setState(() {
@@ -78,12 +79,12 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
             Consumer<LanguageService>(
               builder: (context, languageService, child) {
                 return Text(
-                  'Recomendaciones Avanzadas',
+                  languageService.getLocalizedText('advanced_recommendations'),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                     fontWeight: FontWeight.w600,
                   ),
-                ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2);
+                ).animate().fadeIn(duration: 300.ms).slideX(begin: -0.1);
               },
             ),
             IconButton(
@@ -95,8 +96,24 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  'Recomendaciones actualizadas (${_recommendations.length} encontradas)',
+                                content: Builder(
+                                  builder: (context) {
+                                    final languageService =
+                                        Provider.of<LanguageService>(
+                                          context,
+                                          listen: false,
+                                        );
+                                    return Text(
+                                      languageService
+                                          .getLocalizedText(
+                                            'recommendations_updated',
+                                          )
+                                          .replaceFirst(
+                                            '{count}',
+                                            _recommendations.length.toString(),
+                                          ),
+                                    );
+                                  },
                                 ),
                                 duration: const Duration(seconds: 2),
                               ),
@@ -110,7 +127,10 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.refresh),
-                  tooltip: 'Actualizar recomendaciones',
+                  tooltip: Provider.of<LanguageService>(
+                    context,
+                    listen: false,
+                  ).getLocalizedText('refresh_recommendations'),
                 )
                 .animate()
                 .scale(duration: 200.ms)
@@ -153,13 +173,17 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
                 .rotate(duration: 1000.ms),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                'Analizando tus patrones...',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withOpacity(0.7),
-                ),
+              child: Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    languageService.getLocalizedText('analyzing_patterns'),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                  );
+                },
               ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2),
             ),
           ],
@@ -180,19 +204,33 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
             ),
             const SizedBox(height: 16),
-            Text(
-              'No hay recomendaciones disponibles',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  languageService.getLocalizedText('no_recommendations'),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 8),
-            Text(
-              'Usa la app más frecuentemente para obtener recomendaciones personalizadas',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-              ),
-              textAlign: TextAlign.center,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  languageService.getLocalizedText(
+                    'use_app_for_better_recommendations',
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.5),
+                  ),
+                  textAlign: TextAlign.center,
+                );
+              },
             ),
           ],
         ),
@@ -469,11 +507,15 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
           children: [
             Text(recommendation.description),
             const SizedBox(height: 16),
-            Text(
-              'Beneficios:',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  languageService.getLocalizedText('benefits') + ':',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                );
+              },
             ),
             const SizedBox(height: 8),
             ...recommendation.benefits.map(
@@ -493,18 +535,28 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Tiempo estimado: ${recommendation.estimatedTime}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  '${languageService.getLocalizedText('estimated_time')}: ${recommendation.estimatedTime}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                );
+              },
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar'),
+            child: Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(languageService.getLocalizedText('close'));
+              },
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -532,11 +584,15 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
           children: [
             Text(recommendation.description),
             const SizedBox(height: 16),
-            Text(
-              'Beneficios:',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  languageService.getLocalizedText('benefits') + ':',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                );
+              },
             ),
             const SizedBox(height: 8),
             ...recommendation.benefits.map(
@@ -560,14 +616,22 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar'),
+            child: Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(languageService.getLocalizedText('cancel'));
+              },
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               context.go('/profile');
             },
-            child: const Text('Configurar'),
+            child: Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(languageService.getLocalizedText('configure'));
+              },
+            ),
           ),
         ],
       ),
@@ -646,11 +710,20 @@ class _AIRecommendationsWidgetState extends State<AIRecommendationsWidget> {
   String _getPriorityLabel(Priority priority) {
     switch (priority) {
       case Priority.high:
-        return 'Alta';
+        return Provider.of<LanguageService>(
+          context,
+          listen: false,
+        ).getLocalizedText('priority_high');
       case Priority.medium:
-        return 'Media';
+        return Provider.of<LanguageService>(
+          context,
+          listen: false,
+        ).getLocalizedText('priority_medium');
       case Priority.low:
-        return 'Baja';
+        return Provider.of<LanguageService>(
+          context,
+          listen: false,
+        ).getLocalizedText('priority_low');
     }
   }
 }

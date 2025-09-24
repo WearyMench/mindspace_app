@@ -11,6 +11,7 @@ class UserPreferencesService {
   static const String _dailyReminderTimeKey = 'daily_reminder_time';
   static const String _weeklyGoalKey = 'weekly_goal';
   static const String _notificationsEnabledKey = 'notifications_enabled';
+  static const String _weeklyReportsEnabledKey = 'weekly_reports_enabled';
 
   // Verificar si el onboarding está completo
   static Future<bool> isOnboardingCompleted() async {
@@ -130,9 +131,25 @@ class UserPreferencesService {
     await prefs.setBool(_notificationsEnabledKey, enabled);
   }
 
+  // Verificar si los reportes semanales están habilitados
+  static Future<bool> areWeeklyReportsEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_weeklyReportsEnabledKey) ?? true;
+  }
+
+  // Habilitar/deshabilitar reportes semanales
+  static Future<void> setWeeklyReportsEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_weeklyReportsEnabledKey, enabled);
+  }
+
   // Obtener configuración completa del usuario
   static Future<UserPreferences> getUserPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+
+    final reminderHour = prefs.getInt('reminder_hour');
+    final reminderMinute = prefs.getInt('reminder_minute');
+
     return UserPreferences(
       isOnboardingCompleted: prefs.getBool(_onboardingCompletedKey) ?? false,
       userGoal: prefs.getString(_userGoalKey) ?? '',
@@ -152,12 +169,16 @@ class UserPreferencesService {
           : null,
       weeklyGoal: prefs.getInt(_weeklyGoalKey) ?? 5,
       notificationsEnabled: prefs.getBool(_notificationsEnabledKey) ?? true,
+      weeklyReportsEnabled: prefs.getBool(_weeklyReportsEnabledKey) ?? true,
+      reminderHour: reminderHour,
+      reminderMinute: reminderMinute,
     );
   }
 
   // Guardar configuración completa del usuario
   static Future<void> saveUserPreferences(UserPreferences preferences) async {
     final prefs = await SharedPreferences.getInstance();
+
     await prefs.setBool(
       _onboardingCompletedKey,
       preferences.isOnboardingCompleted,
@@ -187,6 +208,16 @@ class UserPreferencesService {
       _notificationsEnabledKey,
       preferences.notificationsEnabled,
     );
+    await prefs.setBool(
+      _weeklyReportsEnabledKey,
+      preferences.weeklyReportsEnabled,
+    );
+    if (preferences.reminderHour != null) {
+      await prefs.setInt('reminder_hour', preferences.reminderHour!);
+    }
+    if (preferences.reminderMinute != null) {
+      await prefs.setInt('reminder_minute', preferences.reminderMinute!);
+    }
   }
 
   // Resetear configuración del usuario
@@ -202,6 +233,8 @@ class UserPreferencesService {
     await prefs.remove('${_dailyReminderTimeKey}_minute');
     await prefs.remove(_weeklyGoalKey);
     await prefs.remove(_notificationsEnabledKey);
+    await prefs.remove('reminder_hour');
+    await prefs.remove('reminder_minute');
   }
 }
 
@@ -215,6 +248,9 @@ class UserPreferences {
   final TimeOfDay? dailyReminderTime;
   final int weeklyGoal;
   final bool notificationsEnabled;
+  final bool weeklyReportsEnabled;
+  final int? reminderHour;
+  final int? reminderMinute;
 
   UserPreferences({
     required this.isOnboardingCompleted,
@@ -226,6 +262,9 @@ class UserPreferences {
     this.dailyReminderTime,
     required this.weeklyGoal,
     required this.notificationsEnabled,
+    required this.weeklyReportsEnabled,
+    this.reminderHour,
+    this.reminderMinute,
   });
 
   UserPreferences copyWith({
@@ -238,6 +277,9 @@ class UserPreferences {
     TimeOfDay? dailyReminderTime,
     int? weeklyGoal,
     bool? notificationsEnabled,
+    bool? weeklyReportsEnabled,
+    int? reminderHour,
+    int? reminderMinute,
   }) {
     return UserPreferences(
       isOnboardingCompleted:
@@ -250,6 +292,9 @@ class UserPreferences {
       dailyReminderTime: dailyReminderTime ?? this.dailyReminderTime,
       weeklyGoal: weeklyGoal ?? this.weeklyGoal,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      weeklyReportsEnabled: weeklyReportsEnabled ?? this.weeklyReportsEnabled,
+      reminderHour: reminderHour ?? this.reminderHour,
+      reminderMinute: reminderMinute ?? this.reminderMinute,
     );
   }
 }

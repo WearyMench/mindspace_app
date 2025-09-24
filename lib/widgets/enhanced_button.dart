@@ -13,6 +13,7 @@ class EnhancedButton extends StatefulWidget {
   final double? borderRadius;
   final EdgeInsetsGeometry? padding;
   final bool fullWidth;
+  final Color? rippleColor;
 
   const EnhancedButton({
     super.key,
@@ -27,6 +28,7 @@ class EnhancedButton extends StatefulWidget {
     this.borderRadius,
     this.padding,
     this.fullWidth = false,
+    this.rippleColor,
   });
 
   @override
@@ -120,7 +122,7 @@ class _EnhancedButtonState extends State<EnhancedButton>
                 boxShadow: widget.type == ButtonType.primary
                     ? [
                         BoxShadow(
-                          color: colors.backgroundColor.withOpacity(0.3),
+                          color: colors.backgroundColor.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -129,27 +131,12 @@ class _EnhancedButtonState extends State<EnhancedButton>
               ),
               child: Stack(
                 children: [
-                  // Ripple effect
-                  if (_rippleAnimation.value > 0)
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            widget.borderRadius ?? dimensions.borderRadius,
-                          ),
-                          color: colors.rippleColor.withOpacity(
-                            (1 - _rippleAnimation.value) * 0.3,
-                          ),
-                        ),
-                      ),
-                    ),
-
                   // Button content
                   Center(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (widget.isLoading) ...[
+                        if (widget.isLoading)
                           SizedBox(
                             width: 16,
                             height: 16,
@@ -160,26 +147,40 @@ class _EnhancedButtonState extends State<EnhancedButton>
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
-                        ] else if (widget.icon != null) ...[
+                        if (widget.isLoading) const SizedBox(width: 8),
+                        if (widget.icon != null) ...[
                           Icon(
                             widget.icon,
-                            size: dimensions.iconSize,
                             color: colors.textColor,
+                            size: dimensions.iconSize,
                           ),
                           const SizedBox(width: 8),
                         ],
                         Text(
                           widget.text,
-                          style: theme.textTheme.labelLarge?.copyWith(
+                          style: TextStyle(
                             color: colors.textColor,
-                            fontWeight: FontWeight.w600,
                             fontSize: dimensions.fontSize,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  // Ripple effect
+                  if (_rippleAnimation.value > 0)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            widget.borderRadius ?? dimensions.borderRadius,
+                          ),
+                          color: widget.rippleColor?.withOpacity(
+                            _rippleAnimation.value * 0.3,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -192,9 +193,9 @@ class _EnhancedButtonState extends State<EnhancedButton>
   ButtonColors _getButtonColors(ThemeData theme, bool isEnabled) {
     if (!isEnabled) {
       return ButtonColors(
-        backgroundColor: theme.colorScheme.surfaceVariant,
-        textColor: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
-        borderColor: theme.colorScheme.outline.withOpacity(0.3),
+        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+        textColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+        borderColor: theme.colorScheme.outline.withValues(alpha: 0.3),
         rippleColor: theme.colorScheme.onSurfaceVariant,
       );
     }

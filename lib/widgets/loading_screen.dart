@@ -102,8 +102,8 @@ class _LoadingScreenState extends State<LoadingScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             ],
           ),
         ),
@@ -138,7 +138,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryPurple.withOpacity(0.3),
+                              color: AppColors.primaryPurple.withValues(alpha: 0.3),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -157,7 +157,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                         'MindSpace',
                         style: Theme.of(context).textTheme.displayMedium
                             ?.copyWith(
-                              color: Theme.of(context).colorScheme.onBackground,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                             ),
@@ -171,7 +171,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                             ?.copyWith(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onBackground.withOpacity(0.7),
+                              ).colorScheme.onSurface.withValues(alpha: 0.7),
                               fontWeight: FontWeight.w300,
                             ),
                       ),
@@ -196,7 +196,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(
                             context,
-                          ).colorScheme.onBackground.withOpacity(0.6),
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],

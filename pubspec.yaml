@@ -67,6 +67,7 @@ dependencies:
 
   # Audio
   audioplayers: ^6.0.0
+  wakelock_plus: ^1.1.1
 
   # Utils
   uuid: ^4.4.0

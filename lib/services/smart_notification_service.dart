@@ -30,7 +30,7 @@ class SmartNotificationService {
     tz.initializeTimeZones();
 
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
@@ -62,190 +62,251 @@ class SmartNotificationService {
 
   static void _handleNotificationAction(Map<String, dynamic> data) {
     final type = data['type'] as String;
-    // Implementar navegación basada en el tipo de notificación
-    switch (type) {
-      case _moodReminderType:
-        // Navegar a mood tracking
-        break;
-      case _meditationReminderType:
-        // Navegar a meditación
-        break;
-      case _journalReminderType:
-        // Navegar a diario
-        break;
-      case _wellnessInsightType:
-        // Navegar a insights
-        break;
-      case _streakMotivationType:
-        // Navegar a estadísticas
-        break;
-      case _goalReminderType:
-        // Navegar a perfil/objetivos
-        break;
+    print('Notification tapped: $type');
+
+    // Guardar información de navegación pendiente
+    _saveNavigationAction(type);
+  }
+
+  // Guardar acción de navegación para procesar cuando la app esté activa
+  static Future<void> _saveNavigationAction(String type) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('pending_navigation', type);
+    await prefs.setString(
+      'pending_navigation_timestamp',
+      DateTime.now().toIso8601String(),
+    );
+  }
+
+  // Obtener y procesar acciones de navegación pendientes
+  static Future<String?> getPendingNavigationAction() async {
+    final prefs = await SharedPreferences.getInstance();
+    final action = prefs.getString('pending_navigation');
+    final timestamp = prefs.getString('pending_navigation_timestamp');
+
+    if (action != null && timestamp != null) {
+      final actionTime = DateTime.parse(timestamp);
+      // Solo procesar si es reciente (menos de 5 minutos)
+      if (DateTime.now().difference(actionTime).inMinutes < 5) {
+        // Limpiar la acción pendiente
+        await prefs.remove('pending_navigation');
+        await prefs.remove('pending_navigation_timestamp');
+        return action;
+      }
     }
+
+    return null;
   }
 
   // Programar notificaciones inteligentes basadas en patrones del usuario
   static Future<void> scheduleSmartNotifications() async {
-    final userPreferences = await UserPreferencesService.getUserPreferences();
-    if (!userPreferences.notificationsEnabled) return;
+    try {
+      print('=== INICIANDO PROGRAMACIÓN DE NOTIFICACIONES ===');
 
-    // Cancelar notificaciones existentes
-    await _notifications.cancelAll();
+      // Verificar si el servicio está inicializado
+      if (!_initialized) {
+        print('❌ SmartNotificationService no está inicializado');
+        return;
+      }
 
-    // Programar recordatorios basados en horario preferido
-    await _scheduleTimeBasedNotifications(userPreferences);
+      // Obtener preferencias del usuario
+      final userPreferences = await UserPreferencesService.getUserPreferences();
+      print(
+        '📱 Notificaciones habilitadas: ${userPreferences.notificationsEnabled}',
+      );
+      print(
+        '⏰ Hora del recordatorio: ${userPreferences.reminderHour}:${userPreferences.reminderMinute}',
+      );
 
-    // Programar notificaciones contextuales
-    await _scheduleContextualNotifications();
+      if (!userPreferences.notificationsEnabled) {
+        print('❌ Notificaciones deshabilitadas por el usuario');
+        return;
+      }
 
-    // Programar notificaciones de motivación
-    await _scheduleMotivationalNotifications();
+      // Verificar permisos de notificaciones
+      final notificationsEnabled = await areNotificationsEnabled();
+      if (!notificationsEnabled) {
+        print('❌ Notificaciones no están habilitadas en el sistema');
+        return;
+      }
+
+      // Verificar permisos de alarmas exactas
+      final canScheduleExact = await canScheduleExactAlarms();
+      if (!canScheduleExact) {
+        print(
+          '⚠️ No se pueden programar alarmas exactas, intentando solicitar permiso...',
+        );
+        await requestExactAlarmPermission();
+        return;
+      }
+
+      // Cancelar notificaciones existentes
+      print('🗑️ Cancelando notificaciones existentes...');
+      await _notifications.cancelAll();
+
+      // Programar recordatorios basados en horario preferido
+      print('⏰ Programando recordatorios basados en horario...');
+      await _scheduleTimeBasedNotifications(userPreferences);
+
+      // Verificar notificaciones pendientes
+      final pending = await getPendingNotifications();
+      print('✅ Notificaciones programadas: ${pending.length}');
+      for (var notification in pending) {
+        print('  - ID: ${notification.id}, Título: ${notification.title}');
+      }
+
+      print('=== PROGRAMACIÓN COMPLETADA ===');
+    } catch (e) {
+      print('❌ Error programando notificaciones inteligentes: $e');
+    }
   }
 
   static Future<void> _scheduleTimeBasedNotifications(
     UserPreferences preferences,
   ) async {
-    final preferredTime = preferences.preferredTime;
-    TimeOfDay reminderTime;
+    try {
+      TimeOfDay reminderTime;
 
-    switch (preferredTime) {
-      case 'morning':
-        reminderTime = const TimeOfDay(hour: 8, minute: 0);
-        break;
-      case 'afternoon':
-        reminderTime = const TimeOfDay(hour: 14, minute: 0);
-        break;
-      case 'evening':
-        reminderTime = const TimeOfDay(hour: 20, minute: 0);
-        break;
-      default:
-        reminderTime = const TimeOfDay(hour: 9, minute: 0);
+      // Usar la hora específica del recordatorio si está configurada
+      if (preferences.reminderHour != null &&
+          preferences.reminderMinute != null) {
+        reminderTime = TimeOfDay(
+          hour: preferences.reminderHour!,
+          minute: preferences.reminderMinute!,
+        );
+        print(
+          'Usando hora específica del recordatorio: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}',
+        );
+      } else {
+        // Fallback a los valores predefinidos
+        final preferredTime = preferences.preferredTime;
+        switch (preferredTime) {
+          case 'morning':
+            reminderTime = const TimeOfDay(hour: 8, minute: 0);
+            break;
+          case 'afternoon':
+            reminderTime = const TimeOfDay(hour: 14, minute: 0);
+            break;
+          case 'evening':
+            reminderTime = const TimeOfDay(hour: 20, minute: 0);
+            break;
+          default:
+            reminderTime = const TimeOfDay(hour: 9, minute: 0);
+        }
+        print(
+          'Usando hora predefinida: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}',
+        );
+      }
+
+      // Solo programar si las notificaciones están habilitadas
+      if (!preferences.notificationsEnabled) {
+        print('Notificaciones deshabilitadas, no se programarán');
+        return;
+      }
+
+      // Recordatorio de estado de ánimo
+      final moodScheduledTime = _getNextScheduledTime(reminderTime);
+      print(
+        'Programando recordatorio de estado de ánimo para: $moodScheduledTime',
+      );
+
+      await _scheduleNotification(
+        id: 1,
+        title: '¿Cómo te sientes hoy?',
+        body:
+            'Registra tu estado de ánimo para mantener el seguimiento de tu bienestar',
+        scheduledTime: moodScheduledTime,
+        type: _moodReminderType,
+      );
+
+      // Recordatorio de meditación (2 horas después)
+      final meditationTime = TimeOfDay(
+        hour: (reminderTime.hour + 2) % 24,
+        minute: reminderTime.minute,
+      );
+      final meditationScheduledTime = _getNextScheduledTime(meditationTime);
+      print(
+        'Programando recordatorio de meditación para: $meditationScheduledTime',
+      );
+
+      await _scheduleNotification(
+        id: 2,
+        title: 'Momento de meditar',
+        body:
+            'Dedica unos minutos a la meditación para cuidar tu bienestar mental',
+        scheduledTime: meditationScheduledTime,
+        type: _meditationReminderType,
+      );
+    } catch (e) {
+      print('Error programando notificaciones basadas en tiempo: $e');
     }
-
-    // Recordatorio de estado de ánimo
-    await _scheduleNotification(
-      id: 1,
-      title: '¿Cómo te sientes hoy?',
-      body:
-          'Registra tu estado de ánimo para mantener el seguimiento de tu bienestar',
-      scheduledTime: _getNextScheduledTime(reminderTime),
-      type: _moodReminderType,
-    );
-
-    // Recordatorio de meditación (2 horas después)
-    final meditationTime = TimeOfDay(
-      hour: (reminderTime.hour + 2) % 24,
-      minute: reminderTime.minute,
-    );
-    await _scheduleNotification(
-      id: 2,
-      title: 'Momento de meditar',
-      body:
-          'Dedica unos minutos a la meditación para cuidar tu bienestar mental',
-      scheduledTime: _getNextScheduledTime(meditationTime),
-      type: _meditationReminderType,
-    );
   }
 
   static Future<void> _scheduleContextualNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lastNotificationDate = prefs.getString(_lastNotificationDateKey);
-    final today = DateTime.now();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastNotificationDate = prefs.getString(_lastNotificationDateKey);
+      final today = DateTime.now();
 
-    // Solo enviar notificaciones contextuales una vez al día
-    if (lastNotificationDate != null) {
-      final lastDate = DateTime.parse(lastNotificationDate);
-      if (today.difference(lastDate).inDays < 1) return;
-    }
-
-    // Verificar patrones del usuario
-    final moodEntries = await _getRecentMoodEntries(7);
-    final meditationSessions = await _getRecentMeditationSessions(7);
-    final journalEntries = await _getRecentJournalEntries(7);
-
-    // Notificación basada en estado de ánimo
-    if (moodEntries.isNotEmpty) {
-      final lastMood = moodEntries.first.overallMood;
-      if (lastMood.value <= 2) {
-        await _scheduleNotification(
-          id: 10,
-          title: 'Te estamos pensando',
-          body:
-              'Notamos que te has sentido un poco bajo. ¿Te gustaría probar una meditación relajante?',
-          scheduledTime: tz.TZDateTime.now(
-            tz.local,
-          ).add(const Duration(hours: 1)),
-          type: _wellnessInsightType,
-        );
+      // Solo enviar notificaciones contextuales una vez al día
+      if (lastNotificationDate != null) {
+        final lastDate = DateTime.parse(lastNotificationDate);
+        if (today.difference(lastDate).inDays < 1) return;
       }
-    }
 
-    // Notificación de racha de meditación
-    if (meditationSessions.length >= 3) {
-      await _scheduleNotification(
-        id: 11,
-        title: '¡Excelente racha!',
-        body:
-            'Has meditado ${meditationSessions.length} días esta semana. ¡Sigue así!',
-        scheduledTime: tz.TZDateTime.now(
-          tz.local,
-        ).add(const Duration(hours: 2)),
-        type: _streakMotivationType,
-      );
-    }
+      // Verificar patrones del usuario (simplificado para evitar crashes)
+      // final moodEntries = await _getRecentMoodEntries(7);
+      // final meditationSessions = await _getRecentMeditationSessions(7);
+      // final journalEntries = await _getRecentJournalEntries(7);
 
-    // Notificación de diario
-    if (journalEntries.isEmpty) {
-      await _scheduleNotification(
-        id: 12,
-        title: 'Reflexiona sobre tu día',
-        body:
-            'Escribir en tu diario puede ayudarte a procesar tus pensamientos y emociones',
-        scheduledTime: tz.TZDateTime.now(
-          tz.local,
-        ).add(const Duration(hours: 3)),
-        type: _journalReminderType,
-      );
-    }
+      // Notificaciones contextuales temporalmente deshabilitadas para evitar crashes
+      // TODO: Re-habilitar cuando se resuelvan los problemas de datos
 
-    // Guardar fecha de última notificación
-    await prefs.setString(_lastNotificationDateKey, today.toIso8601String());
+      // Guardar fecha de última notificación
+      await prefs.setString(_lastNotificationDateKey, today.toIso8601String());
+    } catch (e) {
+      print('Error programando notificaciones contextuales: $e');
+    }
   }
 
   static Future<void> _scheduleMotivationalNotifications() async {
-    final userPreferences = await UserPreferencesService.getUserPreferences();
+    try {
+      final userPreferences = await UserPreferencesService.getUserPreferences();
 
-    // Notificación de objetivo
-    if (userPreferences.userGoal.isNotEmpty) {
-      await _scheduleNotification(
-        id: 20,
-        title: 'Tu objetivo te espera',
-        body:
-            'Recuerda: ${userPreferences.userGoal}. ¿Cómo vas progresando hoy?',
-        scheduledTime: tz.TZDateTime.now(
-          tz.local,
-        ).add(const Duration(days: 1, hours: 10)),
-        type: _goalReminderType,
-      );
-    }
-
-    // Notificación de bienvenida para nuevos usuarios
-    if (userPreferences.firstLaunchDate != null) {
-      final daysSinceLaunch = DateTime.now()
-          .difference(userPreferences.firstLaunchDate!)
-          .inDays;
-      if (daysSinceLaunch == 3) {
+      // Notificación de objetivo
+      if (userPreferences.userGoal.isNotEmpty) {
         await _scheduleNotification(
-          id: 21,
-          title: '¡Sigue así!',
-          body: 'Has estado usando MindSpace por 3 días. ¡Excelente comienzo!',
+          id: 20,
+          title: 'Tu objetivo te espera',
+          body:
+              'Recuerda: ${userPreferences.userGoal}. ¿Cómo vas progresando hoy?',
           scheduledTime: tz.TZDateTime.now(
             tz.local,
-          ).add(const Duration(hours: 1)),
-          type: _streakMotivationType,
+          ).add(const Duration(days: 1, hours: 10)),
+          type: _goalReminderType,
         );
       }
+
+      // Notificación de bienvenida para nuevos usuarios
+      if (userPreferences.firstLaunchDate != null) {
+        final daysSinceLaunch = DateTime.now()
+            .difference(userPreferences.firstLaunchDate!)
+            .inDays;
+        if (daysSinceLaunch == 3) {
+          await _scheduleNotification(
+            id: 21,
+            title: '¡Sigue así!',
+            body:
+                'Has estado usando MindSpace por 3 días. ¡Excelente comienzo!',
+            scheduledTime: tz.TZDateTime.now(
+              tz.local,
+            ).add(const Duration(hours: 1)),
+            type: _streakMotivationType,
+          );
+        }
+      }
+    } catch (e) {
+      print('Error programando notificaciones motivacionales: $e');
     }
   }
 
@@ -263,7 +324,11 @@ class SmartNotificationService {
           channelDescription: 'Notificaciones inteligentes de MindSpace',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
+          icon: '@mipmap/launcher_icon',
+          enableVibration: true,
+          playSound: true,
+          showWhen: true,
+          when: null, // Se establecerá automáticamente
         );
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -290,6 +355,7 @@ class SmartNotificationService {
       scheduledTime,
       details,
       payload: payload,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
@@ -307,29 +373,71 @@ class SmartNotificationService {
       time.minute,
     );
 
+    print('Hora actual: $now');
+    print('Hora programada inicial: $scheduled');
+
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
+      print('Hora programada ajustada al día siguiente: $scheduled');
     }
 
+    print('Hora final programada: $scheduled');
     return scheduled;
   }
 
-  // Obtener datos recientes (simulado - en implementación real usar providers)
+  // Obtener datos recientes
   static Future<List<MoodEntry>> _getRecentMoodEntries(int days) async {
-    // Implementar obtención de datos reales
-    return [];
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final entriesJson = prefs.getStringList('mood_entries') ?? [];
+      final entries = entriesJson
+          .map((json) => MoodEntry.fromJson(jsonDecode(json)))
+          .toList();
+
+      final cutoffDate = DateTime.now().subtract(Duration(days: days));
+      return entries.where((entry) => entry.date.isAfter(cutoffDate)).toList();
+    } catch (e) {
+      print('Error obteniendo entradas de mood: $e');
+      return [];
+    }
   }
 
   static Future<List<MeditationSession>> _getRecentMeditationSessions(
     int days,
   ) async {
-    // Implementar obtención de datos reales
-    return [];
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionsJson = prefs.getStringList('meditation_sessions') ?? [];
+      final sessions = sessionsJson
+          .map((json) => MeditationSession.fromJson(jsonDecode(json)))
+          .toList();
+
+      final cutoffDate = DateTime.now().subtract(Duration(days: days));
+      return sessions
+          .where((session) => session.completedAt.isAfter(cutoffDate))
+          .toList();
+    } catch (e) {
+      print('Error obteniendo sesiones de meditación: $e');
+      return [];
+    }
   }
 
   static Future<List<JournalEntry>> _getRecentJournalEntries(int days) async {
-    // Implementar obtención de datos reales
-    return [];
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final entriesJson = prefs.getStringList('journal_entries') ?? [];
+      final entries = entriesJson
+          .map((json) => JournalEntry.fromJson(jsonDecode(json)))
+          .toList();
+
+      final cutoffDate = DateTime.now().subtract(Duration(days: days));
+      return entries
+          .where((entry) => entry.createdAt.isAfter(cutoffDate))
+          .toList();
+    } catch (e) {
+      print('Error obteniendo entradas de journal: $e');
+      return [];
+    }
   }
 
   // Notificaciones inmediatas para eventos importantes
@@ -372,6 +480,25 @@ class SmartNotificationService {
     );
   }
 
+  // Programar notificación de prueba para un tiempo específico
+  static Future<void> scheduleTestNotification({
+    required String title,
+    required String body,
+    required Duration delay,
+  }) async {
+    final scheduledTime = tz.TZDateTime.now(tz.local).add(delay);
+
+    await _scheduleNotification(
+      id: 999,
+      title: title,
+      body: body,
+      scheduledTime: scheduledTime,
+      type: 'test_notification',
+    );
+
+    print('Notificación de prueba programada para: $scheduledTime');
+  }
+
   // Cancelar todas las notificaciones
   static Future<void> cancelAllNotifications() async {
     await _notifications.cancelAll();
@@ -407,5 +534,82 @@ class SmartNotificationService {
     }
 
     return true; // iOS no requiere solicitud explícita
+  }
+
+  // Verificar si se pueden programar alarmas exactas
+  static Future<bool> canScheduleExactAlarms() async {
+    final androidImplementation = _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+
+    if (androidImplementation != null) {
+      return await androidImplementation.canScheduleExactNotifications() ??
+          false;
+    }
+
+    return true; // iOS no tiene restricciones
+  }
+
+  // Solicitar permisos de alarmas exactas
+  static Future<bool> requestExactAlarmPermission() async {
+    final androidImplementation = _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+
+    if (androidImplementation != null) {
+      return await androidImplementation.requestExactAlarmsPermission() ??
+          false;
+    }
+
+    return true; // iOS no requiere este permiso
+  }
+
+  // Diagnóstico completo del sistema de notificaciones
+  static Future<Map<String, dynamic>> getNotificationDiagnostics() async {
+    final diagnostics = <String, dynamic>{};
+
+    try {
+      // Estado de inicialización
+      diagnostics['initialized'] = _initialized;
+
+      // Permisos de notificaciones
+      diagnostics['notificationsEnabled'] = await areNotificationsEnabled();
+
+      // Permisos de alarmas exactas
+      diagnostics['canScheduleExactAlarms'] = await canScheduleExactAlarms();
+
+      // Notificaciones pendientes
+      final pending = await getPendingNotifications();
+      diagnostics['pendingNotifications'] = pending.length;
+
+      // Preferencias del usuario
+      try {
+        final userPreferences =
+            await UserPreferencesService.getUserPreferences();
+        diagnostics['userNotificationsEnabled'] =
+            userPreferences.notificationsEnabled;
+        diagnostics['preferredTime'] = userPreferences.preferredTime;
+      } catch (e) {
+        diagnostics['userPreferencesError'] = e.toString();
+      }
+
+      // Información de las notificaciones pendientes
+      diagnostics['pendingDetails'] = pending
+          .map(
+            (notification) => {
+              'id': notification.id,
+              'title': notification.title,
+              'body': notification.body,
+              'payload': notification.payload,
+            },
+          )
+          .toList();
+    } catch (e) {
+      diagnostics['error'] = e.toString();
+    }
+
+    return diagnostics;
   }
 }

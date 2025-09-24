@@ -54,12 +54,20 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
         insights.add(
           Insight(
             type: InsightType.positive,
-            title: '¡Excelente estado de ánimo!',
-            description:
-                'Tu estado de ánimo promedio esta semana ha sido muy bueno. ¡Sigue así!',
+            title: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_great_mood_title'),
+            description: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_great_mood_description'),
             icon: Icons.sentiment_very_satisfied,
             color: Colors.green,
-            actionText: 'Ver estadísticas',
+            actionText: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('view_statistics'),
             onAction: () => _navigateToMood(),
           ),
         );
@@ -67,12 +75,20 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
         insights.add(
           Insight(
             type: InsightType.suggestion,
-            title: '¿Te sientes un poco bajo?',
-            description:
-                'Tu estado de ánimo ha estado un poco bajo esta semana. ¿Te gustaría probar una meditación relajante?',
+            title: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_feeling_low_title'),
+            description: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_feeling_low_description'),
             icon: Icons.self_improvement,
             color: Colors.orange,
-            actionText: 'Meditar ahora',
+            actionText: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('action_meditate_now'),
             onAction: () => _navigateToMeditation(),
           ),
         );
@@ -82,12 +98,20 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
         insights.add(
           Insight(
             type: InsightType.achievement,
-            title: '¡Racha de 7 días!',
-            description:
-                'Has registrado tu estado de ánimo durante 7 días seguidos. ¡Increíble consistencia!',
+            title: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_mood_streak_title'),
+            description: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_mood_streak_description'),
             icon: Icons.local_fire_department,
             color: Colors.red,
-            actionText: 'Ver racha',
+            actionText: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('view_streak'),
             onAction: () => _navigateToMood(),
           ),
         );
@@ -119,12 +143,20 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
         insights.add(
           Insight(
             type: InsightType.reminder,
-            title: '¿Listo para meditar?',
-            description:
-                'Hace un tiempo que no meditas. ¿Te gustaría retomar tu práctica?',
+            title: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_ready_to_meditate_title'),
+            description: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('insight_ready_to_meditate_description'),
             icon: Icons.timer,
             color: Colors.blue,
-            actionText: 'Meditar ahora',
+            actionText: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('action_meditate_now'),
             onAction: () => _navigateToMeditation(),
           ),
         );
@@ -143,12 +175,19 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
         insights.add(
           Insight(
             type: InsightType.reminder,
-            title: '¿Cómo te sientes hoy?',
-            description:
-                'Hace $daysSinceLastJournal días que no escribes en tu diario. ¿Te gustaría reflexionar sobre tu día?',
+            title: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('how_are_you_feeling'),
+            description: Provider.of<LanguageService>(context, listen: false)
+                .getLocalizedText('insight_journal_reminder_description')
+                .replaceFirst('{days}', daysSinceLastJournal.toString()),
             icon: Icons.book,
             color: Colors.amber,
-            actionText: 'Escribir ahora',
+            actionText: Provider.of<LanguageService>(
+              context,
+              listen: false,
+            ).getLocalizedText('write_now'),
             onAction: () => _navigateToJournal(),
           ),
         );
@@ -160,12 +199,19 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
       insights.add(
         Insight(
           type: InsightType.motivation,
-          title: 'Recordatorio de tu objetivo',
-          description:
-              'Tu objetivo es: ${userPreferences.userGoal}. ¿Cómo vas progresando?',
+          title: Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('insight_goal_reminder_title'),
+          description: Provider.of<LanguageService>(context, listen: false)
+              .getLocalizedText('insight_goal_reminder_description')
+              .replaceFirst('{goal}', userPreferences.userGoal),
           icon: Icons.flag,
           color: Colors.teal,
-          actionText: 'Ver progreso',
+          actionText: Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('view_progress'),
           onAction: () => _navigateToProfile(),
         ),
       );
@@ -178,12 +224,20 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
       insights.add(
         Insight(
           type: InsightType.welcome,
-          title: '¡Bienvenido a MindSpace!',
-          description:
-              'Comienza tu viaje hacia el bienestar registrando tu primer estado de ánimo.',
+          title: Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('insight_welcome_title'),
+          description: Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('insight_welcome_description'),
           icon: Icons.waving_hand,
           color: Colors.indigo,
-          actionText: 'Comenzar',
+          actionText: Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('start'),
           onAction: () => _navigateToMood(),
         ),
       );
@@ -445,7 +499,7 @@ class _SmartInsightsWidgetState extends State<SmartInsightsWidget> {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.1);
   }
 }
 

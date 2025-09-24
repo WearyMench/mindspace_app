@@ -177,18 +177,258 @@ class LanguageService extends ChangeNotifier {
         return 'Insights';
       case 'wellness_metrics':
         return 'Métricas de Bienestar';
+      case 'advanced_prediction':
+        return 'Predicción Avanzada';
+      case 'prediction_updated':
+        return 'Predicción actualizada';
+      case 'refresh_prediction':
+        return 'Actualizar predicción';
+      case 'analyzing_patterns':
+        return 'Analizando tus patrones...';
+      case 'not_enough_data':
+        return 'No hay suficientes datos';
+      case 'use_app_for_better_predictions':
+        return 'Usa la app más frecuentemente para obtener predicciones precisas';
+      case 'log_mood':
+        return 'Registrar Estado de Ánimo';
+      case 'trend':
+        return 'Tendencia';
+      case 'confidence':
+        return 'Confianza';
+      case 'recommendation':
+        return 'Recomendación';
+      case 'identified_factors':
+        return 'Factores identificados';
+      case 'next_week_prediction':
+        return 'Predicción próxima semana';
+      case 'expected_mood':
+        return 'Estado de ánimo esperado';
+      case 'view_detailed_analysis':
+        return 'Ver Análisis Detallado';
+      case 'rec_consider_meditating_more':
+        return 'Considera meditar más frecuentemente.';
+      case 'rec_consider_journaling':
+        return 'Escribir sobre tus sentimientos puede ser muy útil.';
+      case 'rec_start_meditation_practice_title':
+        return 'Comienza tu práctica de meditación';
+      case 'rec_start_meditation_practice_description':
+        return 'La meditación puede ayudarte a alcanzar tu objetivo de {goal}';
+      case 'action_meditate_now':
+        return 'Meditar ahora';
+      case 'benefit_reduce_stress':
+        return 'Reduce el estrés';
+      case 'benefit_improve_focus':
+        return 'Mejora la concentración';
+      case 'benefit_increase_self_awareness':
+        return 'Aumenta la autoconciencia';
+      case 'rec_maintain_meditation_practice_title':
+        return 'Mantén tu práctica de meditación';
+      case 'rec_maintain_meditation_practice_description':
+        return 'Has meditado {count} veces. ¡Sigue así para ver mejores resultados!';
+      case 'action_continue_practice':
+        return 'Continuar práctica';
+      case 'benefit_build_habit':
+        return 'Consolida el hábito';
+      case 'benefit_improve_consistency':
+        return 'Mejora la consistencia';
+      case 'benefit_increase_benefits':
+        return 'Aumenta los beneficios';
+      case 'rec_low_mood_title':
+        return 'Técnicas para mejorar tu estado de ánimo';
+      case 'rec_low_mood_description':
+        return 'Notamos que te has sentido un poco bajo. Aquí tienes algunas técnicas que pueden ayudar.';
+      case 'action_view_techniques':
+        return 'Ver técnicas';
+      case 'benefit_mood_improvement':
+        return 'Mejora el estado de ánimo';
+      case 'benefit_reduce_anxiety':
+        return 'Reduce la ansiedad';
+      case 'benefit_increase_energy':
+        return 'Aumenta la energía';
+      case 'morning_label':
+        return 'Mañana';
+      case 'afternoon_label':
+        return 'Tarde';
+      case 'evening_label':
+        return 'Noche';
+      case 'optimal_time_title':
+        return 'Horario óptimo para tu bienestar';
+      case 'optimal_time_message':
+        return 'Basado en tus datos, el mejor momento para tus actividades de bienestar es {time}';
+      case 'action_configure_reminder':
+        return 'Configurar recordatorio';
+      case 'benefit_more_effective':
+        return 'Mayor efectividad';
+      case 'benefit_better_adherence':
+        return 'Mejor adherencia';
+      case 'benefit_more_consistent_results':
+        return 'Resultados más consistentes';
+      case 'goal_reduce_stress_title':
+        return 'Meditación para reducir el estrés';
+      case 'goal_reduce_stress_description':
+        return 'Prueba esta meditación específicamente diseñada para reducir el estrés';
+      case 'action_start_meditation':
+        return 'Comenzar meditación';
+      case 'benefit_reduce_cortisol':
+        return 'Reduce cortisol';
+      case 'benefit_improve_relaxation':
+        return 'Mejora la relajación';
+      case 'benefit_increase_mental_clarity':
+        return 'Aumenta la claridad mental';
+      case 'goal_improve_mood_title':
+        return 'Actividades para mejorar el estado de ánimo';
+      case 'goal_improve_mood_description':
+        return 'Una combinación de técnicas que han demostrado mejorar el estado de ánimo';
+      case 'action_view_activities':
+        return 'Ver actividades';
+      case 'benefit_increase_serotonin':
+        return 'Aumenta la serotonina';
+      case 'benefit_improve_self_esteem':
+        return 'Mejora la autoestima';
+      case 'goal_sleep_better_title':
+        return 'Meditación para el sueño';
+      case 'goal_sleep_better_description':
+        return 'Técnicas de relajación específicas para mejorar la calidad del sueño';
+      case 'action_prepare_sleep':
+        return 'Preparar para dormir';
+      case 'benefit_improve_sleep_quality':
+        return 'Mejora la calidad del sueño';
+      case 'benefit_reduce_insomnia':
+        return 'Reduce el insomnio';
+      case 'benefit_increase_relaxation':
+        return 'Aumenta la relajación';
+      case 'goal_custom_plan_title':
+        return 'Plan personalizado para tu objetivo';
+      case 'goal_custom_plan_description':
+        return 'Hemos creado un plan específico para ayudarte a alcanzar: {goal}';
+      case 'action_view_plan':
+        return 'Ver plan';
+      case 'time_variable':
+        return 'Variable';
+      case 'interest_meditation_title':
+        return 'Nueva técnica de meditación';
+      case 'interest_meditation_description':
+        return 'Explora esta nueva técnica que puede enriquecer tu práctica';
+      case 'action_learn_technique':
+        return 'Aprender técnica';
+      case 'benefit_diversify_practice':
+        return 'Diversifica tu práctica';
+      case 'benefit_increase_motivation':
+        return 'Aumenta la motivación';
+      case 'benefit_improve_results':
+        return 'Mejora los resultados';
+      case 'interest_breathing_title':
+        return 'Ejercicio de respiración avanzado';
+      case 'interest_breathing_description':
+        return 'Técnica de respiración que puedes practicar en cualquier momento';
+      case 'action_practice_now':
+        return 'Practicar ahora';
+      case 'benefit_immediate_stress_reduction':
+        return 'Reduce el estrés inmediatamente';
+      case 'benefit_regulate_nervous_system':
+        return 'Regula el sistema nervioso';
+      case 'interest_gratitude_title':
+        return 'Diario de gratitud';
+      case 'interest_gratitude_description':
+        return 'Escribe sobre las cosas por las que te sientes agradecido hoy';
+      case 'action_write_gratitude':
+        return 'Escribir gratitud';
+      case 'interest_explore_title':
+        return 'Explora más sobre {interest}';
+      case 'interest_explore_description':
+        return 'Descubre nuevas formas de profundizar en {interest}';
+      case 'action_explore':
+        return 'Explorar';
+      case 'benefit_continuous_learning':
+        return 'Aprendizaje continuo';
+      case 'benefit_motivation':
+        return 'Motivación';
+      case 'benefit_personal_growth':
+        return 'Crecimiento personal';
+      case 'rec_need_more_data':
+        return 'Necesitas más datos para hacer predicciones precisas';
+      case 'rec_mood_improving':
+        return 'Tu estado de ánimo está mejorando. ¡Sigue con las actividades que te hacen sentir bien!';
+      case 'rec_mood_declining':
+        return 'Notamos una tendencia a la baja. Te sugerimos probar técnicas de relajación o hablar con alguien de confianza.';
+      case 'rec_mood_stable':
+        return 'Tu estado de ánimo se mantiene estable. Es un buen momento para explorar nuevas actividades de bienestar.';
+      case 'factor_positive_trend':
+        return 'Tendencia positiva en los últimos días';
+      case 'factor_negative_trend':
+        return 'Tendencia negativa en los últimos días';
+      case 'factor_stable_mood':
+        return 'Estado de ánimo estable';
+      case 'factor_meditation_helps':
+        return 'La meditación mejora tu estado de ánimo';
+      case 'factor_journaling_helps':
+        return 'Escribir en tu diario te ayuda a procesar emociones';
+      case 'factor_december_better':
+        return 'Tienes tendencia a sentirte mejor en diciembre';
+      case 'factor_january_better':
+        return 'Tienes tendencia a sentirte mejor en enero';
+      case 'average_1_5':
+        return 'Promedio (1-5)';
+      case 'consistency':
+        return 'Consistencia';
+      case 'this_week':
+        return 'Esta semana';
+      case 'entries_this_week':
+        return 'Entradas esta semana';
+      case 'score_excellent':
+        return 'Excelente';
+      case 'score_good':
+        return 'Bueno';
+      case 'score_fair':
+        return 'Regular';
+      case 'score_needs_improvement':
+        return 'Necesita mejorar';
       case 'wellness_score':
         return 'Puntuación de Bienestar';
       case 'based_on_activity':
         return 'Basado en tu actividad reciente';
-      case 'analyzing_data':
-        return 'Analizando tus datos...';
       case 'no_insights_yet':
         return 'Aún no hay insights';
       case 'start_using_app':
         return 'Comienza a usar la app para obtener insights personalizados';
       case 'refresh':
         return 'Actualizar';
+      case 'insight_great_mood_title':
+        return '¡Excelente estado de ánimo!';
+      case 'insight_great_mood_description':
+        return 'Tu estado de ánimo promedio esta semana ha sido muy bueno. ¡Sigue así!';
+      case 'view_statistics':
+        return 'Ver estadísticas';
+      case 'insight_feeling_low_title':
+        return '¿Te sientes un poco bajo?';
+      case 'insight_feeling_low_description':
+        return 'Tu estado de ánimo ha estado un poco bajo esta semana. ¿Te gustaría probar una meditación relajante?';
+      case 'insight_mood_streak_title':
+        return '¡Racha de 7 días!';
+      case 'insight_mood_streak_description':
+        return 'Has registrado tu estado de ánimo durante 7 días seguidos. ¡Increíble consistencia!';
+      case 'view_streak':
+        return 'Ver racha';
+      case 'view_progress':
+        return 'Ver progreso';
+      case 'insight_ready_to_meditate_title':
+        return '¿Listo para meditar?';
+      case 'insight_ready_to_meditate_description':
+        return 'Hace un tiempo que no meditas. ¿Te gustaría retomar tu práctica?';
+      case 'insight_journal_reminder_description':
+        return 'Hace {days} días que no escribes en tu diario. ¿Te gustaría reflexionar sobre tu día?';
+      case 'write_now':
+        return 'Escribir ahora';
+      case 'insight_goal_reminder_title':
+        return 'Recordatorio de tu objetivo';
+      case 'insight_goal_reminder_description':
+        return 'Tu objetivo es: {goal}. ¿Cómo vas progresando?';
+      case 'insight_welcome_title':
+        return '¡Bienvenido a MindSpace!';
+      case 'insight_welcome_description':
+        return 'Comienza tu viaje hacia el bienestar registrando tu primer estado de ánimo.';
+      case 'start':
+        return 'Comenzar';
 
       // Navigation
       case 'navigation_home':
@@ -215,6 +455,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Cerrar';
+      case 'skip':
+        return 'Omitir';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -443,6 +685,12 @@ class LanguageService extends ChangeNotifier {
         return '¡Meditación completada!';
       case 'meditation_minutes':
         return 'minutos';
+      case 'rate_session':
+        return 'Califica la sesión';
+      case 'notes_optional':
+        return 'Notas (opcional)';
+      case 'notes_hint':
+        return 'Escribe observaciones o cómo te sentiste...';
       case 'recent_sessions_title':
         return 'Sesiones recientes';
       case 'no_recent_sessions':
@@ -471,6 +719,44 @@ class LanguageService extends ChangeNotifier {
         return 'Finalizar';
       case 'instructions':
         return 'Instrucciones';
+      case 'preferences':
+        return 'Preferencias';
+      case 'haptics':
+        return 'Vibración';
+      case 'sound':
+        return 'Sonido';
+
+      // Breathing phases and body scan (ES)
+      case 'inhale':
+        return 'Inhala';
+      case 'hold':
+        return 'Retén';
+      case 'exhale':
+        return 'Exhala';
+      case 'focus_on':
+        return 'Enfoca en';
+      case 'head':
+        return 'Cabeza';
+      case 'neck':
+        return 'Cuello';
+      case 'shoulders':
+        return 'Hombros';
+      case 'arms':
+        return 'Brazos';
+      case 'torso':
+        return 'Torso';
+      case 'legs':
+        return 'Piernas';
+      case 'feet':
+        return 'Pies';
+      case 'prompt_observe_breath':
+        return 'Observa tu respiración';
+      case 'prompt_listen_sounds':
+        return 'Escucha los sonidos';
+      case 'prompt_feel_body':
+        return 'Siente tu cuerpo';
+      case 'prompt_notice_thoughts':
+        return 'Nota tus pensamientos y déjalos pasar';
 
       // Meditation instructions
       case 'breathing_instructions':
@@ -983,6 +1269,91 @@ class LanguageService extends ChangeNotifier {
         return 'Estadísticas';
       case 'statistics_subtitle':
         return 'Tu progreso en detalle';
+      case 'smart_analysis':
+        return 'Análisis Inteligente';
+      case 'quick_summary':
+        return 'Resumen Rápido';
+      case 'analysis_updated':
+        return 'Análisis actualizado';
+      case 'refresh_analytics':
+        return 'Actualizar análisis';
+      case 'analyzing_data':
+        return 'Analizando tus datos...';
+      case 'correlations':
+        return 'Correlaciones';
+      case 'patterns':
+        return 'Patrones';
+      case 'progress':
+        return 'Progreso';
+      case 'wellness':
+        return 'Bienestar';
+      case 'identified_correlations':
+        return 'Correlaciones Identificadas';
+      case 'view_complete_analysis':
+        return 'Ver Análisis Completo';
+      case 'temporal_patterns':
+        return 'Patrones Temporales';
+      case 'best_days':
+        return 'Mejores Días';
+      case 'best_hours':
+        return 'Mejores Horas';
+      case 'seasonal_patterns':
+        return 'Patrones Estacionales';
+      case 'progress_analysis':
+        return 'Análisis de Progreso';
+      case 'overall_progress':
+        return 'Progreso General';
+      case 'recent_achievements':
+        return 'Logros Recientes';
+      case 'wellness_analysis':
+        return 'Análisis de Bienestar';
+      case 'risk_factors':
+        return 'Factores de Riesgo';
+      case 'protective_factors':
+        return 'Factores Protectores';
+      case 'detailed_analysis':
+        return 'Análisis Detallado';
+      case 'found_correlations':
+        return 'Correlaciones Encontradas';
+      case 'not_enough_data_detailed':
+        return 'No hay datos suficientes para mostrar análisis detallado.';
+      case 'usage':
+        return 'Uso';
+      case 'schedule':
+        return 'Horario';
+      // Insights de correlación
+      case 'insight_meditation_positive':
+        return 'La meditación tiene un impacto positivo en tu estado de ánimo';
+      case 'insight_journal_emotions':
+        return 'Escribir en tu diario te ayuda a procesar emociones';
+      case 'insight_app_usage_wellness':
+        return 'El uso frecuente de la app mejora tu bienestar general';
+      case 'insight_specific_schedules':
+        return 'Tienes horarios específicos donde te sientes mejor';
+      // Patrones estacionales
+      case 'feel_better_in':
+        return 'Te sientes mejor en';
+      // Logros
+      case 'achievement_mood_improvement':
+        return 'Mejora en estado de ánimo';
+      case 'achievement_meditation_consistency':
+        return 'Mayor consistencia en meditación';
+      case 'achievement_journal_activity':
+        return 'Más actividad en el diario';
+      // Factores de riesgo
+      case 'risk_recent_low_mood':
+        return 'Estado de ánimo bajo reciente';
+      case 'risk_low_meditation_frequency':
+        return 'Baja frecuencia de meditación';
+      case 'risk_low_journal_activity':
+        return 'Poca actividad en el diario';
+      // Factores protectores
+      case 'protective_regular_meditation':
+        return 'Práctica regular de meditación';
+      case 'protective_regular_journaling':
+        return 'Reflexión regular en el diario';
+      case 'protective_positive_mood':
+        return 'Estado de ánimo positivo general';
       case 'about':
         return 'Acerca de';
       case 'version':
@@ -1003,6 +1374,14 @@ class LanguageService extends ChangeNotifier {
         return 'Eliminar cuenta';
       case 'delete_account_message':
         return 'Esta acción eliminará permanentemente todos tus datos. Esta acción no se puede deshacer.';
+      case 'configure':
+        return 'Configurar';
+      case 'priority_high':
+        return 'Alta';
+      case 'priority_medium':
+        return 'Media';
+      case 'priority_low':
+        return 'Baja';
 
       default:
         return key;
@@ -1050,6 +1429,276 @@ class LanguageService extends ChangeNotifier {
         return 'Search';
       case 'statistics':
         return 'Statistics';
+      case 'wellness_metrics':
+        return 'Wellness Metrics';
+      case 'wellness_score':
+        return 'Wellness Score';
+      case 'based_on_activity':
+        return 'Based on your recent activity';
+      case 'insight_great_mood_title':
+        return 'Great mood!';
+      case 'insight_great_mood_description':
+        return 'Your average mood this week has been very good. Keep it up!';
+      case 'view_statistics':
+        return 'View statistics';
+      case 'insight_feeling_low_title':
+        return 'Feeling a bit low?';
+      case 'insight_feeling_low_description':
+        return 'Your mood has been a bit low this week. Would you like to try a relaxing meditation?';
+      case 'insight_mood_streak_title':
+        return '7-day streak!';
+      case 'insight_mood_streak_description':
+        return 'You have logged your mood for 7 consecutive days. Incredible consistency!';
+      case 'view_streak':
+        return 'View streak';
+      case 'view_progress':
+        return 'View progress';
+      case 'insight_ready_to_meditate_title':
+        return 'Ready to meditate?';
+      case 'insight_ready_to_meditate_description':
+        return 'It’s been a while since you meditated. Would you like to resume your practice?';
+      case 'insight_journal_reminder_description':
+        return 'It’s been {days} days since you wrote in your journal. Would you like to reflect on your day?';
+      case 'write_now':
+        return 'Write now';
+      case 'insight_goal_reminder_title':
+        return 'Your goal reminder';
+      case 'insight_goal_reminder_description':
+        return 'Your goal is: {goal}. How is your progress?';
+      case 'insight_welcome_title':
+        return 'Welcome to MindSpace!';
+      case 'insight_welcome_description':
+        return 'Start your wellness journey by logging your first mood.';
+      case 'start':
+        return 'Start';
+      case 'advanced_recommendations':
+        return 'Advanced Recommendations';
+      case 'recommendations_updated':
+        return 'Recommendations updated ({count} found)';
+      case 'refresh_recommendations':
+        return 'Refresh recommendations';
+      case 'no_recommendations':
+        return 'No recommendations available';
+      case 'use_app_for_better_recommendations':
+        return 'Use the app more for personalized recommendations';
+      case 'benefits':
+        return 'Benefits';
+      case 'estimated_time':
+        return 'Estimated time';
+      case 'configure':
+        return 'Configure';
+      case 'priority_high':
+        return 'High';
+      case 'priority_medium':
+        return 'Medium';
+      case 'priority_low':
+        return 'Low';
+      case 'interest_explore_title':
+        return 'Explore {interest}';
+      case 'interest_explore_description':
+        return 'Discover new ways to incorporate {interest} into your wellness routine.';
+      case 'goal_custom_plan_title':
+        return 'Custom Plan';
+      case 'goal_custom_plan_description':
+        return 'Create a personalized plan to achieve: {goal}';
+      case 'optimal_time_title':
+        return 'Optimal Time';
+      case 'optimal_time_message':
+        return 'Based on your patterns, the best time for you to meditate is';
+      case 'action_explore':
+        return 'Explore';
+      case 'action_view_plan':
+        return 'View Plan';
+      case 'time_variable':
+        return 'Variable';
+      case 'benefit_continuous_learning':
+        return 'Continuous Learning';
+      case 'benefit_motivation':
+        return 'Increased Motivation';
+      case 'benefit_personal_growth':
+        return 'Personal Growth';
+      case 'benefit_reduce_cortisol':
+        return 'Reduce Cortisol';
+      case 'benefit_improve_relaxation':
+        return 'Improve Relaxation';
+      case 'benefit_increase_mental_clarity':
+        return 'Increase Mental Clarity';
+      case 'benefit_increase_serotonin':
+        return 'Increase Serotonin';
+      case 'benefit_improve_self_esteem':
+        return 'Improve Self-Esteem';
+      case 'benefit_improve_sleep_quality':
+        return 'Improve Sleep Quality';
+      case 'benefit_reduce_insomnia':
+        return 'Reduce Insomnia';
+      case 'benefit_diversify_practice':
+        return 'Diversify Practice';
+      case 'benefit_increase_happiness':
+        return 'Increase Happiness';
+      case 'benefit_improve_perspective':
+        return 'Improve Perspective';
+      case 'advanced_prediction':
+        return 'Advanced Prediction';
+      case 'prediction_updated':
+        return 'Prediction updated';
+      case 'refresh_prediction':
+        return 'Refresh prediction';
+      case 'analyzing_patterns':
+        return 'Analyzing your patterns...';
+      case 'not_enough_data':
+        return 'Not enough data';
+      case 'use_app_for_better_predictions':
+        return 'Use the app more frequently for better predictions';
+      case 'log_mood':
+        return 'Log Mood';
+      case 'trend':
+        return 'Trend';
+      case 'confidence':
+        return 'Confidence';
+      case 'recommendation':
+        return 'Recommendation';
+      case 'identified_factors':
+        return 'Identified factors';
+      case 'next_week_prediction':
+        return 'Next week prediction';
+      case 'expected_mood':
+        return 'Expected mood';
+      case 'view_detailed_analysis':
+        return 'View Detailed Analysis';
+      case 'rec_consider_meditating_more':
+        return 'Consider meditating more frequently.';
+      case 'rec_consider_journaling':
+        return 'Writing about your feelings can be very helpful.';
+      case 'rec_start_meditation_practice_title':
+        return 'Start your meditation practice';
+      case 'rec_start_meditation_practice_description':
+        return 'Meditation can help you achieve your goal of {goal}';
+      case 'action_meditate_now':
+        return 'Meditate now';
+      case 'benefit_reduce_stress':
+        return 'Reduce stress';
+      case 'benefit_improve_focus':
+        return 'Improve focus';
+      case 'benefit_increase_self_awareness':
+        return 'Increase self-awareness';
+      case 'rec_maintain_meditation_practice_title':
+        return 'Maintain your meditation practice';
+      case 'rec_maintain_meditation_practice_description':
+        return 'You have meditated {count} times. Keep going to see better results!';
+      case 'action_continue_practice':
+        return 'Continue practice';
+      case 'benefit_build_habit':
+        return 'Build habit';
+      case 'benefit_improve_consistency':
+        return 'Improve consistency';
+      case 'benefit_increase_benefits':
+        return 'Increase benefits';
+      case 'rec_low_mood_title':
+        return 'Techniques to improve your mood';
+      case 'rec_low_mood_description':
+        return 'We noticed you have felt a bit low. Here are some techniques that can help.';
+      case 'action_view_techniques':
+        return 'View techniques';
+      case 'benefit_mood_improvement':
+        return 'Mood improvement';
+      case 'benefit_reduce_anxiety':
+        return 'Reduce anxiety';
+      case 'benefit_increase_energy':
+        return 'Increase energy';
+      case 'morning_label':
+        return 'Morning';
+      case 'afternoon_label':
+        return 'Afternoon';
+      case 'evening_label':
+        return 'Evening';
+      case 'action_configure_reminder':
+        return 'Configure reminder';
+      case 'benefit_more_effective':
+        return 'More effective';
+      case 'benefit_better_adherence':
+        return 'Better adherence';
+      case 'benefit_more_consistent_results':
+        return 'More consistent results';
+      case 'goal_reduce_stress_title':
+        return 'Meditation to reduce stress';
+      case 'goal_reduce_stress_description':
+        return 'Try this meditation specifically designed to reduce stress';
+      case 'action_start_meditation':
+        return 'Start meditation';
+      case 'goal_improve_mood_title':
+        return 'Activities to improve mood';
+      case 'goal_improve_mood_description':
+        return 'A combination of techniques proven to improve mood';
+      case 'action_view_activities':
+        return 'View activities';
+      case 'goal_sleep_better_title':
+        return 'Meditation for sleep';
+      case 'goal_sleep_better_description':
+        return 'Relaxation techniques to improve sleep quality';
+      case 'action_prepare_sleep':
+        return 'Prepare for sleep';
+      case 'interest_meditation_title':
+        return 'New meditation technique';
+      case 'interest_meditation_description':
+        return 'Explore this new technique to enrich your practice';
+      case 'action_learn_technique':
+        return 'Learn technique';
+      case 'benefit_increase_motivation':
+        return 'Increase motivation';
+      case 'benefit_improve_results':
+        return 'Improve results';
+      case 'interest_breathing_title':
+        return 'Advanced breathing exercise';
+      case 'interest_breathing_description':
+        return 'Breathing technique you can practice anytime';
+      case 'action_practice_now':
+        return 'Practice now';
+      case 'benefit_immediate_stress_reduction':
+        return 'Immediate stress reduction';
+      case 'interest_gratitude_title':
+        return 'Gratitude journal';
+      case 'interest_gratitude_description':
+        return 'Write about things you feel grateful for today';
+      case 'action_write_gratitude':
+        return 'Write gratitude';
+      case 'rec_need_more_data':
+        return 'You need more data for accurate predictions';
+      case 'rec_mood_improving':
+        return 'Your mood is improving. Keep doing activities that make you feel good!';
+      case 'rec_mood_declining':
+        return 'We notice a downward trend. Try relaxation techniques or talk to someone you trust.';
+      case 'rec_mood_stable':
+        return 'Your mood is stable. It’s a good time to explore new wellness activities.';
+      case 'factor_positive_trend':
+        return 'Positive trend in recent days';
+      case 'factor_negative_trend':
+        return 'Negative trend in recent days';
+      case 'factor_stable_mood':
+        return 'Stable mood';
+      case 'factor_meditation_helps':
+        return 'Meditation improves your mood';
+      case 'factor_journaling_helps':
+        return 'Journaling helps you process emotions';
+      case 'factor_december_better':
+        return 'You tend to feel better in December';
+      case 'factor_january_better':
+        return 'You tend to feel better in January';
+      case 'average_1_5':
+        return 'Average (1-5)';
+      case 'consistency':
+        return 'Consistency';
+      case 'this_week':
+        return 'This week';
+      case 'entries_this_week':
+        return 'Entries this week';
+      case 'score_excellent':
+        return 'Excellent';
+      case 'score_good':
+        return 'Good';
+      case 'score_fair':
+        return 'Fair';
+      case 'score_needs_improvement':
+        return 'Needs improvement';
 
       // Navigation
       case 'navigation_home':
@@ -1076,6 +1725,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Close';
+      case 'skip':
+        return 'Skip';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -1304,6 +1955,12 @@ class LanguageService extends ChangeNotifier {
         return 'Meditation completed!';
       case 'meditation_minutes':
         return 'minutes';
+      case 'rate_session':
+        return 'Rate session';
+      case 'notes_optional':
+        return 'Notes (optional)';
+      case 'notes_hint':
+        return 'Write observations or how you felt...';
       case 'recent_sessions_title':
         return 'Recent Sessions';
       case 'no_recent_sessions':
@@ -1332,6 +1989,44 @@ class LanguageService extends ChangeNotifier {
         return 'Finish';
       case 'instructions':
         return 'Instructions';
+      case 'preferences':
+        return 'Preferences';
+      case 'haptics':
+        return 'Haptics';
+      case 'sound':
+        return 'Sound';
+
+      // Breathing phases and body scan (EN)
+      case 'inhale':
+        return 'Inhale';
+      case 'hold':
+        return 'Hold';
+      case 'exhale':
+        return 'Exhale';
+      case 'focus_on':
+        return 'Focus on';
+      case 'head':
+        return 'Head';
+      case 'neck':
+        return 'Neck';
+      case 'shoulders':
+        return 'Shoulders';
+      case 'arms':
+        return 'Arms';
+      case 'torso':
+        return 'Torso';
+      case 'legs':
+        return 'Legs';
+      case 'feet':
+        return 'Feet';
+      case 'prompt_observe_breath':
+        return 'Observe your breath';
+      case 'prompt_listen_sounds':
+        return 'Listen to the sounds';
+      case 'prompt_feel_body':
+        return 'Feel your body';
+      case 'prompt_notice_thoughts':
+        return 'Notice your thoughts and let them pass';
 
       // Meditation instructions
       case 'breathing_instructions':
@@ -1844,6 +2539,91 @@ class LanguageService extends ChangeNotifier {
         return 'Statistics';
       case 'statistics_subtitle':
         return 'Your progress in detail';
+      case 'smart_analysis':
+        return 'Smart Analysis';
+      case 'quick_summary':
+        return 'Quick Summary';
+      case 'analysis_updated':
+        return 'Analysis updated';
+      case 'refresh_analytics':
+        return 'Refresh analytics';
+      case 'analyzing_data':
+        return 'Analyzing your data...';
+      case 'correlations':
+        return 'Correlations';
+      case 'patterns':
+        return 'Patterns';
+      case 'progress':
+        return 'Progress';
+      case 'wellness':
+        return 'Wellness';
+      case 'identified_correlations':
+        return 'Identified Correlations';
+      case 'view_complete_analysis':
+        return 'View Complete Analysis';
+      case 'temporal_patterns':
+        return 'Temporal Patterns';
+      case 'best_days':
+        return 'Best Days';
+      case 'best_hours':
+        return 'Best Hours';
+      case 'seasonal_patterns':
+        return 'Seasonal Patterns';
+      case 'progress_analysis':
+        return 'Progress Analysis';
+      case 'overall_progress':
+        return 'Overall Progress';
+      case 'recent_achievements':
+        return 'Recent Achievements';
+      case 'wellness_analysis':
+        return 'Wellness Analysis';
+      case 'risk_factors':
+        return 'Risk Factors';
+      case 'protective_factors':
+        return 'Protective Factors';
+      case 'detailed_analysis':
+        return 'Detailed Analysis';
+      case 'found_correlations':
+        return 'Found Correlations';
+      case 'not_enough_data_detailed':
+        return 'Not enough data to show detailed analysis.';
+      case 'usage':
+        return 'Usage';
+      case 'schedule':
+        return 'Schedule';
+      // Correlation insights
+      case 'insight_meditation_positive':
+        return 'Meditation has a positive impact on your mood';
+      case 'insight_journal_emotions':
+        return 'Writing in your journal helps you process emotions';
+      case 'insight_app_usage_wellness':
+        return 'Frequent use of the app improves your overall wellbeing';
+      case 'insight_specific_schedules':
+        return 'You have specific times when you feel better';
+      // Seasonal patterns
+      case 'feel_better_in':
+        return 'You feel better in';
+      // Achievements
+      case 'achievement_mood_improvement':
+        return 'Mood improvement';
+      case 'achievement_meditation_consistency':
+        return 'Greater consistency in meditation';
+      case 'achievement_journal_activity':
+        return 'More journal activity';
+      // Risk factors
+      case 'risk_recent_low_mood':
+        return 'Recent low mood';
+      case 'risk_low_meditation_frequency':
+        return 'Low meditation frequency';
+      case 'risk_low_journal_activity':
+        return 'Little journal activity';
+      // Protective factors
+      case 'protective_regular_meditation':
+        return 'Regular meditation practice';
+      case 'protective_regular_journaling':
+        return 'Regular journal reflection';
+      case 'protective_positive_mood':
+        return 'Generally positive mood';
       case 'about':
         return 'About';
       case 'version':
@@ -1911,6 +2691,228 @@ class LanguageService extends ChangeNotifier {
         return 'Rechercher';
       case 'statistics':
         return 'Statistiques';
+      case 'wellness_metrics':
+        return 'Indicateurs de bien-être';
+      case 'wellness_score':
+        return 'Score de bien-être';
+      case 'based_on_activity':
+        return 'Basé sur votre activité récente';
+      case 'insight_great_mood_title':
+        return 'Excellente humeur !';
+      case 'insight_great_mood_description':
+        return 'Votre humeur moyenne cette semaine a été très bonne. Continuez ainsi !';
+      case 'view_statistics':
+        return 'Voir les statistiques';
+      case 'insight_feeling_low_title':
+        return 'Vous vous sentez un peu bas ?';
+      case 'insight_feeling_low_description':
+        return 'Votre humeur a été un peu basse cette semaine. Voulez-vous essayer une méditation relaxante ?';
+      case 'insight_mood_streak_title':
+        return 'Série de 7 jours !';
+      case 'insight_mood_streak_description':
+        return 'Vous avez enregistré votre humeur pendant 7 jours consécutifs. Incroyable constance !';
+      case 'view_streak':
+        return 'Voir la série';
+      case 'view_progress':
+        return 'Voir les progrès';
+      case 'insight_ready_to_meditate_title':
+        return 'Prêt à méditer ?';
+      case 'insight_ready_to_meditate_description':
+        return 'Il y a un moment que vous n’avez pas médité. Voulez-vous reprendre votre pratique ?';
+      case 'insight_journal_reminder_description':
+        return 'Cela fait {days} jours que vous n’avez pas écrit dans votre journal. Voulez-vous réfléchir à votre journée ?';
+      case 'write_now':
+        return 'Écrire maintenant';
+      case 'insight_goal_reminder_title':
+        return 'Rappel de votre objectif';
+      case 'insight_goal_reminder_description':
+        return 'Votre objectif est : {goal}. Où en êtes-vous ?';
+      case 'insight_welcome_title':
+        return 'Bienvenue sur MindSpace !';
+      case 'insight_welcome_description':
+        return 'Commencez votre parcours de bien-être en enregistrant votre première humeur.';
+      case 'start':
+        return 'Commencer';
+      case 'advanced_recommendations':
+        return 'Recommandations Avancées';
+      case 'recommendations_updated':
+        return 'Recommandations mises à jour ({count} trouvées)';
+      case 'refresh_recommendations':
+        return 'Actualiser les recommandations';
+      case 'no_recommendations':
+        return 'Aucune recommandation disponible';
+      case 'use_app_for_better_recommendations':
+        return 'Utilisez l’application plus pour des recommandations personnalisées';
+      case 'benefits':
+        return 'Bénéfices';
+      case 'estimated_time':
+        return 'Temps estimé';
+      case 'configure':
+        return 'Configurer';
+      case 'priority_high':
+        return 'Élevée';
+      case 'priority_medium':
+        return 'Moyenne';
+      case 'priority_low':
+        return 'Faible';
+      case 'interest_explore_title':
+        return 'Explorer {interest}';
+      case 'interest_explore_description':
+        return 'Découvrez de nouvelles façons d\'intégrer {interest} dans votre routine de bien-être.';
+      case 'goal_custom_plan_title':
+        return 'Plan Personnalisé';
+      case 'goal_custom_plan_description':
+        return 'Créez un plan personnalisé pour atteindre : {goal}';
+      case 'optimal_time_title':
+        return 'Moment Optimal';
+      case 'optimal_time_message':
+        return 'Selon vos habitudes, le meilleur moment pour méditer est';
+      case 'action_explore':
+        return 'Explorer';
+      case 'action_view_plan':
+        return 'Voir le Plan';
+      case 'time_variable':
+        return 'Variable';
+      case 'benefit_continuous_learning':
+        return 'Apprentissage Continu';
+      case 'benefit_motivation':
+        return 'Motivation Accrue';
+      case 'benefit_personal_growth':
+        return 'Croissance Personnelle';
+      case 'benefit_reduce_cortisol':
+        return 'Réduire le Cortisol';
+      case 'benefit_improve_relaxation':
+        return 'Améliorer la Relaxation';
+      case 'benefit_increase_mental_clarity':
+        return 'Clarté Mentale';
+      case 'benefit_increase_serotonin':
+        return 'Augmenter la Sérotonine';
+      case 'benefit_improve_self_esteem':
+        return 'Améliorer l\'Estime de Soi';
+      case 'benefit_improve_sleep_quality':
+        return 'Améliorer la Qualité du Sommeil';
+      case 'benefit_reduce_insomnia':
+        return 'Réduire l\'Insomnie';
+      case 'benefit_diversify_practice':
+        return 'Diversifier la Pratique';
+      case 'benefit_increase_happiness':
+        return 'Augmenter le Bonheur';
+      case 'benefit_improve_perspective':
+        return 'Améliorer la Perspective';
+      case 'action_configure_reminder':
+        return 'Configurer un rappel';
+      case 'benefit_more_effective':
+        return 'Plus efficace';
+      case 'benefit_better_adherence':
+        return 'Meilleure adhérence';
+      case 'benefit_more_consistent_results':
+        return 'Résultats plus cohérents';
+      case 'benefit_increase_motivation':
+        return 'Augmenter la motivation';
+      case 'benefit_improve_results':
+        return 'Améliorer les résultats';
+      case 'action_learn_technique':
+        return 'Apprendre la technique';
+      case 'interest_meditation_title':
+        return 'Nouvelle technique de méditation';
+      case 'interest_meditation_description':
+        return 'Explorez cette nouvelle technique pour enrichir votre pratique';
+      case 'advanced_prediction':
+        return 'Prédiction avancée';
+      case 'prediction_updated':
+        return 'Prédiction mise à jour';
+      case 'refresh_prediction':
+        return 'Actualiser la prédiction';
+      case 'analyzing_patterns':
+        return 'Analyse de vos schémas...';
+      case 'not_enough_data':
+        return 'Pas assez de données';
+      case 'use_app_for_better_predictions':
+        return 'Utilisez l’application plus fréquemment pour de meilleures prédictions';
+      case 'log_mood':
+        return 'Enregistrer l’humeur';
+      case 'trend':
+        return 'Tendance';
+      case 'confidence':
+        return 'Confiance';
+      case 'recommendation':
+        return 'Recommandation';
+      case 'identified_factors':
+        return 'Facteurs identifiés';
+      case 'next_week_prediction':
+        return 'Prédiction de la semaine prochaine';
+      case 'expected_mood':
+        return 'Humeur prévue';
+      case 'view_detailed_analysis':
+        return 'Voir l’analyse détaillée';
+      case 'rec_need_more_data':
+        return 'Vous avez besoin de plus de données pour des prédictions précises';
+      case 'rec_mood_improving':
+        return 'Votre humeur s’améliore. Continuez les activités qui vous font du bien !';
+      case 'rec_mood_declining':
+        return 'Nous remarquons une tendance à la baisse. Essayez des techniques de relaxation ou parlez à quelqu’un de confiance.';
+      case 'rec_mood_stable':
+        return 'Votre humeur est stable. C’est un bon moment pour explorer de nouvelles activités de bien-être.';
+      case 'factor_positive_trend':
+        return 'Tendance positive ces derniers jours';
+      case 'factor_negative_trend':
+        return 'Tendance négative ces derniers jours';
+      case 'factor_stable_mood':
+        return 'Humeur stable';
+      case 'factor_meditation_helps':
+        return 'La méditation améliore votre humeur';
+      case 'factor_journaling_helps':
+        return 'L’écriture dans un journal aide à traiter les émotions';
+      case 'factor_december_better':
+        return 'Vous avez tendance à vous sentir mieux en décembre';
+      case 'factor_january_better':
+        return 'Vous avez tendance à vous sentir mieux en janvier';
+      case 'average_1_5':
+        return 'Moyenne (1-5)';
+      case 'consistency':
+        return 'Cohérence';
+      case 'this_week':
+        return 'Cette semaine';
+      case 'entries_this_week':
+        return 'Entrées cette semaine';
+      case 'score_excellent':
+        return 'Excellent';
+      case 'score_good':
+        return 'Bon';
+      case 'score_fair':
+        return 'Passable';
+      case 'score_needs_improvement':
+        return 'À améliorer';
+      case 'inhale':
+        return 'Inspirez';
+      case 'hold':
+        return 'Retenez';
+      case 'exhale':
+        return 'Expirez';
+      case 'focus_on':
+        return 'Concentrez-vous sur';
+      case 'head':
+        return 'Tête';
+      case 'neck':
+        return 'Cou';
+      case 'shoulders':
+        return 'Épaules';
+      case 'arms':
+        return 'Bras';
+      case 'torso':
+        return 'Torse';
+      case 'legs':
+        return 'Jambes';
+      case 'feet':
+        return 'Pieds';
+      case 'prompt_observe_breath':
+        return 'Observez votre respiration';
+      case 'prompt_listen_sounds':
+        return 'Écoutez les sons';
+      case 'prompt_feel_body':
+        return 'Ressentez votre corps';
+      case 'prompt_notice_thoughts':
+        return 'Remarquez vos pensées et laissez-les passer';
 
       // Navigation
       case 'navigation_home':
@@ -1937,6 +2939,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Fermer';
+      case 'skip':
+        return 'Ignorer';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -2693,6 +3697,91 @@ class LanguageService extends ChangeNotifier {
         return 'Statistiques';
       case 'statistics_subtitle':
         return 'Votre progression en détail';
+      case 'smart_analysis':
+        return 'Analyse Intelligente';
+      case 'quick_summary':
+        return 'Résumé Rapide';
+      case 'analysis_updated':
+        return 'Analyse mise à jour';
+      case 'refresh_analytics':
+        return 'Actualiser l\'analyse';
+      case 'analyzing_data':
+        return 'Analyse de vos données...';
+      case 'correlations':
+        return 'Corrélations';
+      case 'patterns':
+        return 'Modèles';
+      case 'progress':
+        return 'Progrès';
+      case 'wellness':
+        return 'Bien-être';
+      case 'identified_correlations':
+        return 'Corrélations Identifiées';
+      case 'view_complete_analysis':
+        return 'Voir l\'Analyse Complète';
+      case 'temporal_patterns':
+        return 'Modèles Temporels';
+      case 'best_days':
+        return 'Meilleurs Jours';
+      case 'best_hours':
+        return 'Meilleures Heures';
+      case 'seasonal_patterns':
+        return 'Modèles Saisonniers';
+      case 'progress_analysis':
+        return 'Analyse des Progrès';
+      case 'overall_progress':
+        return 'Progrès Global';
+      case 'recent_achievements':
+        return 'Réalisations Récentes';
+      case 'wellness_analysis':
+        return 'Analyse du Bien-être';
+      case 'risk_factors':
+        return 'Facteurs de Risque';
+      case 'protective_factors':
+        return 'Facteurs Protecteurs';
+      case 'detailed_analysis':
+        return 'Analyse Détaillée';
+      case 'found_correlations':
+        return 'Corrélations Trouvées';
+      case 'not_enough_data_detailed':
+        return 'Pas assez de données pour afficher une analyse détaillée.';
+      case 'usage':
+        return 'Utilisation';
+      case 'schedule':
+        return 'Horaire';
+      // Insights de corrélation
+      case 'insight_meditation_positive':
+        return 'La méditation a un impact positif sur votre humeur';
+      case 'insight_journal_emotions':
+        return 'Écrire dans votre journal vous aide à traiter les émotions';
+      case 'insight_app_usage_wellness':
+        return 'L\'utilisation fréquente de l\'app améliore votre bien-être général';
+      case 'insight_specific_schedules':
+        return 'Vous avez des horaires spécifiques où vous vous sentez mieux';
+      // Modèles saisonniers
+      case 'feel_better_in':
+        return 'Vous vous sentez mieux en';
+      // Réalisations
+      case 'achievement_mood_improvement':
+        return 'Amélioration de l\'humeur';
+      case 'achievement_meditation_consistency':
+        return 'Plus de cohérence dans la méditation';
+      case 'achievement_journal_activity':
+        return 'Plus d\'activité dans le journal';
+      // Facteurs de risque
+      case 'risk_recent_low_mood':
+        return 'Humeur récente basse';
+      case 'risk_low_meditation_frequency':
+        return 'Faible fréquence de méditation';
+      case 'risk_low_journal_activity':
+        return 'Peu d\'activité dans le journal';
+      // Facteurs protecteurs
+      case 'protective_regular_meditation':
+        return 'Pratique régulière de méditation';
+      case 'protective_regular_journaling':
+        return 'Réflexion régulière dans le journal';
+      case 'protective_positive_mood':
+        return 'Humeur généralement positive';
 
       default:
         return key;
@@ -2740,6 +3829,228 @@ class LanguageService extends ChangeNotifier {
         return 'Suchen';
       case 'statistics':
         return 'Statistiken';
+      case 'wellness_metrics':
+        return 'Wohlbefinden-Metriken';
+      case 'wellness_score':
+        return 'Wohlbefinden-Score';
+      case 'based_on_activity':
+        return 'Basierend auf Ihrer jüngsten Aktivität';
+      case 'insight_great_mood_title':
+        return 'Großartige Stimmung!';
+      case 'insight_great_mood_description':
+        return 'Ihre durchschnittliche Stimmung in dieser Woche war sehr gut. Weiter so!';
+      case 'view_statistics':
+        return 'Statistiken anzeigen';
+      case 'insight_feeling_low_title':
+        return 'Fühlen Sie sich etwas niedergeschlagen?';
+      case 'insight_feeling_low_description':
+        return 'Ihre Stimmung war diese Woche etwas niedrig. Möchten Sie eine entspannende Meditation ausprobieren?';
+      case 'insight_mood_streak_title':
+        return '7-Tage-Serie!';
+      case 'insight_mood_streak_description':
+        return 'Sie haben Ihre Stimmung 7 Tage in Folge protokolliert. Tolle Beständigkeit!';
+      case 'view_streak':
+        return 'Serie anzeigen';
+      case 'view_progress':
+        return 'Fortschritt anzeigen';
+      case 'insight_ready_to_meditate_title':
+        return 'Bereit zu meditieren?';
+      case 'insight_ready_to_meditate_description':
+        return 'Es ist eine Weile her, seit Sie meditiert haben. Möchten Sie Ihre Praxis wieder aufnehmen?';
+      case 'insight_journal_reminder_description':
+        return 'Es sind {days} Tage vergangen, seit Sie in Ihr Journal geschrieben haben. Möchten Sie über Ihren Tag nachdenken?';
+      case 'write_now':
+        return 'Jetzt schreiben';
+      case 'insight_goal_reminder_title':
+        return 'Erinnerung an Ihr Ziel';
+      case 'insight_goal_reminder_description':
+        return 'Ihr Ziel ist: {goal}. Wie ist Ihr Fortschritt?';
+      case 'insight_welcome_title':
+        return 'Willkommen bei MindSpace!';
+      case 'insight_welcome_description':
+        return 'Beginnen Sie Ihre Wellness-Reise, indem Sie Ihre erste Stimmung erfassen.';
+      case 'start':
+        return 'Starten';
+      case 'advanced_recommendations':
+        return 'Erweiterte Empfehlungen';
+      case 'recommendations_updated':
+        return 'Empfehlungen aktualisiert ({count} gefunden)';
+      case 'refresh_recommendations':
+        return 'Empfehlungen aktualisieren';
+      case 'no_recommendations':
+        return 'Keine Empfehlungen verfügbar';
+      case 'use_app_for_better_recommendations':
+        return 'Nutzen Sie die App öfter für personalisierte Empfehlungen';
+      case 'benefits':
+        return 'Vorteile';
+      case 'estimated_time':
+        return 'Geschätzte Zeit';
+      case 'configure':
+        return 'Konfigurieren';
+      case 'priority_high':
+        return 'Hoch';
+      case 'priority_medium':
+        return 'Mittel';
+      case 'priority_low':
+        return 'Niedrig';
+      case 'interest_explore_title':
+        return '{interest} Erkunden';
+      case 'interest_explore_description':
+        return 'Entdecken Sie neue Wege, {interest} in Ihre Wellness-Routine zu integrieren.';
+      case 'goal_custom_plan_title':
+        return 'Individueller Plan';
+      case 'goal_custom_plan_description':
+        return 'Erstellen Sie einen personalisierten Plan für: {goal}';
+      case 'optimal_time_title':
+        return 'Optimale Zeit';
+      case 'optimal_time_message':
+        return 'Basierend auf Ihren Mustern ist die beste Zeit zum Meditieren';
+      case 'action_explore':
+        return 'Erkunden';
+      case 'action_view_plan':
+        return 'Plan Ansehen';
+      case 'time_variable':
+        return 'Variabel';
+      case 'benefit_continuous_learning':
+        return 'Kontinuierliches Lernen';
+      case 'benefit_motivation':
+        return 'Erhöhte Motivation';
+      case 'benefit_personal_growth':
+        return 'Persönliches Wachstum';
+      case 'benefit_reduce_cortisol':
+        return 'Cortisol Reduzieren';
+      case 'benefit_improve_relaxation':
+        return 'Entspannung Verbessern';
+      case 'benefit_increase_mental_clarity':
+        return 'Geistige Klarheit';
+      case 'benefit_increase_serotonin':
+        return 'Serotonin Erhöhen';
+      case 'benefit_improve_self_esteem':
+        return 'Selbstwertgefühl Stärken';
+      case 'benefit_improve_sleep_quality':
+        return 'Schlafqualität Verbessern';
+      case 'benefit_reduce_insomnia':
+        return 'Schlaflosigkeit Reduzieren';
+      case 'benefit_diversify_practice':
+        return 'Praxis Diversifizieren';
+      case 'benefit_increase_happiness':
+        return 'Glück Steigern';
+      case 'benefit_improve_perspective':
+        return 'Perspektive Verbessern';
+      case 'action_configure_reminder':
+        return 'Erinnerung konfigurieren';
+      case 'benefit_more_effective':
+        return 'Effektiver';
+      case 'benefit_better_adherence':
+        return 'Bessere Einhaltung';
+      case 'benefit_more_consistent_results':
+        return 'Konsistentere Ergebnisse';
+      case 'benefit_increase_motivation':
+        return 'Motivation steigern';
+      case 'benefit_improve_results':
+        return 'Ergebnisse verbessern';
+      case 'action_learn_technique':
+        return 'Technik lernen';
+      case 'interest_meditation_title':
+        return 'Neue Meditationstechnik';
+      case 'interest_meditation_description':
+        return 'Entdecken Sie diese neue Technik, um Ihre Praxis zu bereichern';
+      case 'advanced_prediction':
+        return 'Erweiterte Vorhersage';
+      case 'prediction_updated':
+        return 'Vorhersage aktualisiert';
+      case 'refresh_prediction':
+        return 'Vorhersage aktualisieren';
+      case 'analyzing_patterns':
+        return 'Muster werden analysiert...';
+      case 'not_enough_data':
+        return 'Nicht genügend Daten';
+      case 'use_app_for_better_predictions':
+        return 'Nutzen Sie die App häufiger für bessere Vorhersagen';
+      case 'log_mood':
+        return 'Stimmung protokollieren';
+      case 'trend':
+        return 'Trend';
+      case 'confidence':
+        return 'Zuversicht';
+      case 'recommendation':
+        return 'Empfehlung';
+      case 'identified_factors':
+        return 'Identifizierte Faktoren';
+      case 'next_week_prediction':
+        return 'Vorhersage für nächste Woche';
+      case 'expected_mood':
+        return 'Erwartete Stimmung';
+      case 'view_detailed_analysis':
+        return 'Detaillierte Analyse anzeigen';
+      case 'rec_need_more_data':
+        return 'Sie benötigen mehr Daten für genaue Vorhersagen';
+      case 'rec_mood_improving':
+        return 'Ihre Stimmung verbessert sich. Machen Sie weiter mit den Aktivitäten, die Ihnen guttun!';
+      case 'rec_mood_declining':
+        return 'Wir sehen einen Abwärtstrend. Versuchen Sie Entspannungstechniken oder sprechen Sie mit jemandem Ihres Vertrauens.';
+      case 'rec_mood_stable':
+        return 'Ihre Stimmung ist stabil. Eine gute Gelegenheit, neue Wohlfühlaktivitäten zu erkunden.';
+      case 'factor_positive_trend':
+        return 'Positiver Trend in den letzten Tagen';
+      case 'factor_negative_trend':
+        return 'Negativer Trend in den letzten Tagen';
+      case 'factor_stable_mood':
+        return 'Stabile Stimmung';
+      case 'factor_meditation_helps':
+        return 'Meditation verbessert Ihre Stimmung';
+      case 'factor_journaling_helps':
+        return 'Tagebuchschreiben hilft, Emotionen zu verarbeiten';
+      case 'factor_december_better':
+        return 'Sie fühlen sich tendenziell im Dezember besser';
+      case 'factor_january_better':
+        return 'Sie fühlen sich tendenziell im Januar besser';
+      case 'average_1_5':
+        return 'Durchschnitt (1-5)';
+      case 'consistency':
+        return 'Konsistenz';
+      case 'this_week':
+        return 'Diese Woche';
+      case 'entries_this_week':
+        return 'Einträge diese Woche';
+      case 'score_excellent':
+        return 'Ausgezeichnet';
+      case 'score_good':
+        return 'Gut';
+      case 'score_fair':
+        return 'Mittel';
+      case 'score_needs_improvement':
+        return 'Verbesserungsbedarf';
+      case 'inhale':
+        return 'Einatmen';
+      case 'hold':
+        return 'Anhalten';
+      case 'exhale':
+        return 'Ausatmen';
+      case 'focus_on':
+        return 'Fokussiere auf';
+      case 'head':
+        return 'Kopf';
+      case 'neck':
+        return 'Nacken';
+      case 'shoulders':
+        return 'Schultern';
+      case 'arms':
+        return 'Arme';
+      case 'torso':
+        return 'Oberkörper';
+      case 'legs':
+        return 'Beine';
+      case 'feet':
+        return 'Füße';
+      case 'prompt_observe_breath':
+        return 'Beobachte deinen Atem';
+      case 'prompt_listen_sounds':
+        return 'Höre auf die Geräusche';
+      case 'prompt_feel_body':
+        return 'Fühle deinen Körper';
+      case 'prompt_notice_thoughts':
+        return 'Beobachte deine Gedanken und lass sie vorbeiziehen';
 
       // Navigation
       case 'navigation_home':
@@ -2766,6 +4077,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Schließen';
+      case 'skip':
+        return 'Überspringen';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -2994,6 +4307,12 @@ class LanguageService extends ChangeNotifier {
         return 'Meditation abgeschlossen!';
       case 'meditation_minutes':
         return 'Minuten';
+      case 'rate_session':
+        return 'Sitzung bewerten';
+      case 'notes_optional':
+        return 'Notizen (optional)';
+      case 'notes_hint':
+        return 'Schreiben Sie Beobachtungen oder wie Sie sich gefühlt haben...';
       case 'recent_sessions_title':
         return 'Aktuelle Sitzungen';
       case 'no_recent_sessions':
@@ -3022,6 +4341,12 @@ class LanguageService extends ChangeNotifier {
         return 'Beenden';
       case 'instructions':
         return 'Anweisungen';
+      case 'preferences':
+        return 'Einstellungen';
+      case 'haptics':
+        return 'Vibration';
+      case 'sound':
+        return 'Ton';
 
       // Meditation instructions
       case 'breathing_instructions':
@@ -3522,6 +4847,91 @@ class LanguageService extends ChangeNotifier {
         return 'Statistiken';
       case 'statistics_subtitle':
         return 'Ihr Fortschritt im Detail';
+      case 'smart_analysis':
+        return 'Intelligente Analyse';
+      case 'quick_summary':
+        return 'Schnelle Zusammenfassung';
+      case 'analysis_updated':
+        return 'Analyse aktualisiert';
+      case 'refresh_analytics':
+        return 'Analyse aktualisieren';
+      case 'analyzing_data':
+        return 'Analysiere deine Daten...';
+      case 'correlations':
+        return 'Korrelationen';
+      case 'patterns':
+        return 'Muster';
+      case 'progress':
+        return 'Fortschritt';
+      case 'wellness':
+        return 'Wohlbefinden';
+      case 'identified_correlations':
+        return 'Identifizierte Korrelationen';
+      case 'view_complete_analysis':
+        return 'Vollständige Analyse anzeigen';
+      case 'temporal_patterns':
+        return 'Zeitliche Muster';
+      case 'best_days':
+        return 'Beste Tage';
+      case 'best_hours':
+        return 'Beste Stunden';
+      case 'seasonal_patterns':
+        return 'Saisonale Muster';
+      case 'progress_analysis':
+        return 'Fortschrittsanalyse';
+      case 'overall_progress':
+        return 'Gesamtfortschritt';
+      case 'recent_achievements':
+        return 'Kürzliche Erfolge';
+      case 'wellness_analysis':
+        return 'Wohlbefindensanalyse';
+      case 'risk_factors':
+        return 'Risikofaktoren';
+      case 'protective_factors':
+        return 'Schutzfaktoren';
+      case 'detailed_analysis':
+        return 'Detaillierte Analyse';
+      case 'found_correlations':
+        return 'Gefundene Korrelationen';
+      case 'not_enough_data_detailed':
+        return 'Nicht genügend Daten für eine detaillierte Analyse.';
+      case 'usage':
+        return 'Nutzung';
+      case 'schedule':
+        return 'Zeitplan';
+      // Korrelations-Einsichten
+      case 'insight_meditation_positive':
+        return 'Meditation hat einen positiven Einfluss auf Ihre Stimmung';
+      case 'insight_journal_emotions':
+        return 'Das Schreiben in Ihr Tagebuch hilft Ihnen, Emotionen zu verarbeiten';
+      case 'insight_app_usage_wellness':
+        return 'Häufige Nutzung der App verbessert Ihr allgemeines Wohlbefinden';
+      case 'insight_specific_schedules':
+        return 'Sie haben bestimmte Zeiten, in denen Sie sich besser fühlen';
+      // Saisonale Muster
+      case 'feel_better_in':
+        return 'Sie fühlen sich besser in';
+      // Erfolge
+      case 'achievement_mood_improvement':
+        return 'Stimmungsverbesserung';
+      case 'achievement_meditation_consistency':
+        return 'Mehr Konsistenz bei der Meditation';
+      case 'achievement_journal_activity':
+        return 'Mehr Tagebuch-Aktivität';
+      // Risikofaktoren
+      case 'risk_recent_low_mood':
+        return 'Kürzlich schlechte Stimmung';
+      case 'risk_low_meditation_frequency':
+        return 'Niedrige Meditationsfrequenz';
+      case 'risk_low_journal_activity':
+        return 'Wenig Tagebuch-Aktivität';
+      // Schutzfaktoren
+      case 'protective_regular_meditation':
+        return 'Regelmäßige Meditationspraxis';
+      case 'protective_regular_journaling':
+        return 'Regelmäßige Tagebuchreflexion';
+      case 'protective_positive_mood':
+        return 'Allgemein positive Stimmung';
 
       default:
         return key;
@@ -3569,6 +4979,228 @@ class LanguageService extends ChangeNotifier {
         return 'Cerca';
       case 'statistics':
         return 'Statistiche';
+      case 'wellness_metrics':
+        return 'Metriche di benessere';
+      case 'wellness_score':
+        return 'Punteggio di benessere';
+      case 'based_on_activity':
+        return 'Basato sulla tua attività recente';
+      case 'insight_great_mood_title':
+        return 'Ottimo umore!';
+      case 'insight_great_mood_description':
+        return 'Il tuo umore medio questa settimana è stato molto buono. Continua così!';
+      case 'view_statistics':
+        return 'Vedi statistiche';
+      case 'insight_feeling_low_title':
+        return 'Ti senti un po’ giù?';
+      case 'insight_feeling_low_description':
+        return 'Il tuo umore è stato un po’ basso questa settimana. Vuoi provare una meditazione rilassante?';
+      case 'insight_mood_streak_title':
+        return 'Serie di 7 giorni!';
+      case 'insight_mood_streak_description':
+        return 'Hai registrato il tuo umore per 7 giorni consecutivi. Incredibile costanza!';
+      case 'view_streak':
+        return 'Vedi serie';
+      case 'view_progress':
+        return 'Vedi progresso';
+      case 'insight_ready_to_meditate_title':
+        return 'Pronto a meditare?';
+      case 'insight_ready_to_meditate_description':
+        return 'È passato un po’ di tempo dall’ultima meditazione. Vuoi riprendere la pratica?';
+      case 'insight_journal_reminder_description':
+        return 'Sono passati {days} giorni dall’ultima volta che hai scritto nel diario. Vuoi riflettere sulla tua giornata?';
+      case 'write_now':
+        return 'Scrivi ora';
+      case 'insight_goal_reminder_title':
+        return 'Promemoria del tuo obiettivo';
+      case 'insight_goal_reminder_description':
+        return 'Il tuo obiettivo è: {goal}. Come procede?';
+      case 'insight_welcome_title':
+        return 'Benvenuto in MindSpace!';
+      case 'insight_welcome_description':
+        return 'Inizia il tuo percorso di benessere registrando il tuo primo umore.';
+      case 'start':
+        return 'Inizia';
+      case 'advanced_recommendations':
+        return 'Raccomandazioni Avanzate';
+      case 'recommendations_updated':
+        return 'Raccomandazioni aggiornate ({count} trovate)';
+      case 'refresh_recommendations':
+        return 'Aggiorna raccomandazioni';
+      case 'no_recommendations':
+        return 'Nessuna raccomandazione disponibile';
+      case 'use_app_for_better_recommendations':
+        return 'Usa l’app di più per raccomandazioni personalizzate';
+      case 'benefits':
+        return 'Benefici';
+      case 'estimated_time':
+        return 'Tempo stimato';
+      case 'configure':
+        return 'Configura';
+      case 'priority_high':
+        return 'Alta';
+      case 'priority_medium':
+        return 'Media';
+      case 'priority_low':
+        return 'Bassa';
+      case 'interest_explore_title':
+        return 'Esplora {interest}';
+      case 'interest_explore_description':
+        return 'Scopri nuovi modi per integrare {interest} nella tua routine di benessere.';
+      case 'goal_custom_plan_title':
+        return 'Piano Personalizzato';
+      case 'goal_custom_plan_description':
+        return 'Crea un piano personalizzato per raggiungere: {goal}';
+      case 'optimal_time_title':
+        return 'Momento Ottimale';
+      case 'optimal_time_message':
+        return 'Basato sui tuoi schemi, il momento migliore per meditare è';
+      case 'action_explore':
+        return 'Esplora';
+      case 'action_view_plan':
+        return 'Vedi Piano';
+      case 'time_variable':
+        return 'Variabile';
+      case 'benefit_continuous_learning':
+        return 'Apprendimento Continuo';
+      case 'benefit_motivation':
+        return 'Motivazione Aumentata';
+      case 'benefit_personal_growth':
+        return 'Crescita Personale';
+      case 'benefit_reduce_cortisol':
+        return 'Ridurre il Cortisolo';
+      case 'benefit_improve_relaxation':
+        return 'Migliorare il Rilassamento';
+      case 'benefit_increase_mental_clarity':
+        return 'Chiarezza Mentale';
+      case 'benefit_increase_serotonin':
+        return 'Aumentare la Serotonina';
+      case 'benefit_improve_self_esteem':
+        return 'Migliorare l\'Autostima';
+      case 'benefit_improve_sleep_quality':
+        return 'Migliorare la Qualità del Sonno';
+      case 'benefit_reduce_insomnia':
+        return 'Ridurre l\'Insonnia';
+      case 'benefit_diversify_practice':
+        return 'Diversificare la Pratica';
+      case 'benefit_increase_happiness':
+        return 'Aumentare la Felicità';
+      case 'benefit_improve_perspective':
+        return 'Migliorare la Prospettiva';
+      case 'action_configure_reminder':
+        return 'Configura promemoria';
+      case 'benefit_more_effective':
+        return 'Più efficace';
+      case 'benefit_better_adherence':
+        return 'Migliore aderenza';
+      case 'benefit_more_consistent_results':
+        return 'Risultati più coerenti';
+      case 'benefit_increase_motivation':
+        return 'Aumentare la motivazione';
+      case 'benefit_improve_results':
+        return 'Migliorare i risultati';
+      case 'action_learn_technique':
+        return 'Impara la tecnica';
+      case 'interest_meditation_title':
+        return 'Nuova tecnica di meditazione';
+      case 'interest_meditation_description':
+        return 'Esplora questa nuova tecnica per arricchire la tua pratica';
+      case 'advanced_prediction':
+        return 'Previsione Avanzata';
+      case 'prediction_updated':
+        return 'Previsione aggiornata';
+      case 'refresh_prediction':
+        return 'Aggiorna previsione';
+      case 'analyzing_patterns':
+        return 'Analisi dei tuoi schemi...';
+      case 'not_enough_data':
+        return 'Dati insufficienti';
+      case 'use_app_for_better_predictions':
+        return 'Usa l’app più frequentemente per previsioni migliori';
+      case 'log_mood':
+        return 'Registrare umore';
+      case 'trend':
+        return 'Tendenza';
+      case 'confidence':
+        return 'Affidabilità';
+      case 'recommendation':
+        return 'Raccomandazione';
+      case 'identified_factors':
+        return 'Fattori identificati';
+      case 'next_week_prediction':
+        return 'Previsione prossima settimana';
+      case 'expected_mood':
+        return 'Umore previsto';
+      case 'view_detailed_analysis':
+        return 'Vedi Analisi Dettagliata';
+      case 'rec_need_more_data':
+        return 'Hai bisogno di più dati per previsioni accurate';
+      case 'rec_mood_improving':
+        return 'Il tuo umore sta migliorando. Continua con le attività che ti fanno stare bene!';
+      case 'rec_mood_declining':
+        return 'Notiamo una tendenza al ribasso. Prova tecniche di rilassamento o parla con qualcuno di fiducia.';
+      case 'rec_mood_stable':
+        return 'Il tuo umore è stabile. È un buon momento per esplorare nuove attività di benessere.';
+      case 'factor_positive_trend':
+        return 'Tendenza positiva negli ultimi giorni';
+      case 'factor_negative_trend':
+        return 'Tendenza negativa negli ultimi giorni';
+      case 'factor_stable_mood':
+        return 'Umore stabile';
+      case 'factor_meditation_helps':
+        return 'La meditazione migliora il tuo umore';
+      case 'factor_journaling_helps':
+        return 'Scrivere nel diario aiuta a elaborare le emozioni';
+      case 'factor_december_better':
+        return 'Tendi a sentirti meglio a dicembre';
+      case 'factor_january_better':
+        return 'Tendi a sentirti meglio a gennaio';
+      case 'average_1_5':
+        return 'Media (1-5)';
+      case 'consistency':
+        return 'Coerenza';
+      case 'this_week':
+        return 'Questa settimana';
+      case 'entries_this_week':
+        return 'Voci questa settimana';
+      case 'score_excellent':
+        return 'Eccellente';
+      case 'score_good':
+        return 'Buono';
+      case 'score_fair':
+        return 'Discreto';
+      case 'score_needs_improvement':
+        return 'Da migliorare';
+      case 'inhale':
+        return 'Inspira';
+      case 'hold':
+        return 'Trattieni';
+      case 'exhale':
+        return 'Espira';
+      case 'focus_on':
+        return 'Concentrati su';
+      case 'head':
+        return 'Testa';
+      case 'neck':
+        return 'Collo';
+      case 'shoulders':
+        return 'Spalle';
+      case 'arms':
+        return 'Braccia';
+      case 'torso':
+        return 'Torso';
+      case 'legs':
+        return 'Gambe';
+      case 'feet':
+        return 'Piedi';
+      case 'prompt_observe_breath':
+        return 'Osserva il respiro';
+      case 'prompt_listen_sounds':
+        return 'Ascolta i suoni';
+      case 'prompt_feel_body':
+        return 'Senti il corpo';
+      case 'prompt_notice_thoughts':
+        return 'Nota i pensieri e lasciali andare';
 
       // Navigation
       case 'navigation_home':
@@ -3595,6 +5227,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Chiudi';
+      case 'skip':
+        return 'Salta';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -3823,6 +5457,12 @@ class LanguageService extends ChangeNotifier {
         return 'Meditazione completata!';
       case 'meditation_minutes':
         return 'minuti';
+      case 'rate_session':
+        return 'Valuta la sessione';
+      case 'notes_optional':
+        return 'Note (opzionale)';
+      case 'notes_hint':
+        return 'Scrivi osservazioni o come ti sei sentito...';
       case 'recent_sessions_title':
         return 'Sessioni recenti';
       case 'no_recent_sessions':
@@ -3851,6 +5491,12 @@ class LanguageService extends ChangeNotifier {
         return 'Termina';
       case 'instructions':
         return 'Istruzioni';
+      case 'preferences':
+        return 'Preferenze';
+      case 'haptics':
+        return 'Vibrazione';
+      case 'sound':
+        return 'Suono';
 
       // Meditation instructions
       case 'breathing_instructions':
@@ -4351,6 +5997,91 @@ class LanguageService extends ChangeNotifier {
         return 'Statistiche';
       case 'statistics_subtitle':
         return 'Il tuo progresso in dettaglio';
+      case 'smart_analysis':
+        return 'Analisi Intelligente';
+      case 'quick_summary':
+        return 'Riassunto Rapido';
+      case 'analysis_updated':
+        return 'Analisi aggiornata';
+      case 'refresh_analytics':
+        return 'Aggiorna analisi';
+      case 'analyzing_data':
+        return 'Analizzando i tuoi dati...';
+      case 'correlations':
+        return 'Correlazioni';
+      case 'patterns':
+        return 'Modelli';
+      case 'progress':
+        return 'Progresso';
+      case 'wellness':
+        return 'Benessere';
+      case 'identified_correlations':
+        return 'Correlazioni Identificate';
+      case 'view_complete_analysis':
+        return 'Visualizza Analisi Completa';
+      case 'temporal_patterns':
+        return 'Modelli Temporali';
+      case 'best_days':
+        return 'Giorni Migliori';
+      case 'best_hours':
+        return 'Ore Migliori';
+      case 'seasonal_patterns':
+        return 'Modelli Stagionali';
+      case 'progress_analysis':
+        return 'Analisi del Progresso';
+      case 'overall_progress':
+        return 'Progresso Generale';
+      case 'recent_achievements':
+        return 'Risultati Recenti';
+      case 'wellness_analysis':
+        return 'Analisi del Benessere';
+      case 'risk_factors':
+        return 'Fattori di Rischio';
+      case 'protective_factors':
+        return 'Fattori Protettivi';
+      case 'detailed_analysis':
+        return 'Analisi Dettagliata';
+      case 'found_correlations':
+        return 'Correlazioni Trovate';
+      case 'not_enough_data_detailed':
+        return 'Dati insufficienti per mostrare un\'analisi dettagliata.';
+      case 'usage':
+        return 'Utilizzo';
+      case 'schedule':
+        return 'Orario';
+      // Intuizioni di correlazione
+      case 'insight_meditation_positive':
+        return 'La meditazione ha un impatto positivo sul tuo umore';
+      case 'insight_journal_emotions':
+        return 'Scrivere nel tuo diario ti aiuta a elaborare le emozioni';
+      case 'insight_app_usage_wellness':
+        return 'L\'uso frequente dell\'app migliora il tuo benessere generale';
+      case 'insight_specific_schedules':
+        return 'Hai orari specifici in cui ti senti meglio';
+      // Modelli stagionali
+      case 'feel_better_in':
+        return 'Ti senti meglio in';
+      // Risultati
+      case 'achievement_mood_improvement':
+        return 'Miglioramento dell\'umore';
+      case 'achievement_meditation_consistency':
+        return 'Maggiore coerenza nella meditazione';
+      case 'achievement_journal_activity':
+        return 'Più attività nel diario';
+      // Fattori di rischio
+      case 'risk_recent_low_mood':
+        return 'Umore basso recente';
+      case 'risk_low_meditation_frequency':
+        return 'Bassa frequenza di meditazione';
+      case 'risk_low_journal_activity':
+        return 'Poca attività nel diario';
+      // Fattori protettivi
+      case 'protective_regular_meditation':
+        return 'Pratica regolare di meditazione';
+      case 'protective_regular_journaling':
+        return 'Riflessione regolare nel diario';
+      case 'protective_positive_mood':
+        return 'Umore generalmente positivo';
 
       default:
         return key;
@@ -4398,6 +6129,228 @@ class LanguageService extends ChangeNotifier {
         return 'Pesquisar';
       case 'statistics':
         return 'Estatísticas';
+      case 'wellness_metrics':
+        return 'Métricas de Bem-estar';
+      case 'wellness_score':
+        return 'Pontuação de Bem-estar';
+      case 'based_on_activity':
+        return 'Com base na sua atividade recente';
+      case 'insight_great_mood_title':
+        return 'Ótimo humor!';
+      case 'insight_great_mood_description':
+        return 'Seu humor médio esta semana foi muito bom. Continue assim!';
+      case 'view_statistics':
+        return 'Ver estatísticas';
+      case 'insight_feeling_low_title':
+        return 'Sentindo-se um pouco para baixo?';
+      case 'insight_feeling_low_description':
+        return 'Seu humor esteve um pouco baixo esta semana. Gostaria de tentar uma meditação relaxante?';
+      case 'insight_mood_streak_title':
+        return 'Sequência de 7 dias!';
+      case 'insight_mood_streak_description':
+        return 'Você registrou seu humor por 7 dias consecutivos. Incrível consistência!';
+      case 'view_streak':
+        return 'Ver sequência';
+      case 'view_progress':
+        return 'Ver progresso';
+      case 'insight_ready_to_meditate_title':
+        return 'Pronto para meditar?';
+      case 'insight_ready_to_meditate_description':
+        return 'Faz um tempo que você não medita. Quer retomar a prática?';
+      case 'insight_journal_reminder_description':
+        return 'Faz {days} dias que você não escreve no diário. Quer refletir sobre seu dia?';
+      case 'write_now':
+        return 'Escrever agora';
+      case 'insight_goal_reminder_title':
+        return 'Lembrete do seu objetivo';
+      case 'insight_goal_reminder_description':
+        return 'Seu objetivo é: {goal}. Como está seu progresso?';
+      case 'insight_welcome_title':
+        return 'Bem-vindo ao MindSpace!';
+      case 'insight_welcome_description':
+        return 'Comece sua jornada de bem-estar registrando seu primeiro humor.';
+      case 'start':
+        return 'Começar';
+      case 'advanced_recommendations':
+        return 'Recomendações Avançadas';
+      case 'recommendations_updated':
+        return 'Recomendações atualizadas ({count} encontradas)';
+      case 'refresh_recommendations':
+        return 'Atualizar recomendações';
+      case 'no_recommendations':
+        return 'Sem recomendações disponíveis';
+      case 'use_app_for_better_recommendations':
+        return 'Use o app mais para recomendações personalizadas';
+      case 'benefits':
+        return 'Benefícios';
+      case 'estimated_time':
+        return 'Tempo estimado';
+      case 'configure':
+        return 'Configurar';
+      case 'priority_high':
+        return 'Alta';
+      case 'priority_medium':
+        return 'Média';
+      case 'priority_low':
+        return 'Baixa';
+      case 'interest_explore_title':
+        return 'Explorar {interest}';
+      case 'interest_explore_description':
+        return 'Descubra novas maneiras de incorporar {interest} em sua rotina de bem-estar.';
+      case 'goal_custom_plan_title':
+        return 'Plano Personalizado';
+      case 'goal_custom_plan_description':
+        return 'Crie um plano personalizado para alcançar: {goal}';
+      case 'optimal_time_title':
+        return 'Momento Ideal';
+      case 'optimal_time_message':
+        return 'Com base nos seus padrões, o melhor momento para meditar é';
+      case 'action_explore':
+        return 'Explorar';
+      case 'action_view_plan':
+        return 'Ver Plano';
+      case 'time_variable':
+        return 'Variável';
+      case 'benefit_continuous_learning':
+        return 'Aprendizado Contínuo';
+      case 'benefit_motivation':
+        return 'Motivação Aumentada';
+      case 'benefit_personal_growth':
+        return 'Crescimento Pessoal';
+      case 'benefit_reduce_cortisol':
+        return 'Reduzir Cortisol';
+      case 'benefit_improve_relaxation':
+        return 'Melhorar Relaxamento';
+      case 'benefit_increase_mental_clarity':
+        return 'Clareza Mental';
+      case 'benefit_increase_serotonin':
+        return 'Aumentar Serotonina';
+      case 'benefit_improve_self_esteem':
+        return 'Melhorar Autoestima';
+      case 'benefit_improve_sleep_quality':
+        return 'Melhorar Qualidade do Sono';
+      case 'benefit_reduce_insomnia':
+        return 'Reduzir Insônia';
+      case 'benefit_diversify_practice':
+        return 'Diversificar Prática';
+      case 'benefit_increase_happiness':
+        return 'Aumentar Felicidade';
+      case 'benefit_improve_perspective':
+        return 'Melhorar Perspectiva';
+      case 'action_configure_reminder':
+        return 'Configurar lembrete';
+      case 'benefit_more_effective':
+        return 'Mais eficaz';
+      case 'benefit_better_adherence':
+        return 'Melhor aderência';
+      case 'benefit_more_consistent_results':
+        return 'Resultados mais consistentes';
+      case 'benefit_increase_motivation':
+        return 'Aumentar motivação';
+      case 'benefit_improve_results':
+        return 'Melhorar resultados';
+      case 'action_learn_technique':
+        return 'Aprender técnica';
+      case 'interest_meditation_title':
+        return 'Nova técnica de meditação';
+      case 'interest_meditation_description':
+        return 'Explore esta nova técnica para enriquecer sua prática';
+      case 'advanced_prediction':
+        return 'Previsão Avançada';
+      case 'prediction_updated':
+        return 'Previsão atualizada';
+      case 'refresh_prediction':
+        return 'Atualizar previsão';
+      case 'analyzing_patterns':
+        return 'Analisando seus padrões...';
+      case 'not_enough_data':
+        return 'Dados insuficientes';
+      case 'use_app_for_better_predictions':
+        return 'Use o app com mais frequência para previsões melhores';
+      case 'log_mood':
+        return 'Registrar Humor';
+      case 'trend':
+        return 'Tendência';
+      case 'confidence':
+        return 'Confiança';
+      case 'recommendation':
+        return 'Recomendação';
+      case 'identified_factors':
+        return 'Fatores identificados';
+      case 'next_week_prediction':
+        return 'Previsão da próxima semana';
+      case 'expected_mood':
+        return 'Humor esperado';
+      case 'view_detailed_analysis':
+        return 'Ver Análise Detalhada';
+      case 'rec_need_more_data':
+        return 'Você precisa de mais dados para previsões precisas';
+      case 'rec_mood_improving':
+        return 'Seu humor está melhorando. Continue com atividades que te fazem bem!';
+      case 'rec_mood_declining':
+        return 'Notamos uma tendência de queda. Tente técnicas de relaxamento ou converse com alguém de confiança.';
+      case 'rec_mood_stable':
+        return 'Seu humor está estável. É um bom momento para explorar novas atividades de bem-estar.';
+      case 'factor_positive_trend':
+        return 'Tendência positiva nos últimos dias';
+      case 'factor_negative_trend':
+        return 'Tendência negativa nos últimos dias';
+      case 'factor_stable_mood':
+        return 'Humor estável';
+      case 'factor_meditation_helps':
+        return 'A meditação melhora seu humor';
+      case 'factor_journaling_helps':
+        return 'Escrever no diário ajuda a processar emoções';
+      case 'factor_december_better':
+        return 'Você tende a se sentir melhor em dezembro';
+      case 'factor_january_better':
+        return 'Você tende a se sentir melhor em janeiro';
+      case 'average_1_5':
+        return 'Média (1-5)';
+      case 'consistency':
+        return 'Consistência';
+      case 'this_week':
+        return 'Esta semana';
+      case 'entries_this_week':
+        return 'Entradas esta semana';
+      case 'score_excellent':
+        return 'Excelente';
+      case 'score_good':
+        return 'Bom';
+      case 'score_fair':
+        return 'Regular';
+      case 'score_needs_improvement':
+        return 'Precisa melhorar';
+      case 'inhale':
+        return 'Inspire';
+      case 'hold':
+        return 'Segure';
+      case 'exhale':
+        return 'Expire';
+      case 'focus_on':
+        return 'Foque em';
+      case 'head':
+        return 'Cabeça';
+      case 'neck':
+        return 'Pescoço';
+      case 'shoulders':
+        return 'Ombros';
+      case 'arms':
+        return 'Braços';
+      case 'torso':
+        return 'Torso';
+      case 'legs':
+        return 'Pernas';
+      case 'feet':
+        return 'Pés';
+      case 'prompt_observe_breath':
+        return 'Observe sua respiração';
+      case 'prompt_listen_sounds':
+        return 'Ouça os sons';
+      case 'prompt_feel_body':
+        return 'Sinta seu corpo';
+      case 'prompt_notice_thoughts':
+        return 'Perceba seus pensamentos e deixe-os passar';
 
       // Navigation
       case 'navigation_home':
@@ -4424,6 +6377,8 @@ class LanguageService extends ChangeNotifier {
         return 'OK';
       case 'close':
         return 'Fechar';
+      case 'skip':
+        return 'Pular';
 
       // Quick actions translations
       case 'mood_logged_today':
@@ -4680,6 +6635,12 @@ class LanguageService extends ChangeNotifier {
         return 'Finalizar';
       case 'instructions':
         return 'Instruções';
+      case 'preferences':
+        return 'Preferências';
+      case 'haptics':
+        return 'Vibração';
+      case 'sound':
+        return 'Som';
 
       // Meditation instructions
       case 'breathing_instructions':
@@ -5180,6 +7141,91 @@ class LanguageService extends ChangeNotifier {
         return 'Estatísticas';
       case 'statistics_subtitle':
         return 'Seu progresso em detalhes';
+      case 'smart_analysis':
+        return 'Análise Inteligente';
+      case 'quick_summary':
+        return 'Resumo Rápido';
+      case 'analysis_updated':
+        return 'Análise atualizada';
+      case 'refresh_analytics':
+        return 'Atualizar análise';
+      case 'analyzing_data':
+        return 'Analisando seus dados...';
+      case 'correlations':
+        return 'Correlações';
+      case 'patterns':
+        return 'Padrões';
+      case 'progress':
+        return 'Progresso';
+      case 'wellness':
+        return 'Bem-estar';
+      case 'identified_correlations':
+        return 'Correlações Identificadas';
+      case 'view_complete_analysis':
+        return 'Ver Análise Completa';
+      case 'temporal_patterns':
+        return 'Padrões Temporais';
+      case 'best_days':
+        return 'Melhores Dias';
+      case 'best_hours':
+        return 'Melhores Horas';
+      case 'seasonal_patterns':
+        return 'Padrões Sazonais';
+      case 'progress_analysis':
+        return 'Análise de Progresso';
+      case 'overall_progress':
+        return 'Progresso Geral';
+      case 'recent_achievements':
+        return 'Conquistas Recentes';
+      case 'wellness_analysis':
+        return 'Análise de Bem-estar';
+      case 'risk_factors':
+        return 'Fatores de Risco';
+      case 'protective_factors':
+        return 'Fatores Protetivos';
+      case 'detailed_analysis':
+        return 'Análise Detalhada';
+      case 'found_correlations':
+        return 'Correlações Encontradas';
+      case 'not_enough_data_detailed':
+        return 'Dados insuficientes para mostrar análise detalhada.';
+      case 'usage':
+        return 'Uso';
+      case 'schedule':
+        return 'Horário';
+      // Insights de correlação
+      case 'insight_meditation_positive':
+        return 'A meditação tem um impacto positivo no seu humor';
+      case 'insight_journal_emotions':
+        return 'Escrever no seu diário ajuda a processar emoções';
+      case 'insight_app_usage_wellness':
+        return 'O uso frequente do app melhora seu bem-estar geral';
+      case 'insight_specific_schedules':
+        return 'Você tem horários específicos em que se sente melhor';
+      // Padrões sazonais
+      case 'feel_better_in':
+        return 'Você se sente melhor em';
+      // Conquistas
+      case 'achievement_mood_improvement':
+        return 'Melhoria do humor';
+      case 'achievement_meditation_consistency':
+        return 'Maior consistência na meditação';
+      case 'achievement_journal_activity':
+        return 'Mais atividade no diário';
+      // Fatores de risco
+      case 'risk_recent_low_mood':
+        return 'Humor baixo recente';
+      case 'risk_low_meditation_frequency':
+        return 'Baixa frequência de meditação';
+      case 'risk_low_journal_activity':
+        return 'Pouca atividade no diário';
+      // Fatores protetivos
+      case 'protective_regular_meditation':
+        return 'Prática regular de meditação';
+      case 'protective_regular_journaling':
+        return 'Reflexão regular no diário';
+      case 'protective_positive_mood':
+        return 'Humor geralmente positivo';
 
       default:
         return key;

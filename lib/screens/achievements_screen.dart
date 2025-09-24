@@ -24,8 +24,10 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+              Theme.of(context).colorScheme.surface,
+              Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             ],
           ),
         ),
@@ -53,7 +55,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               const SizedBox(width: 8),
               Consumer<LanguageService>(
@@ -61,7 +63,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                   return Text(
                     languageService.getLocalizedText('achievements'),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   );
@@ -209,7 +211,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                 return Text(
                   languageService.getLocalizedText('your_progress'),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 );
@@ -271,7 +273,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 24),
@@ -319,12 +321,12 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     return GradientCard(
       gradientColors: achievement.isUnlocked
           ? [
-              achievement.color.withOpacity(0.1),
-              achievement.color.withOpacity(0.05),
+              achievement.color.withValues(alpha: 0.1),
+              achievement.color.withValues(alpha: 0.05),
             ]
           : [
-              AppColors.textTertiary.withOpacity(0.1),
-              AppColors.textTertiary.withOpacity(0.05),
+              AppColors.textTertiary.withValues(alpha: 0.1),
+              AppColors.textTertiary.withValues(alpha: 0.05),
             ],
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -335,8 +337,8 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: achievement.isUnlocked
-                    ? achievement.color.withOpacity(0.2)
-                    : AppColors.textTertiary.withOpacity(0.2),
+                    ? achievement.color.withValues(alpha: 0.2)
+                    : AppColors.textTertiary.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -374,22 +376,14 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             if (achievement.isUnlocked)
               Consumer<LanguageService>(
                 builder: (context, languageService, child) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                  return Text(
+                    achievement.description,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w500,
                     ),
-                    decoration: BoxDecoration(
-                      color: achievement.color,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${achievement.points} ${languageService.getLocalizedText('pts')}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   );
                 },
               )

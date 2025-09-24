@@ -5,6 +5,8 @@ import '../models/meditation_session.dart';
 import '../constants/app_colors.dart';
 import '../services/language_service.dart';
 import 'gradient_card.dart';
+import '../screens/meditation_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MeditationQuickStart extends StatelessWidget {
   const MeditationQuickStart({super.key});
@@ -112,6 +114,8 @@ class _MeditationOptionsBottomSheetState
   MeditationType? selectedType;
   Duration selectedDuration = const Duration(minutes: 5);
   DifficultyLevel selectedDifficulty = DifficultyLevel.beginner;
+  bool hapticsEnabled = true;
+  bool soundEnabled = true;
 
   final List<Duration> durations = [
     const Duration(minutes: 5),
@@ -169,6 +173,8 @@ class _MeditationOptionsBottomSheetState
             _buildDurationSelector(),
             const SizedBox(height: 24),
             _buildDifficultySelector(),
+            const SizedBox(height: 24),
+            _buildPreferencesToggles(),
             const SizedBox(height: 24),
             _buildActionButtons(),
           ],
@@ -297,7 +303,7 @@ class _MeditationOptionsBottomSheetState
                     ),
                   ),
                   child: Text(
-                    '${duration.inMinutes}m',
+                    '${duration.inMinutes} ${Provider.of<LanguageService>(context, listen: false).getLocalizedText('minutes')}',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: isSelected
@@ -385,6 +391,74 @@ class _MeditationOptionsBottomSheetState
     );
   }
 
+  Widget _buildPreferencesToggles() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return Text(
+              languageService.getLocalizedText('preferences'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Switch(
+                    value: hapticsEnabled,
+                    onChanged: (v) => setState(() => hapticsEnabled = v),
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        languageService.getLocalizedText('haptics'),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Switch(
+                    value: soundEnabled,
+                    onChanged: (v) => setState(() => soundEnabled = v),
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        languageService.getLocalizedText('sound'),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildActionButtons() {
     return Row(
       children: [
@@ -417,25 +491,53 @@ class _MeditationOptionsBottomSheetState
 
   void _startMeditation() {
     if (selectedType != null) {
-      Provider.of<MeditationProvider>(
-        context,
-        listen: false,
-      ).startMeditationSession(
-        selectedType!,
-        selectedDuration,
-        selectedDifficulty,
-      );
+      final type = selectedType!;
+      final duration = selectedDuration;
+      final difficulty = selectedDifficulty;
+      // Guardar preferencias y comenzar
       Navigator.pop(context);
-
-      // Navigate to meditation screen or show meditation timer
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${Provider.of<LanguageService>(context, listen: false).getLocalizedText('meditation_starting_message')}: ${selectedType!.name}',
+      Future.microtask(() async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('meditation_haptics_enabled', hapticsEnabled);
+        await prefs.setBool('meditation_sound_enabled', soundEnabled);
+        Provider.of<MeditationProvider>(
+          context,
+          listen: false,
+        ).startMeditationSession(type, duration, difficulty);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MeditationSessionScreen(
+              type: type,
+              duration: duration,
+              difficulty: difficulty,
+              onComplete: (actualDuration) {
+                Provider.of<MeditationProvider>(
+                  context,
+                  listen: false,
+                ).completeMeditationSession(actualDuration: actualDuration);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      Provider.of<LanguageService>(
+                        context,
+                        listen: false,
+                      ).getLocalizedText('meditation_completed'),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                );
+              },
+              onCancel: () {
+                Provider.of<MeditationProvider>(
+                  context,
+                  listen: false,
+                ).cancelMeditationSession();
+              },
+              closeOnComplete: true,
+            ),
           ),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-        ),
-      );
+        );
+      });
     }
   }
 

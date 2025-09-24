@@ -341,7 +341,9 @@ class GamificationService {
   /// Obtener racha de mood
   Future<int> _getMoodStreak() async {
     final entries = await _databaseService.getAllMoodEntries();
-    if (entries.isEmpty) return 0;
+    if (entries.isEmpty) {
+    return 0;;
+  }
 
     final sortedEntries = entries..sort((a, b) => b.date.compareTo(a.date));
     int streak = 0;
@@ -365,7 +367,9 @@ class GamificationService {
   Future<int> _getMeditationStreak() async {
     final sessions = await _databaseService.getAllMeditationSessions();
     final completedSessions = sessions.where((s) => s.completed).toList();
-    if (completedSessions.isEmpty) return 0;
+    if (completedSessions.isEmpty) {
+    return 0;;
+  }
 
     completedSessions.sort((a, b) => b.completedAt.compareTo(a.completedAt));
     int streak = 0;
@@ -388,7 +392,9 @@ class GamificationService {
   /// Obtener racha de diario
   Future<int> _getJournalStreak() async {
     final entries = await _databaseService.getAllJournalEntries();
-    if (entries.isEmpty) return 0;
+    if (entries.isEmpty) {
+    return 0;;
+  }
 
     final sortedEntries = entries
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));

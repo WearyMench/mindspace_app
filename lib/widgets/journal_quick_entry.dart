@@ -108,6 +108,7 @@ class _JournalOptionsBottomSheetState extends State<JournalOptionsBottomSheet> {
   final TextEditingController contentController = TextEditingController();
   final List<MoodTag> selectedMoodTags = [];
   final List<String> customTags = [];
+  String? _currentPrompt;
 
   @override
   void initState() {
@@ -125,7 +126,9 @@ class _JournalOptionsBottomSheetState extends State<JournalOptionsBottomSheet> {
       listen: false,
     ).getWritingPrompts(languageService);
     if (prompts.isNotEmpty) {
-      contentController.text = prompts.first;
+      setState(() {
+        _currentPrompt = prompts.first;
+      });
     }
   }
 
@@ -222,12 +225,12 @@ class _JournalOptionsBottomSheetState extends State<JournalOptionsBottomSheet> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.tertiary.withOpacity(0.1)
+                      ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? Theme.of(context).colorScheme.tertiary
+                        ? Theme.of(context).colorScheme.primary
                         : Colors.transparent,
                     width: 2,
                   ),
@@ -238,14 +241,16 @@ class _JournalOptionsBottomSheetState extends State<JournalOptionsBottomSheet> {
                     Icon(
                       category.icon,
                       size: 16,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       _getLocalizedCategoryName(category, languageService),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: isSelected
-                            ? Theme.of(context).colorScheme.tertiary
+                            ? Theme.of(context).colorScheme.onPrimary
                             : Theme.of(context).colorScheme.onSurface,
                         fontWeight: isSelected
                             ? FontWeight.w600
@@ -278,7 +283,9 @@ class _JournalOptionsBottomSheetState extends State<JournalOptionsBottomSheet> {
       maxLines: 4,
       decoration: InputDecoration(
         labelText: languageService.getLocalizedText('content'),
-        hintText: languageService.getLocalizedText('content_hint_journal'),
+        hintText:
+            _currentPrompt ??
+            languageService.getLocalizedText('content_hint_journal'),
         alignLabelWithHint: true,
       ),
     );

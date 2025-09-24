@@ -39,7 +39,7 @@ class NotificationService {
       // Inicializar notificaciones inteligentes
       await SmartNotificationService.initialize();
     } catch (e) {
-      print('Error al inicializar notificaciones: $e');
+      // print('Error al inicializar notificaciones: $e');
       // No lanzar el error, solo registrar y continuar
     }
   }
@@ -54,7 +54,7 @@ class NotificationService {
 
   static void _onNotificationTapped(NotificationResponse response) {
     // Manejar cuando el usuario toca una notificación
-    print('Notificación tocada: ${response.payload}');
+    // print('Notificación tocada: ${response.payload}');
   }
 
   // Programar recordatorio diario de estado de ánimo
@@ -224,7 +224,7 @@ class NotificationService {
   static Future<void> openNotificationSettings() async {
     // Esta funcionalidad no está disponible en todas las versiones
     // Se puede implementar usando platform channels si es necesario
-    print('Abrir configuración de notificaciones del sistema');
+    // print('Abrir configuración de notificaciones del sistema');
   }
 
   // Mostrar notificación inmediata

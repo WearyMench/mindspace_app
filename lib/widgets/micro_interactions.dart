@@ -71,7 +71,9 @@ class _MicroInteractionCardState extends State<MicroInteractionCard>
 
     _colorAnimation = ColorTween(
       begin: widget.backgroundColor ?? AppColors.surface,
-      end: (widget.backgroundColor ?? AppColors.surface).withOpacity(0.95),
+      end: (widget.backgroundColor ?? AppColors.surface).withValues(
+        alpha: 0.95,
+      ),
     ).animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeOut));
 
     _shimmerAnimation = Tween<double>(begin: -1.0, end: 1.0).animate(
@@ -149,7 +151,7 @@ class _MicroInteractionCardState extends State<MicroInteractionCard>
                       borderRadius: borderRadius,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: _elevationAnimation.value,
                           offset: Offset(0, _elevationAnimation.value / 2),
                         ),
@@ -176,18 +178,17 @@ class _MicroInteractionCardState extends State<MicroInteractionCard>
                                       return Container(
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
                                             colors: [
-                                              Colors.transparent,
-                                              Colors.white.withOpacity(0.3),
-                                              Colors.transparent,
+                                              Colors.grey[300]!,
+                                              Colors.grey[100]!,
+                                              Colors.grey[300]!,
                                             ],
-                                            stops: [
-                                              _shimmerAnimation.value - 0.3,
-                                              _shimmerAnimation.value,
-                                              _shimmerAnimation.value + 0.3,
-                                            ],
+                                            stops: [0.0, 0.5, 1.0],
+                                            // transform: GradientTransform(
+                                            //   _shimmerAnimation.value,
+                                            // ),
                                           ),
                                         ),
                                       );
@@ -363,11 +364,11 @@ class _MicroInteractionButtonState extends State<MicroInteractionButton>
                     decoration: BoxDecoration(
                       color: widget.isEnabled
                           ? backgroundColor
-                          : backgroundColor.withOpacity(0.5),
+                          : backgroundColor.withValues(alpha: 0.5),
                       borderRadius: borderRadius,
                       boxShadow: [
                         BoxShadow(
-                          color: backgroundColor.withOpacity(0.3),
+                          color: backgroundColor.withValues(alpha: 0.3),
                           blurRadius: _elevationAnimation.value,
                           offset: Offset(0, _elevationAnimation.value / 2),
                         ),
@@ -400,43 +401,28 @@ class _MicroInteractionButtonState extends State<MicroInteractionButton>
                                             ),
                                       ),
                                     )
-                                  else if (widget.icon != null) ...[
-                                    Icon(
-                                      widget.icon,
-                                      color: textColor,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 8),
+                                  else ...[
+                                    if (widget.icon != null) ...[
+                                      Icon(
+                                        widget.icon,
+                                        color: textColor,
+                                        size: 20,
+                                      ),
+                                      if (widget.text != null)
+                                        const SizedBox(width: 8),
+                                    ],
+                                    if (widget.text != null)
+                                      Text(
+                                        widget.text!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(color: textColor),
+                                      ),
                                   ],
-                                  Text(
-                                    widget.text,
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
-                            if (_rippleCenter != null)
-                              Positioned.fill(
-                                child: ClipRRect(
-                                  borderRadius: borderRadius,
-                                  child: AnimatedBuilder(
-                                    animation: _rippleAnimation,
-                                    builder: (context, child) {
-                                      return CustomPaint(
-                                        painter: RipplePainter(
-                                          center: _rippleCenter!,
-                                          progress: _rippleAnimation.value,
-                                          color: textColor.withOpacity(0.3),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ),
@@ -578,7 +564,7 @@ class _MicroInteractionSwitchState extends State<MicroInteractionSwitch>
                           borderRadius: BorderRadius.circular(13),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),

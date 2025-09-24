@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import '../services/advanced_analytics_service.dart';
+import '../services/language_service.dart';
 import '../widgets/gradient_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../providers/mood_provider.dart';
@@ -53,6 +53,10 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
         context,
         listen: false,
       );
+      final languageService = Provider.of<LanguageService>(
+        context,
+        listen: false,
+      );
 
       final moods = moodProvider.getMoodEntriesForLastDays(90);
       final sessions = meditationProvider.getSessionsForLastDays(90);
@@ -64,6 +68,7 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             moods: moods,
             sessions: sessions,
             journals: journals,
+            languageService: languageService,
           );
 
       final temporalPatterns =
@@ -71,18 +76,21 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             moods: moods,
             sessions: sessions,
             journals: journals,
+            languageService: languageService,
           );
 
       final progressAnalysis = await AdvancedAnalyticsService.analyzeProgress(
         moods: moods,
         sessions: sessions,
         journals: journals,
+        languageService: languageService,
       );
 
       final wellnessAnalysis = await AdvancedAnalyticsService.analyzeWellness(
         moods: moods,
         sessions: sessions,
         journals: journals,
+        languageService: languageService,
       );
 
       setState(() {
@@ -119,21 +127,26 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
                       size: 24,
                     )
                     .animate()
-                    .scale(duration: 600.ms, curve: Curves.elasticOut)
+                    .scale(duration: 300.ms, curve: Curves.easeOut)
                     .then()
                     .shimmer(
-                      duration: 2000.ms,
+                      duration: 1000.ms,
                       color: Theme.of(
                         context,
                       ).colorScheme.primary.withOpacity(0.3),
                     ),
                 const SizedBox(width: 12),
-                Text(
-                      'Análisis Inteligente',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+                Consumer<LanguageService>(
+                      builder: (context, languageService, child) {
+                        return Text(
+                          languageService.getLocalizedText('smart_analysis'),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        );
+                      },
                     )
                     .animate()
                     .fadeIn(duration: 800.ms, delay: 200.ms)
@@ -146,10 +159,15 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
                               await _loadAnalytics();
                               // Mostrar feedback visual
                               if (mounted) {
+                                final languageService =
+                                    Provider.of<LanguageService>(
+                                      context,
+                                      listen: false,
+                                    );
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Análisis actualizado${_correlationAnalysis != null ? ' (${_correlationAnalysis!.insights.length} insights)' : ''}',
+                                      '${languageService.getLocalizedText('analysis_updated')}${_correlationAnalysis != null ? ' (${_correlationAnalysis!.insights.length} insights)' : ''}',
                                     ),
                                     duration: const Duration(seconds: 2),
                                   ),
@@ -163,7 +181,10 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.refresh),
-                      tooltip: 'Actualizar analytics',
+                      tooltip: Provider.of<LanguageService>(
+                        context,
+                        listen: false,
+                      ).getLocalizedText('refresh_analytics'),
                     )
                     .animate()
                     .scale(duration: 200.ms)
@@ -202,11 +223,17 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             .rotate(duration: 1000.ms),
         const SizedBox(width: 16),
         Expanded(
-          child: Text(
-            'Analizando tus datos...',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+          child: Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('analyzing_data'),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.7),
+                ),
+              );
+            },
           ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2),
         ),
       ],
@@ -216,15 +243,19 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
   Widget _buildAnalyticsContent() {
     return Column(
       children: [
-        TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabs: const [
-            Tab(text: 'Correlaciones'),
-            Tab(text: 'Patrones'),
-            Tab(text: 'Progreso'),
-            Tab(text: 'Bienestar'),
-          ],
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              tabs: [
+                Tab(text: languageService.getLocalizedText('correlations')),
+                Tab(text: languageService.getLocalizedText('patterns')),
+                Tab(text: languageService.getLocalizedText('progress')),
+                Tab(text: languageService.getLocalizedText('wellness')),
+              ],
+            );
+          },
         ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
         const SizedBox(height: 16),
         SizedBox(
@@ -253,12 +284,16 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Correlaciones Identificadas',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('identified_correlations'),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
@@ -267,19 +302,31 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
           const SizedBox(height: 16),
 
           // Botón de acción
-          _buildActionButton('Ver Análisis Completo', Icons.analytics, () {
-            // Mostrar modal con análisis más detallado
-            _showDetailedAnalysisModal(context);
-          }),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return _buildActionButton(
+                languageService.getLocalizedText('view_complete_analysis'),
+                Icons.analytics,
+                () {
+                  // Mostrar modal con análisis más detallado
+                  _showDetailedAnalysisModal(context);
+                },
+              );
+            },
+          ),
 
           // Insights
           if (_correlationAnalysis!.insights.isNotEmpty) ...[
-            Text(
-              'Insights',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
-              ),
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return Text(
+                  languageService.getLocalizedText('insights'),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 8),
             ..._correlationAnalysis!.insights.map(
@@ -320,44 +367,60 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Patrones Temporales',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('temporal_patterns'),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
           // Mejores días
           if (_temporalPatterns!.bestDays.isNotEmpty) ...[
-            _buildPatternCard(
-              'Mejores Días',
-              _temporalPatterns!.bestDays,
-              Icons.calendar_today,
-              Colors.green,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildPatternCard(
+                  languageService.getLocalizedText('best_days'),
+                  _temporalPatterns!.bestDays,
+                  Icons.calendar_today,
+                  Colors.green,
+                );
+              },
             ),
             const SizedBox(height: 16),
           ],
 
           // Mejores horas
           if (_temporalPatterns!.bestHours.isNotEmpty) ...[
-            _buildPatternCard(
-              'Mejores Horas',
-              _temporalPatterns!.bestHours,
-              Icons.access_time,
-              Colors.blue,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildPatternCard(
+                  languageService.getLocalizedText('best_hours'),
+                  _temporalPatterns!.bestHours,
+                  Icons.access_time,
+                  Colors.blue,
+                );
+              },
             ),
             const SizedBox(height: 16),
           ],
 
           // Insights estacionales
           if (_temporalPatterns!.seasonalInsights.isNotEmpty) ...[
-            _buildPatternCard(
-              'Patrones Estacionales',
-              _temporalPatterns!.seasonalInsights,
-              Icons.wb_sunny,
-              Colors.orange,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildPatternCard(
+                  languageService.getLocalizedText('seasonal_patterns'),
+                  _temporalPatterns!.seasonalInsights,
+                  Icons.wb_sunny,
+                  Colors.orange,
+                );
+              },
             ),
           ],
         ],
@@ -372,37 +435,53 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Análisis de Progreso',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('progress_analysis'),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
           // Progreso general
-          _buildProgressCard(
-            'Progreso General',
-            _progressAnalysis!.overallProgress,
-            Icons.trending_up,
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return _buildProgressCard(
+                languageService.getLocalizedText('overall_progress'),
+                _progressAnalysis!.overallProgress,
+                Icons.trending_up,
+              );
+            },
           ),
           const SizedBox(height: 16),
 
           // Métricas individuales
-          _buildProgressMetricsCard(
-            'Estado de Ánimo',
-            _progressAnalysis!.moodProgress,
-          ),
-          const SizedBox(height: 12),
-          _buildProgressMetricsCard(
-            'Meditación',
-            _progressAnalysis!.meditationProgress,
-          ),
-          const SizedBox(height: 12),
-          _buildProgressMetricsCard(
-            'Diario',
-            _progressAnalysis!.journalProgress,
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Column(
+                children: [
+                  _buildProgressMetricsCard(
+                    languageService.getLocalizedText('mood_state'),
+                    _progressAnalysis!.moodProgress,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildProgressMetricsCard(
+                    languageService.getLocalizedText('meditation'),
+                    _progressAnalysis!.meditationProgress,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildProgressMetricsCard(
+                    languageService.getLocalizedText('journal'),
+                    _progressAnalysis!.journalProgress,
+                  ),
+                ],
+              );
+            },
           ),
 
           // Logros
@@ -422,12 +501,16 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Análisis de Bienestar',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('wellness_analysis'),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
@@ -437,33 +520,45 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
 
           // Factores de riesgo
           if (_wellnessAnalysis!.riskFactors.isNotEmpty) ...[
-            _buildFactorsCard(
-              'Factores de Riesgo',
-              _wellnessAnalysis!.riskFactors,
-              Icons.warning,
-              Colors.red,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildFactorsCard(
+                  languageService.getLocalizedText('risk_factors'),
+                  _wellnessAnalysis!.riskFactors,
+                  Icons.warning,
+                  Colors.red,
+                );
+              },
             ),
             const SizedBox(height: 16),
           ],
 
           // Factores protectores
           if (_wellnessAnalysis!.protectiveFactors.isNotEmpty) ...[
-            _buildFactorsCard(
-              'Factores Protectores',
-              _wellnessAnalysis!.protectiveFactors,
-              Icons.shield,
-              Colors.green,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildFactorsCard(
+                  languageService.getLocalizedText('protective_factors'),
+                  _wellnessAnalysis!.protectiveFactors,
+                  Icons.shield,
+                  Colors.green,
+                );
+              },
             ),
             const SizedBox(height: 16),
           ],
 
           // Recomendaciones
           if (_wellnessAnalysis!.recommendations.isNotEmpty) ...[
-            _buildFactorsCard(
-              'Recomendaciones',
-              _wellnessAnalysis!.recommendations,
-              Icons.lightbulb,
-              Colors.blue,
+            Consumer<LanguageService>(
+              builder: (context, languageService, child) {
+                return _buildFactorsCard(
+                  languageService.getLocalizedText('recommendations'),
+                  _wellnessAnalysis!.recommendations,
+                  Icons.lightbulb,
+                  Colors.blue,
+                );
+              },
             ),
           ],
         ],
@@ -702,12 +797,16 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             children: [
               Icon(Icons.emoji_events, color: Colors.amber, size: 20),
               const SizedBox(width: 8),
-              Text(
-                'Logros Recientes',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+              Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    languageService.getLocalizedText('recent_achievements'),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -777,12 +876,16 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Puntuación de Bienestar',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('wellness_score'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -857,15 +960,19 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
   }
 
   String _getCorrelationLabel(String key) {
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
     switch (key) {
       case 'meditation_mood':
-        return 'Meditación';
+        return languageService.getLocalizedText('meditation');
       case 'journal_mood':
-        return 'Diario';
+        return languageService.getLocalizedText('journal');
       case 'usage_mood':
-        return 'Uso';
+        return languageService.getLocalizedText('usage');
       case 'time_mood':
-        return 'Horario';
+        return languageService.getLocalizedText('schedule');
       default:
         return key;
     }
@@ -889,10 +996,14 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
   }
 
   String _getWellnessLabel(double score) {
-    if (score >= 80) return 'Excelente';
-    if (score >= 60) return 'Bueno';
-    if (score >= 40) return 'Regular';
-    return 'Necesita mejorar';
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    if (score >= 80) return languageService.getLocalizedText('score_excellent');
+    if (score >= 60) return languageService.getLocalizedText('score_good');
+    if (score >= 40) return languageService.getLocalizedText('score_fair');
+    return languageService.getLocalizedText('score_needs_improvement');
   }
 
   Widget _buildActionButton(
@@ -919,10 +1030,14 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
   }
 
   void _showDetailedAnalysisModal(BuildContext context) {
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Análisis Detallado'),
+        title: Text(languageService.getLocalizedText('detailed_analysis')),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -930,7 +1045,7 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
             children: [
               if (_correlationAnalysis != null) ...[
                 Text(
-                  'Correlaciones Encontradas:',
+                  '${languageService.getLocalizedText('found_correlations')}:',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -959,7 +1074,7 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Insights:',
+                  '${languageService.getLocalizedText('insights')}:',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -987,8 +1102,8 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
                   ),
                 ),
               ] else ...[
-                const Text(
-                  'No hay datos suficientes para mostrar análisis detallado.',
+                Text(
+                  languageService.getLocalizedText('not_enough_data_detailed'),
                 ),
               ],
             ],
@@ -997,7 +1112,7 @@ class _AdvancedAnalyticsWidgetState extends State<AdvancedAnalyticsWidget>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar'),
+            child: Text(languageService.getLocalizedText('close')),
           ),
         ],
       ),

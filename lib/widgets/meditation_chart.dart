@@ -128,9 +128,9 @@ class MeditationChart extends StatelessWidget {
             showTitles: true,
             getTitlesWidget: (value, meta) {
               if (value.toInt() < sortedEntries.length) {
-                final date = sortedEntries[value.toInt()].key;
+                final entry = sortedEntries[value.toInt()];
                 return Text(
-                  '${date.day}/${date.month}',
+                  '${entry.key.day}/${entry.key.month}',
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -164,7 +164,7 @@ class MeditationChart extends StatelessWidget {
         horizontalInterval: 5,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: AppColors.textTertiary.withOpacity(0.2),
+            color: AppColors.textTertiary.withValues(alpha: 0.2),
             strokeWidth: 1,
           );
         },
@@ -174,7 +174,10 @@ class MeditationChart extends StatelessWidget {
   }
 
   double _getMaxY(Iterable<int> values) {
-    if (values.isEmpty) return 10;
+    if (values.isEmpty) {
+      return 10;
+      ;
+    }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 5).toDouble();
   }
@@ -230,7 +233,7 @@ class MeditationChart extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -386,9 +389,9 @@ class MeditationTypeChart extends StatelessWidget {
             showTitles: true,
             getTitlesWidget: (value, meta) {
               if (value.toInt() < sortedTypes.length) {
-                final type = sortedTypes[value.toInt()].key;
+                final entry = sortedTypes[value.toInt()];
                 return Icon(
-                  type.icon,
+                  entry.key.icon,
                   size: 16,
                   color: AppColors.textSecondary,
                 );
@@ -406,7 +409,7 @@ class MeditationTypeChart extends StatelessWidget {
         horizontalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: AppColors.textTertiary.withOpacity(0.2),
+            color: AppColors.textTertiary.withValues(alpha: 0.2),
             strokeWidth: 1,
           );
         },
@@ -416,7 +419,10 @@ class MeditationTypeChart extends StatelessWidget {
   }
 
   double _getMaxY(Iterable<int> values) {
-    if (values.isEmpty) return 5;
+    if (values.isEmpty) {
+      return 5;
+      ;
+    }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 1).toDouble();
   }

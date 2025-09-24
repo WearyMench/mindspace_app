@@ -300,26 +300,29 @@ class SearchService {
 
   /// Calcular relevancia para mood entries
   double _calculateMoodRelevance(MoodEntry entry, String query) {
-    if (query.isEmpty) return 1.0;
+    if (query.isEmpty) {
+      return 1.0;
+      ;
+    }
 
     double score = 0.0;
     final lowercaseQuery = query.toLowerCase();
 
     // Buscar en mood level
     if (entry.overallMood.label.toLowerCase().contains(lowercaseQuery)) {
-      score += 3.0;
+      score += 0.8;
     }
 
     // Buscar en notas
     if (entry.notes != null &&
         entry.notes!.toLowerCase().contains(lowercaseQuery)) {
-      score += 2.0;
+      score += 0.6;
     }
 
     // Buscar en tags
     for (final tag in entry.tags) {
       if (tag.toLowerCase().contains(lowercaseQuery)) {
-        score += 1.0;
+        score += 0.4;
       }
     }
 
@@ -331,26 +334,28 @@ class SearchService {
     MeditationSession session,
     String query,
   ) {
-    if (query.isEmpty) return 1.0;
+    if (query.isEmpty) {
+      return 1.0;
+      ;
+    }
 
     double score = 0.0;
     final lowercaseQuery = query.toLowerCase();
 
     // Buscar en tipo de meditación
-    if (session.type.name.toLowerCase().contains(lowercaseQuery) ||
-        session.type.description.toLowerCase().contains(lowercaseQuery)) {
-      score += 3.0;
+    if (session.type.name.toLowerCase().contains(lowercaseQuery)) {
+      score += 0.8;
     }
 
     // Buscar en dificultad
     if (session.difficulty.label.toLowerCase().contains(lowercaseQuery)) {
-      score += 2.0;
+      score += 0.6;
     }
 
     // Buscar en notas
     if (session.notes != null &&
         session.notes!.toLowerCase().contains(lowercaseQuery)) {
-      score += 2.0;
+      score += 0.4;
     }
 
     return score;
@@ -358,37 +363,39 @@ class SearchService {
 
   /// Calcular relevancia para journal entries
   double _calculateJournalRelevance(JournalEntry entry, String query) {
-    if (query.isEmpty) return 1.0;
+    if (query.isEmpty) {
+      return 1.0;
+    }
 
     double score = 0.0;
     final lowercaseQuery = query.toLowerCase();
 
     // Buscar en título (mayor peso)
     if (entry.title.toLowerCase().contains(lowercaseQuery)) {
-      score += 4.0;
+      score += 1.0;
     }
 
     // Buscar en contenido
     if (entry.content.toLowerCase().contains(lowercaseQuery)) {
-      score += 3.0;
+      score += 0.8;
     }
 
     // Buscar en categoría
     if (entry.category.name.toLowerCase().contains(lowercaseQuery)) {
-      score += 2.0;
+      score += 0.6;
     }
 
     // Buscar en tags personalizados
     for (final tag in entry.customTags) {
       if (tag.toLowerCase().contains(lowercaseQuery)) {
-        score += 1.0;
+        score += 0.4;
       }
     }
 
     // Buscar en mood tags
     for (final moodTag in entry.moodTags) {
       if (moodTag.label.toLowerCase().contains(lowercaseQuery)) {
-        score += 1.0;
+        score += 0.3;
       }
     }
 
@@ -415,7 +422,10 @@ class SearchService {
 
   /// Obtener sugerencias de búsqueda
   Future<List<String>> getSuggestions(String query) async {
-    if (query.length < 2) return [];
+    if (query.length < 2) {
+      return [];
+      ;
+    }
 
     final suggestions = <String>{};
     final lowercaseQuery = query.toLowerCase();
@@ -429,8 +439,7 @@ class SearchService {
 
     // Sugerencias de meditation types
     for (final type in MeditationType.values) {
-      if (type.name.toLowerCase().contains(lowercaseQuery) ||
-          type.description.toLowerCase().contains(lowercaseQuery)) {
+      if (type.name.toLowerCase().contains(lowercaseQuery)) {
         suggestions.add(type.name);
       }
     }

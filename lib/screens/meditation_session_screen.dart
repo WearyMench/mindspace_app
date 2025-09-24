@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:async';
 import '../models/meditation_session.dart';
 import '../constants/app_colors.dart';
+import '../services/language_service.dart';
+import 'package:provider/provider.dart';
 
 class MeditationSessionScreen extends StatefulWidget {
   final MeditationType type;
@@ -99,7 +101,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
           ),
           const Spacer(),
           Text(
-            widget.type.name,
+            _localizedTypeName(context),
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
@@ -199,7 +201,15 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
           ),
         ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
         Text(
-          _isPaused ? 'Pausado' : 'Tiempo restante',
+          _isPaused
+              ? Provider.of<LanguageService>(
+                  context,
+                  listen: false,
+                ).getLocalizedText('pause')
+              : Provider.of<LanguageService>(
+                  context,
+                  listen: false,
+                ).getLocalizedText('time'),
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
@@ -213,8 +223,14 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Text(
         _isPaused
-            ? 'Presiona play para continuar'
-            : 'Sigue el ritmo de respiración del círculo',
+            ? Provider.of<LanguageService>(
+                context,
+                listen: false,
+              ).getLocalizedText('continue')
+            : Provider.of<LanguageService>(
+                context,
+                listen: false,
+              ).getLocalizedText('breathing_instructions'),
         style: Theme.of(
           context,
         ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
@@ -277,7 +293,10 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
             const SizedBox(height: 32),
 
             Text(
-              '¡Meditación completada!',
+              Provider.of<LanguageService>(
+                context,
+                listen: false,
+              ).getLocalizedText('meditation_completed'),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -286,7 +305,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
             const SizedBox(height: 16),
 
             Text(
-              'Has meditado durante ${widget.duration.inMinutes} minutos',
+              '${Provider.of<LanguageService>(context, listen: false).getLocalizedText('time')}: ${widget.duration.inMinutes} ${Provider.of<LanguageService>(context, listen: false).getLocalizedText('minutes')}',
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
@@ -306,9 +325,12 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
                   vertical: 16,
                 ),
               ),
-              child: const Text(
-                'Finalizar',
-                style: TextStyle(
+              child: Text(
+                Provider.of<LanguageService>(
+                  context,
+                  listen: false,
+                ).getLocalizedText('finish'),
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -366,14 +388,27 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Cancelar meditación'),
-        content: const Text(
-          '¿Estás seguro de que quieres cancelar esta sesión de meditación?',
+        title: Text(
+          Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('cancel'),
+        ),
+        content: Text(
+          Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('restore_warning'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Continuar'),
+            child: Text(
+              Provider.of<LanguageService>(
+                context,
+                listen: false,
+              ).getLocalizedText('continue'),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -382,10 +417,40 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Cancelar'),
+            child: Text(
+              Provider.of<LanguageService>(
+                context,
+                listen: false,
+              ).getLocalizedText('cancel'),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  String _localizedTypeName(BuildContext context) {
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    switch (widget.type) {
+      case MeditationType.breathing:
+        return languageService.getLocalizedText('meditation_breathing');
+      case MeditationType.mindfulness:
+        return languageService.getLocalizedText('meditation_mindfulness');
+      case MeditationType.bodyScan:
+        return languageService.getLocalizedText('meditation_body_scan');
+      case MeditationType.lovingKindness:
+        return languageService.getLocalizedText('meditation_loving_kindness');
+      case MeditationType.walking:
+        return languageService.getLocalizedText('meditation_walking');
+      case MeditationType.gratitude:
+        return languageService.getLocalizedText('meditation_gratitude');
+      case MeditationType.sleep:
+        return languageService.getLocalizedText('meditation_sleep');
+      case MeditationType.anxiety:
+        return languageService.getLocalizedText('meditation_anxiety');
+    }
   }
 }

@@ -272,27 +272,27 @@ class _MoodSelectorBottomSheetState extends State<MoodSelectorBottomSheet> {
               },
             ),
           ),
-          Row(
-            children: List.generate(5, (index) {
-              final isSelected = index < rating;
-              return GestureDetector(
-                onTap: () => setState(() {
-                  categoryRatings[category] = index + 1;
-                }),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: Icon(
-                    isSelected ? Icons.star : Icons.star_border,
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.tertiary
-                        : Theme.of(
-                            context,
-                          ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-                    size: 20,
-                  ),
-                ),
-              );
-            }),
+          const SizedBox(width: 12),
+          Expanded(
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(trackHeight: 3),
+              child: Slider(
+                value: rating.toDouble(),
+                min: 1,
+                max: 5,
+                divisions: 4,
+                label: '$rating',
+                onChanged: (newValue) {
+                  setState(() {
+                    categoryRatings[category] = newValue.round();
+                  });
+                },
+                activeColor: Theme.of(context).colorScheme.tertiary,
+                inactiveColor: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withOpacity(0.3),
+              ),
+            ),
           ),
         ],
       ),

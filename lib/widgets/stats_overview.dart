@@ -33,11 +33,22 @@ class StatsOverview extends StatelessWidget {
             final journalStats = journalProvider.getJournalStatistics();
 
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 12.0;
+                    const minChildWidth = 140.0;
+                    int columns =
+                        (constraints.maxWidth / (minChildWidth + spacing))
+                            .floor()
+                            .clamp(1, 3);
+                    final childWidth =
+                        (constraints.maxWidth - spacing * (columns - 1)) /
+                        columns;
+
+                    final cards = <Widget>[
+                      _buildStatCard(
                         context,
                         title: languageService.getLocalizedText('mood_stat'),
                         value: moodStats['streak'].toString(),
@@ -55,10 +66,7 @@ class StatsOverview extends StatelessWidget {
                           ).colorScheme.primary.withOpacity(0.05),
                         ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildStatCard(
+                      _buildStatCard(
                         context,
                         title: languageService.getLocalizedText(
                           'meditation_stat',
@@ -78,14 +86,7 @@ class StatsOverview extends StatelessWidget {
                           ).colorScheme.secondary.withOpacity(0.05),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
+                      _buildStatCard(
                         context,
                         title: languageService.getLocalizedText('journal_stat'),
                         value: journalStats['writingStreak'].toString(),
@@ -103,12 +104,16 @@ class StatsOverview extends StatelessWidget {
                           ).colorScheme.tertiary.withOpacity(0.05),
                         ],
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: SizedBox(),
-                    ), // Empty space for balance
-                  ],
+                    ];
+
+                    return Wrap(
+                      spacing: spacing,
+                      runSpacing: spacing,
+                      children: cards
+                          .map((w) => SizedBox(width: childWidth, child: w))
+                          .toList(),
+                    );
+                  },
                 ),
               ],
             );
@@ -128,25 +133,25 @@ class StatsOverview extends StatelessWidget {
     return GradientCard(
       gradientColors: gradient,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(icon, color: color, size: 16),
+                  child: Icon(icon, color: color, size: 14),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     title,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
@@ -156,17 +161,17 @@ class StatsOverview extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               value,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: color,
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               subtitle,
               style: Theme.of(

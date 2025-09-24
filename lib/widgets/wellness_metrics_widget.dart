@@ -62,11 +62,17 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
                   children: [
                     Expanded(
                       child: _buildMetricCard(
-                        title: 'Estado de Ánimo',
+                        title: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('mood_stat'),
                         value:
                             moodStats['averageMood']?.toStringAsFixed(1) ??
                             '0.0',
-                        subtitle: 'Promedio (1-5)',
+                        subtitle: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('average_1_5'),
                         icon: Icons.mood,
                         color: _getMoodColor(
                           moodStats['averageMood'] as double? ?? 0,
@@ -77,9 +83,15 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: _buildMetricCard(
-                        title: 'Consistencia',
+                        title: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('consistency'),
                         value: '${(consistencyScore * 100).toInt()}%',
-                        subtitle: 'Esta semana',
+                        subtitle: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('this_week'),
                         icon: Icons.trending_up,
                         color: _getConsistencyColor(consistencyScore),
                         trend: consistencyScore > 0.7 ? Trend.up : Trend.stable,
@@ -93,9 +105,15 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
                   children: [
                     Expanded(
                       child: _buildMetricCard(
-                        title: 'Meditación',
+                        title: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('meditation_stat'),
                         value: '${meditationStats['streak'] ?? 0}',
-                        subtitle: 'Días seguidos',
+                        subtitle: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('days_streak'),
                         icon: Icons.self_improvement,
                         color: _getStreakColor(
                           meditationStats['streak'] as int? ?? 0,
@@ -108,9 +126,15 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: _buildMetricCard(
-                        title: 'Reflexión',
+                        title: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('journal_stat'),
                         value: '${recentJournals.length}',
-                        subtitle: 'Entradas esta semana',
+                        subtitle: Provider.of<LanguageService>(
+                          context,
+                          listen: false,
+                        ).getLocalizedText('entries_this_week'),
                         icon: Icons.book,
                         color: recentJournals.isNotEmpty
                             ? Colors.green
@@ -208,7 +232,7 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms).scale();
+    ).animate().fadeIn(duration: 200.ms).scale(begin: const Offset(0.95, 0.95));
   }
 
   Widget _buildMetricCard({
@@ -265,7 +289,7 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.1);
   }
 
   double _calculateWellnessScore(
@@ -331,10 +355,15 @@ class _WellnessMetricsWidgetState extends State<WellnessMetricsWidget> {
   }
 
   String _getWellnessScoreLabel(double score) {
-    if (score >= 8.0) return 'Excelente';
-    if (score >= 6.0) return 'Bueno';
-    if (score >= 4.0) return 'Regular';
-    return 'Necesita mejorar';
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    if (score >= 8.0)
+      return languageService.getLocalizedText('score_excellent');
+    if (score >= 6.0) return languageService.getLocalizedText('score_good');
+    if (score >= 4.0) return languageService.getLocalizedText('score_fair');
+    return languageService.getLocalizedText('score_needs_improvement');
   }
 
   Color _getMoodColor(double mood) {

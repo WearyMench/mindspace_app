@@ -25,16 +25,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-            ],
-          ),
-        ),
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -74,7 +65,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1),
         const SizedBox(height: 8),
         Consumer<LanguageService>(
           builder: (context, languageService, child) {
@@ -87,7 +78,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms, delay: 100.ms).slideY(begin: -0.1),
       ],
     );
   }
@@ -95,8 +86,8 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
   Widget _buildQuickEntry(BuildContext context) {
     return const MoodQuickEntry()
         .animate()
-        .fadeIn(duration: 600.ms, delay: 400.ms)
-        .slideY(begin: 0.2);
+        .fadeIn(duration: 400.ms, delay: 150.ms)
+        .slideY(begin: 0.1);
   }
 
   Widget _buildTimeRangeSelector(BuildContext context) {
@@ -113,7 +104,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms, delay: 600.ms),
+        ).animate().fadeIn(duration: 300.ms, delay: 225.ms),
         const SizedBox(height: 12),
         Row(
           children: _timeRangeKeys.asMap().entries.map((entry) {
@@ -162,7 +153,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
           }).toList(),
         ),
       ],
-    ).animate().fadeIn(duration: 600.ms, delay: 700.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 400.ms, delay: 300.ms).slideY(begin: 0.1);
   }
 
   Widget _buildMoodChart(BuildContext context) {
@@ -195,7 +186,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
               ),
             ],
           ),
-        ).animate().fadeIn(duration: 600.ms, delay: 800.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 375.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -395,8 +386,8 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
                   ],
                 )
                 .animate()
-                .fadeIn(duration: 600.ms, delay: 900.ms)
-                .slideY(begin: 0.2);
+                .fadeIn(duration: 400.ms, delay: 450.ms)
+                .slideY(begin: 0.1);
           },
         );
       },
@@ -485,7 +476,7 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
                     color: Theme.of(context).colorScheme.onBackground,
                     fontWeight: FontWeight.w600,
                   ),
-                ).animate().fadeIn(duration: 600.ms, delay: 1000.ms);
+                ).animate().fadeIn(duration: 200.ms, delay: 350.ms);
               },
             ),
             const SizedBox(height: 16),
@@ -540,81 +531,104 @@ class _MoodTrackingScreenState extends State<MoodTrackingScreen> {
                 ),
               )
             else
-              ...recentEntries
-                  .take(5)
-                  .map((entry) => _buildMoodEntryItem(context, entry)),
+              GradientCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: SizedBox(
+                    height: 280,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: recentEntries.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withOpacity(0.12),
+                        height: 12,
+                        thickness: 1,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
+                      itemBuilder: (context, index) {
+                        final entry = recentEntries[index];
+                        return _buildCompactMoodRow(context, entry);
+                      },
+                    ),
+                  ),
+                ),
+              ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 1100.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 525.ms).slideY(begin: 0.1);
       },
     );
   }
 
-  Widget _buildMoodEntryItem(BuildContext context, MoodEntry entry) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: GradientCard(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
+  Widget _buildCompactMoodRow(BuildContext context, MoodEntry entry) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: _getMoodColor(entry.overallMood).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            entry.overallMood.icon,
+            size: 20,
+            color: _getMoodColor(entry.overallMood),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: _getMoodColor(entry.overallMood).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  entry.overallMood.icon,
-                  size: 24,
-                  color: _getMoodColor(entry.overallMood),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
                       entry.overallMood.label,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${entry.date.day}/${entry.date.month}/${entry.date.year}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withOpacity(0.7),
-                      ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${entry.date.day}/${entry.date.month}/${entry.date.year}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withOpacity(0.6),
                     ),
-                    if (entry.notes != null && entry.notes!.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        entry.notes!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.5),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              if (entry.notes != null && entry.notes!.isNotEmpty)
+                Text(
+                  entry.notes!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                size: 16,
-              ),
             ],
           ),
         ),
-      ),
+        Icon(
+          Icons.arrow_forward_ios,
+          color: Theme.of(
+            context,
+          ).colorScheme.onSurfaceVariant.withOpacity(0.5),
+          size: 14,
+        ),
+      ],
     );
   }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import '../providers/meditation_provider.dart';
 import '../models/meditation_session.dart';
 import '../services/language_service.dart';
@@ -19,8 +22,8 @@ class _MeditationScreenState extends State<MeditationScreen>
     with TickerProviderStateMixin {
   late AnimationController _breathingController;
   late AnimationController _pulseController;
+  // Timer and remaining time are managed inside MeditationSessionScreen
   Timer? _meditationTimer;
-  Duration _remainingTime = const Duration(minutes: 5);
 
   @override
   void initState() {
@@ -48,16 +51,7 @@ class _MeditationScreenState extends State<MeditationScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-            ],
-          ),
-        ),
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -95,7 +89,7 @@ class _MeditationScreenState extends State<MeditationScreen>
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms).slideY(begin: -0.1),
         const SizedBox(height: 8),
         Consumer<LanguageService>(
           builder: (context, languageService, child) {
@@ -108,7 +102,7 @@ class _MeditationScreenState extends State<MeditationScreen>
               ),
             );
           },
-        ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: -0.2),
+        ).animate().fadeIn(duration: 300.ms, delay: 100.ms).slideY(begin: -0.1),
       ],
     );
   }
@@ -116,8 +110,8 @@ class _MeditationScreenState extends State<MeditationScreen>
   Widget _buildQuickStart(BuildContext context) {
     return const MeditationQuickStart()
         .animate()
-        .fadeIn(duration: 600.ms, delay: 400.ms)
-        .slideY(begin: 0.2);
+        .fadeIn(duration: 400.ms, delay: 150.ms)
+        .slideY(begin: 0.1);
   }
 
   Widget _buildMeditationTypes(BuildContext context) {
@@ -132,7 +126,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                 color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.w600,
               ),
-            ).animate().fadeIn(duration: 600.ms, delay: 600.ms);
+            ).animate().fadeIn(duration: 300.ms, delay: 225.ms);
           },
         ),
         const SizedBox(height: 16),
@@ -152,7 +146,7 @@ class _MeditationScreenState extends State<MeditationScreen>
           },
         ),
       ],
-    ).animate().fadeIn(duration: 600.ms, delay: 700.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 400.ms, delay: 300.ms).slideY(begin: 0.1);
   }
 
   Widget _buildMeditationTypeCard(BuildContext context, MeditationType type) {
@@ -220,7 +214,7 @@ class _MeditationScreenState extends State<MeditationScreen>
                     color: Theme.of(context).colorScheme.onBackground,
                     fontWeight: FontWeight.w600,
                   ),
-                ).animate().fadeIn(duration: 600.ms, delay: 800.ms);
+                ).animate().fadeIn(duration: 300.ms, delay: 375.ms);
               },
             ),
             const SizedBox(height: 16),
@@ -275,97 +269,121 @@ class _MeditationScreenState extends State<MeditationScreen>
                 ),
               )
             else
-              ...recentSessions
-                  .take(3)
-                  .map((session) => _buildSessionItem(context, session)),
+              GradientCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: SizedBox(
+                    height: 280,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: recentSessions.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withOpacity(0.12),
+                        height: 12,
+                        thickness: 1,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
+                      itemBuilder: (context, index) {
+                        final session = recentSessions[index];
+                        return _buildCompactSessionRow(context, session);
+                      },
+                    ),
+                  ),
+                ),
+              ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 900.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 450.ms).slideY(begin: 0.1);
       },
     );
   }
 
-  Widget _buildSessionItem(BuildContext context, MeditationSession session) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: GradientCard(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
+  Widget _buildCompactSessionRow(
+    BuildContext context,
+    MeditationSession session,
+  ) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            session.type.icon,
+            size: 20,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.secondary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  session.type.icon,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Consumer<LanguageService>(
+              Row(
+                children: [
+                  Expanded(
+                    child: Consumer<LanguageService>(
                       builder: (context, languageService, child) {
                         return Text(
                           _getLocalizedMeditationTypeName(
                             session.type,
                             languageService,
                           ),
-                          style: Theme.of(context).textTheme.titleMedium
+                          style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface,
                                 fontWeight: FontWeight.w600,
                               ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         );
                       },
                     ),
-                    const SizedBox(height: 4),
-                    Consumer<LanguageService>(
-                      builder: (context, languageService, child) {
-                        return Text(
-                          '${session.duration.inMinutes} ${languageService.getLocalizedText('minutes')} • ${_getLocalizedDifficultyLabel(session.difficulty, languageService)}',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withOpacity(0.7),
-                              ),
-                        );
-                      },
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${session.completedAt.day}/${session.completedAt.month}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withOpacity(0.6),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${session.completedAt.day}/${session.completedAt.month}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withOpacity(0.5),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              if (session.rating != null)
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      index < session.rating! ? Icons.star : Icons.star_border,
-                      color: Theme.of(context).colorScheme.tertiary,
-                      size: 16,
-                    );
-                  }),
-                ),
+              const SizedBox(height: 2),
+              Consumer<LanguageService>(
+                builder: (context, languageService, child) {
+                  return Text(
+                    '${session.duration.inMinutes} ${languageService.getLocalizedText('minutes')} • ${_getLocalizedDifficultyLabel(session.difficulty, languageService)}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
+              ),
             ],
           ),
         ),
-      ),
+        if (session.rating != null)
+          Row(
+            children: List.generate(5, (index) {
+              return Icon(
+                index < session.rating! ? Icons.star : Icons.star_border,
+                color: Theme.of(context).colorScheme.tertiary,
+                size: 14,
+              );
+            }),
+          ),
+      ],
     );
   }
 
@@ -438,7 +456,7 @@ class _MeditationScreenState extends State<MeditationScreen>
               ],
             ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 1000.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 400.ms, delay: 525.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -528,17 +546,10 @@ class _MeditationScreenState extends State<MeditationScreen>
     Duration duration,
     DifficultyLevel difficulty,
   ) {
-    setState(() {
-      _remainingTime = duration;
-    });
-
     Provider.of<MeditationProvider>(
       context,
       listen: false,
     ).startMeditationSession(type, duration, difficulty);
-
-    _startTimer();
-    _startBreathingAnimation();
 
     // Mostrar pantalla de meditación
     Navigator.push(
@@ -548,55 +559,21 @@ class _MeditationScreenState extends State<MeditationScreen>
           type: type,
           duration: duration,
           difficulty: difficulty,
-          onComplete: _completeMeditation,
+          onComplete: (actualDuration) => _completeMeditation(actualDuration),
           onCancel: _cancelMeditation,
         ),
       ),
     );
   }
 
-  void _startTimer() {
-    _meditationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        if (_remainingTime.inSeconds > 0) {
-          setState(() {
-            _remainingTime = Duration(seconds: _remainingTime.inSeconds - 1);
-          });
-        } else {
-          _completeMeditation();
-          timer.cancel();
-        }
-      } else {
-        timer.cancel();
-      }
-    });
-  }
+  // Timer/animations handled in MeditationSessionScreen
 
-  void _startBreathingAnimation() {
-    _breathingController.repeat(reverse: true);
-    _pulseController.repeat(reverse: true);
-  }
-
-  void _completeMeditation() {
+  void _completeMeditation(Duration actualDuration) {
     _meditationTimer?.cancel();
     _breathingController.stop();
     _pulseController.stop();
 
-    Provider.of<MeditationProvider>(
-      context,
-      listen: false,
-    ).completeMeditationSession(actualDuration: _remainingTime);
-
-    Navigator.pop(context);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${Provider.of<LanguageService>(context, listen: false).getLocalizedText('meditation_completed')} ${_remainingTime.inMinutes} ${Provider.of<LanguageService>(context, listen: false).getLocalizedText('meditation_minutes')}',
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
+    _showRatingNotesSheet(actualDuration);
   }
 
   void _cancelMeditation() {
@@ -608,8 +585,178 @@ class _MeditationScreenState extends State<MeditationScreen>
       context,
       listen: false,
     ).cancelMeditationSession();
+  }
 
-    Navigator.pop(context);
+  Future<void> _showRatingNotesSheet(Duration actualDuration) async {
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        int tempRating = 0;
+        final TextEditingController notesController = TextEditingController();
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 24,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('rate_session'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: List.generate(5, (index) {
+                    final idx = index + 1;
+                    return IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints.tightFor(
+                        width: 32,
+                        height: 32,
+                      ),
+                      onPressed: () => setState(() => tempRating = idx),
+                      icon: Icon(
+                        idx <= tempRating ? Icons.star : Icons.star_border,
+                        color: Theme.of(context).colorScheme.tertiary,
+                        size: 24,
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 12),
+                Consumer<LanguageService>(
+                  builder: (context, languageService, child) {
+                    return Text(
+                      languageService.getLocalizedText('notes_optional'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: notesController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: Provider.of<LanguageService>(
+                      context,
+                      listen: false,
+                    ).getLocalizedText('notes_hint'),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context, {
+                            'rating': null,
+                            'notes': null,
+                          });
+                        },
+                        child: Consumer<LanguageService>(
+                          builder: (context, languageService, child) {
+                            return Text(
+                              languageService.getLocalizedText('skip'),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context, {
+                            'rating': tempRating == 0 ? null : tempRating,
+                            'notes': notesController.text.trim().isEmpty
+                                ? null
+                                : notesController.text.trim(),
+                          });
+                        },
+                        child: Consumer<LanguageService>(
+                          builder: (context, languageService, child) {
+                            return Text(
+                              languageService.getLocalizedText('save'),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    Provider.of<MeditationProvider>(
+      context,
+      listen: false,
+    ).completeMeditationSession(
+      actualDuration: actualDuration,
+      rating: result?['rating'] as int?,
+      notes: result?['notes'] as String?,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          Provider.of<LanguageService>(
+            context,
+            listen: false,
+          ).getLocalizedText('meditation_completed'),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+
+    // Cerrar la pantalla de sesión después de completar
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
   String _getLocalizedMeditationTypeName(
@@ -696,6 +843,8 @@ class _MeditationDetailsBottomSheetState
     extends State<MeditationDetailsBottomSheet> {
   Duration selectedDuration = const Duration(minutes: 5);
   DifficultyLevel selectedDifficulty = DifficultyLevel.beginner;
+  bool hapticsEnabled = true;
+  bool soundEnabled = true;
 
   final List<Duration> durations = [
     const Duration(minutes: 5),
@@ -792,6 +941,8 @@ class _MeditationDetailsBottomSheetState
             const SizedBox(height: 24),
             _buildDifficultySelector(),
             const SizedBox(height: 24),
+            _buildPreferencesToggles(),
+            const SizedBox(height: 24),
             _buildActionButtons(),
           ],
         ),
@@ -838,7 +989,7 @@ class _MeditationDetailsBottomSheetState
                     ),
                   ),
                   child: Text(
-                    '${duration.inMinutes}m',
+                    '${duration.inMinutes} ${Provider.of<LanguageService>(context, listen: false).getLocalizedText('minutes')}',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: isSelected
@@ -924,6 +1075,74 @@ class _MeditationDetailsBottomSheetState
     );
   }
 
+  Widget _buildPreferencesToggles() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Consumer<LanguageService>(
+          builder: (context, languageService, child) {
+            return Text(
+              languageService.getLocalizedText('preferences'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Switch(
+                    value: hapticsEnabled,
+                    onChanged: (v) => setState(() => hapticsEnabled = v),
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        languageService.getLocalizedText('haptics'),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Switch(
+                    value: soundEnabled,
+                    onChanged: (v) => setState(() => soundEnabled = v),
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        languageService.getLocalizedText('sound'),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildActionButtons() {
     return Row(
       children: [
@@ -941,8 +1160,16 @@ class _MeditationDetailsBottomSheetState
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              widget.onStart(selectedDuration, selectedDifficulty);
               Navigator.pop(context);
+              Future.microtask(() async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool(
+                  'meditation_haptics_enabled',
+                  hapticsEnabled,
+                );
+                await prefs.setBool('meditation_sound_enabled', soundEnabled);
+                widget.onStart(selectedDuration, selectedDifficulty);
+              });
             },
             child: Consumer<LanguageService>(
               builder: (context, languageService, child) {
@@ -1026,8 +1253,9 @@ class MeditationSessionScreen extends StatefulWidget {
   final MeditationType type;
   final Duration duration;
   final DifficultyLevel difficulty;
-  final VoidCallback onComplete;
+  final void Function(Duration actualDuration) onComplete;
   final VoidCallback onCancel;
+  final bool closeOnComplete;
 
   const MeditationSessionScreen({
     super.key,
@@ -1036,6 +1264,7 @@ class MeditationSessionScreen extends StatefulWidget {
     required this.difficulty,
     required this.onComplete,
     required this.onCancel,
+    this.closeOnComplete = false,
   });
 
   @override
@@ -1050,6 +1279,10 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
   Timer? _timer;
   Duration _remainingTime = const Duration(minutes: 5);
   bool _isPaused = false;
+  Timer? _guidanceTimer;
+  String _guidanceText = '';
+  bool _hapticsEnabled = true;
+  bool _soundEnabled = true;
 
   @override
   void initState() {
@@ -1065,6 +1298,17 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
     );
     _startTimer();
     _startBreathingAnimation();
+    _startGuidance();
+    _loadPrefs();
+    WakelockPlus.enable();
+  }
+
+  Future<void> _loadPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hapticsEnabled = prefs.getBool('meditation_haptics_enabled') ?? true;
+      _soundEnabled = prefs.getBool('meditation_sound_enabled') ?? true;
+    });
   }
 
   @override
@@ -1072,6 +1316,8 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
     _breathingController.dispose();
     _pulseController.dispose();
     _timer?.cancel();
+    _guidanceTimer?.cancel();
+    WakelockPlus.disable();
     super.dispose();
   }
 
@@ -1083,7 +1329,23 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
             _remainingTime = Duration(seconds: _remainingTime.inSeconds - 1);
           });
         } else {
-          widget.onComplete();
+          widget.onComplete(widget.duration);
+          if (widget.closeOnComplete) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  Provider.of<LanguageService>(
+                    context,
+                    listen: false,
+                  ).getLocalizedText('meditation_completed'),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            );
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          }
           timer.cancel();
         }
       } else {
@@ -1106,9 +1368,164 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
       _timer?.cancel();
       _breathingController.stop();
       _pulseController.stop();
+      _guidanceTimer?.cancel();
     } else {
       _startTimer();
       _startBreathingAnimation();
+      _startGuidance();
+    }
+  }
+
+  void _startGuidance() {
+    _guidanceTimer?.cancel();
+    switch (widget.type) {
+      case MeditationType.breathing:
+        _startBreathingGuidance();
+        break;
+      case MeditationType.bodyScan:
+        _startBodyScanGuidance();
+        break;
+      case MeditationType.mindfulness:
+        _startMindfulnessGuidance();
+        break;
+      default:
+        _startMindfulnessGuidance();
+        break;
+    }
+  }
+
+  void _startBreathingGuidance() {
+    // Patterns per difficulty: [inhale, hold, exhale] in seconds
+    List<int> pattern;
+    switch (widget.difficulty) {
+      case DifficultyLevel.beginner:
+        pattern = [4, 4, 4];
+        break;
+      case DifficultyLevel.intermediate:
+        pattern = [4, 7, 8];
+        break;
+      case DifficultyLevel.advanced:
+        pattern = [6, 8, 10];
+        break;
+    }
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    final phaseLabels = [
+      languageService.getLocalizedText('inhale'),
+      languageService.getLocalizedText('hold'),
+      languageService.getLocalizedText('exhale'),
+    ];
+    int phaseIndex = 0;
+    void scheduleNextPhase() {
+      if (!mounted || _isPaused) return;
+      setState(() {
+        _guidanceText = phaseLabels[phaseIndex];
+      });
+      final seconds = pattern[phaseIndex];
+      // Adjust breathing animation speed proportionally
+      _breathingController.duration = Duration(seconds: seconds);
+      _breathingController.repeat(reverse: true);
+      _feedbackCue();
+      _guidanceTimer = Timer(Duration(seconds: seconds), () {
+        phaseIndex = (phaseIndex + 1) % pattern.length;
+        scheduleNextPhase();
+      });
+    }
+
+    scheduleNextPhase();
+  }
+
+  void _startBodyScanGuidance() {
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    final regions = [
+      languageService.getLocalizedText('head'),
+      languageService.getLocalizedText('neck'),
+      languageService.getLocalizedText('shoulders'),
+      languageService.getLocalizedText('arms'),
+      languageService.getLocalizedText('torso'),
+      languageService.getLocalizedText('legs'),
+      languageService.getLocalizedText('feet'),
+    ];
+    int perRegion;
+    switch (widget.difficulty) {
+      case DifficultyLevel.beginner:
+        perRegion = 10;
+        break;
+      case DifficultyLevel.intermediate:
+        perRegion = 8;
+        break;
+      case DifficultyLevel.advanced:
+        perRegion = 6;
+        break;
+    }
+    int idx = 0;
+    void scheduleNext() {
+      if (!mounted || _isPaused) return;
+      setState(() {
+        _guidanceText =
+            '${languageService.getLocalizedText('focus_on')}: ${regions[idx]}';
+      });
+      _feedbackCue();
+      _guidanceTimer = Timer(Duration(seconds: perRegion), () {
+        idx = (idx + 1) % regions.length;
+        scheduleNext();
+      });
+    }
+
+    scheduleNext();
+  }
+
+  void _startMindfulnessGuidance() {
+    final languageService = Provider.of<LanguageService>(
+      context,
+      listen: false,
+    );
+    final prompts = [
+      languageService.getLocalizedText('prompt_observe_breath'),
+      languageService.getLocalizedText('prompt_listen_sounds'),
+      languageService.getLocalizedText('prompt_feel_body'),
+      languageService.getLocalizedText('prompt_notice_thoughts'),
+    ];
+    int interval;
+    switch (widget.difficulty) {
+      case DifficultyLevel.beginner:
+        interval = 20;
+        break;
+      case DifficultyLevel.intermediate:
+        interval = 15;
+        break;
+      case DifficultyLevel.advanced:
+        interval = 10;
+        break;
+    }
+    int idx = 0;
+    void scheduleNext() {
+      if (!mounted || _isPaused) return;
+      setState(() {
+        _guidanceText = prompts[idx];
+      });
+      _feedbackCue();
+      _guidanceTimer = Timer(Duration(seconds: interval), () {
+        idx = (idx + 1) % prompts.length;
+        scheduleNext();
+      });
+    }
+
+    scheduleNext();
+  }
+
+  void _feedbackCue() {
+    // Sutil vibración y sonido del sistema condicionados por preferencias
+    if (_hapticsEnabled) {
+      HapticFeedback.selectionClick();
+    }
+    if (_soundEnabled) {
+      SystemSound.play(SystemSoundType.click);
     }
   }
 
@@ -1150,7 +1567,10 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
     return Row(
       children: [
         IconButton(
-          onPressed: widget.onCancel,
+          onPressed: () {
+            widget.onCancel();
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.close),
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -1223,6 +1643,16 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  if (_guidanceText.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _guidanceText,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -1252,7 +1682,12 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen>
                 _buildControlButton(
                   icon: Icons.stop,
                   label: languageService.getLocalizedText('finish'),
-                  onTap: widget.onComplete,
+                  onTap: () {
+                    widget.onComplete(widget.duration - _remainingTime);
+                    if (widget.closeOnComplete) {
+                      Navigator.pop(context);
+                    }
+                  },
                   color: Theme.of(context).colorScheme.error,
                 ),
               ],

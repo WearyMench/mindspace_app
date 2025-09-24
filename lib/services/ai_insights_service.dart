@@ -2,6 +2,7 @@ import '../models/mood_entry.dart';
 import '../models/meditation_session.dart';
 import '../models/journal_entry.dart';
 import '../services/user_preferences_service.dart';
+import '../services/language_service.dart';
 
 class AIInsightsService {
   // Análisis predictivo del estado de ánimo
@@ -9,12 +10,13 @@ class AIInsightsService {
     required List<MoodEntry> recentMoods,
     required List<MeditationSession> recentSessions,
     required List<JournalEntry> recentJournals,
+    required LanguageService languageService,
   }) async {
     if (recentMoods.length < 3) {
       return MoodPrediction(
         trend: MoodTrend.stable,
         confidence: 0.3,
-        recommendation: 'Necesitas más datos para hacer predicciones precisas',
+        recommendation: languageService.getLocalizedText('rec_need_more_data'),
         factors: [],
         nextWeekPrediction: 3.0,
       );
@@ -38,21 +40,18 @@ class AIInsightsService {
     if (slope > 0.2) {
       trend = MoodTrend.improving;
       confidence = 0.8;
-      recommendation =
-          'Tu estado de ánimo está mejorando. ¡Sigue con las actividades que te hacen sentir bien!';
-      factors.add('Tendencia positiva en los últimos días');
+      recommendation = languageService.getLocalizedText('rec_mood_improving');
+      factors.add(languageService.getLocalizedText('factor_positive_trend'));
     } else if (slope < -0.2) {
       trend = MoodTrend.declining;
       confidence = 0.7;
-      recommendation =
-          'Notamos una tendencia a la baja. Te sugerimos probar técnicas de relajación o hablar con alguien de confianza.';
-      factors.add('Tendencia negativa en los últimos días');
+      recommendation = languageService.getLocalizedText('rec_mood_declining');
+      factors.add(languageService.getLocalizedText('factor_negative_trend'));
     } else {
       trend = MoodTrend.stable;
       confidence = 0.6;
-      recommendation =
-          'Tu estado de ánimo se mantiene estable. Es un buen momento para explorar nuevas actividades de bienestar.';
-      factors.add('Estado de ánimo estable');
+      recommendation = languageService.getLocalizedText('rec_mood_stable');
+      factors.add(languageService.getLocalizedText('factor_stable_mood'));
     }
 
     // Analizar correlaciones
@@ -66,24 +65,30 @@ class AIInsightsService {
     );
 
     if (meditationCorrelation > 0.5) {
-      factors.add('La meditación mejora tu estado de ánimo');
+      factors.add(languageService.getLocalizedText('factor_meditation_helps'));
       if (trend == MoodTrend.declining) {
-        recommendation += ' Considera meditar más frecuentemente.';
+        recommendation +=
+            ' ' +
+            languageService.getLocalizedText('rec_consider_meditating_more');
       }
     }
 
     if (journalCorrelation > 0.3) {
-      factors.add('Escribir en tu diario te ayuda a procesar emociones');
+      factors.add(languageService.getLocalizedText('factor_journaling_helps'));
       if (trend == MoodTrend.declining) {
         recommendation +=
-            ' Escribir sobre tus sentimientos puede ser muy útil.';
+            ' ' + languageService.getLocalizedText('rec_consider_journaling');
       }
     }
 
     // Analizar patrones estacionales
     final seasonalPattern = _analyzeSeasonalPattern(recentMoods);
     if (seasonalPattern.isNotEmpty) {
-      factors.add(seasonalPattern);
+      factors.add(
+        seasonalPattern == 'december_better'
+            ? languageService.getLocalizedText('factor_december_better')
+            : languageService.getLocalizedText('factor_january_better'),
+      );
     }
 
     return MoodPrediction(
@@ -101,13 +106,17 @@ class AIInsightsService {
     required List<MoodEntry> recentMoods,
     required List<MeditationSession> recentSessions,
     required List<JournalEntry> recentJournals,
+    required LanguageService languageService,
   }) async {
     final recommendations = <PersonalizedRecommendation>[];
 
     // Recomendación basada en objetivo del usuario
     if (userPreferences.userGoal.isNotEmpty) {
       recommendations.add(
-        _createGoalBasedRecommendation(userPreferences.userGoal),
+        _createGoalBasedRecommendation(
+          userPreferences.userGoal,
+          languageService,
+        ),
       );
     }
 
@@ -116,16 +125,19 @@ class AIInsightsService {
       recommendations.add(
         PersonalizedRecommendation(
           type: RecommendationType.meditation,
-          title: 'Comienza tu práctica de meditación',
-          description:
-              'La meditación puede ayudarte a alcanzar tu objetivo de ${userPreferences.userGoal}',
+          title: languageService.getLocalizedText(
+            'rec_start_meditation_practice_title',
+          ),
+          description: languageService
+              .getLocalizedText('rec_start_meditation_practice_description')
+              .replaceFirst('{goal}', userPreferences.userGoal),
           priority: Priority.high,
-          actionText: 'Meditar ahora',
-          estimatedTime: '5-10 minutos',
+          actionText: languageService.getLocalizedText('action_meditate_now'),
+          estimatedTime: '5-10 ' + languageService.getLocalizedText('minutes'),
           benefits: [
-            'Reduce el estrés',
-            'Mejora la concentración',
-            'Aumenta la autoconciencia',
+            languageService.getLocalizedText('benefit_reduce_stress'),
+            languageService.getLocalizedText('benefit_improve_focus'),
+            languageService.getLocalizedText('benefit_increase_self_awareness'),
           ],
         ),
       );
@@ -133,16 +145,21 @@ class AIInsightsService {
       recommendations.add(
         PersonalizedRecommendation(
           type: RecommendationType.meditation,
-          title: 'Mantén tu práctica de meditación',
-          description:
-              'Has meditado ${recentSessions.length} veces. ¡Sigue así para ver mejores resultados!',
+          title: languageService.getLocalizedText(
+            'rec_maintain_meditation_practice_title',
+          ),
+          description: languageService
+              .getLocalizedText('rec_maintain_meditation_practice_description')
+              .replaceFirst('{count}', recentSessions.length.toString()),
           priority: Priority.medium,
-          actionText: 'Continuar práctica',
-          estimatedTime: '10-15 minutos',
+          actionText: languageService.getLocalizedText(
+            'action_continue_practice',
+          ),
+          estimatedTime: '10-15 ' + languageService.getLocalizedText('minutes'),
           benefits: [
-            'Consolida el hábito',
-            'Mejora la consistencia',
-            'Aumenta los beneficios',
+            languageService.getLocalizedText('benefit_build_habit'),
+            languageService.getLocalizedText('benefit_improve_consistency'),
+            languageService.getLocalizedText('benefit_increase_benefits'),
           ],
         ),
       );
@@ -155,16 +172,20 @@ class AIInsightsService {
         recommendations.add(
           PersonalizedRecommendation(
             type: RecommendationType.wellness,
-            title: 'Técnicas para mejorar tu estado de ánimo',
-            description:
-                'Notamos que te has sentido un poco bajo. Aquí tienes algunas técnicas que pueden ayudar.',
+            title: languageService.getLocalizedText('rec_low_mood_title'),
+            description: languageService.getLocalizedText(
+              'rec_low_mood_description',
+            ),
             priority: Priority.high,
-            actionText: 'Ver técnicas',
-            estimatedTime: '15-20 minutos',
+            actionText: languageService.getLocalizedText(
+              'action_view_techniques',
+            ),
+            estimatedTime:
+                '15-20 ' + languageService.getLocalizedText('minutes'),
             benefits: [
-              'Mejora el estado de ánimo',
-              'Reduce la ansiedad',
-              'Aumenta la energía',
+              languageService.getLocalizedText('benefit_mood_improvement'),
+              languageService.getLocalizedText('benefit_reduce_anxiety'),
+              languageService.getLocalizedText('benefit_increase_energy'),
             ],
           ),
         );
@@ -173,25 +194,35 @@ class AIInsightsService {
 
     // Recomendación basada en intereses del usuario
     for (final interest in userPreferences.userInterests) {
-      recommendations.add(_createInterestBasedRecommendation(interest));
+      recommendations.add(
+        _createInterestBasedRecommendation(interest, languageService),
+      );
     }
 
     // Recomendación de horario óptimo
     final optimalTime = _findOptimalTime(recentMoods, recentSessions);
     if (optimalTime != null) {
+      final timeLabel = optimalTime == 'morning'
+          ? languageService.getLocalizedText('morning_label')
+          : optimalTime == 'afternoon'
+          ? languageService.getLocalizedText('afternoon_label')
+          : languageService.getLocalizedText('evening_label');
       recommendations.add(
         PersonalizedRecommendation(
           type: RecommendationType.timing,
-          title: 'Horario óptimo para tu bienestar',
-          description:
-              'Basado en tus datos, el mejor momento para tus actividades de bienestar es $optimalTime',
+          title: languageService.getLocalizedText('optimal_time_title'),
+          description: languageService
+              .getLocalizedText('optimal_time_message')
+              .replaceFirst('{time}', timeLabel),
           priority: Priority.low,
-          actionText: 'Configurar recordatorio',
-          estimatedTime: '2 minutos',
+          actionText: languageService.getLocalizedText(
+            'action_configure_reminder',
+          ),
+          estimatedTime: '2 ' + languageService.getLocalizedText('minutes'),
           benefits: [
-            'Mayor efectividad',
-            'Mejor adherencia',
-            'Resultados más consistentes',
+            languageService.getLocalizedText('benefit_more_effective'),
+            languageService.getLocalizedText('benefit_better_adherence'),
+            languageService.getLocalizedText('benefit_more_consistent_results'),
           ],
         ),
       );
@@ -322,9 +353,9 @@ class AIInsightsService {
       final januaryAvg = monthlyAverages[1]!;
 
       if (decemberAvg > januaryAvg + 0.5) {
-        return 'Tienes tendencia a sentirte mejor en diciembre';
+        return 'december_better';
       } else if (januaryAvg > decemberAvg + 0.5) {
-        return 'Tienes tendencia a sentirte mejor en enero';
+        return 'january_better';
       }
     }
 
@@ -393,48 +424,52 @@ class AIInsightsService {
   // Crear recomendaciones basadas en objetivos
   static PersonalizedRecommendation _createGoalBasedRecommendation(
     String goal,
+    LanguageService languageService,
   ) {
     final goalRecommendations = {
       'Reducir el estrés': PersonalizedRecommendation(
         type: RecommendationType.meditation,
-        title: 'Meditación para reducir el estrés',
-        description:
-            'Prueba esta meditación específicamente diseñada para reducir el estrés',
+        title: languageService.getLocalizedText('goal_reduce_stress_title'),
+        description: languageService.getLocalizedText(
+          'goal_reduce_stress_description',
+        ),
         priority: Priority.high,
-        actionText: 'Comenzar meditación',
-        estimatedTime: '10-15 minutos',
+        actionText: languageService.getLocalizedText('action_start_meditation'),
+        estimatedTime: '10-15 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Reduce cortisol',
-          'Mejora la relajación',
-          'Aumenta la claridad mental',
+          languageService.getLocalizedText('benefit_reduce_cortisol'),
+          languageService.getLocalizedText('benefit_improve_relaxation'),
+          languageService.getLocalizedText('benefit_increase_mental_clarity'),
         ],
       ),
       'Mejorar el estado de ánimo': PersonalizedRecommendation(
         type: RecommendationType.wellness,
-        title: 'Actividades para mejorar el estado de ánimo',
-        description:
-            'Una combinación de técnicas que han demostrado mejorar el estado de ánimo',
+        title: languageService.getLocalizedText('goal_improve_mood_title'),
+        description: languageService.getLocalizedText(
+          'goal_improve_mood_description',
+        ),
         priority: Priority.high,
-        actionText: 'Ver actividades',
-        estimatedTime: '20-30 minutos',
+        actionText: languageService.getLocalizedText('action_view_activities'),
+        estimatedTime: '20-30 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Aumenta la serotonina',
-          'Mejora la autoestima',
-          'Reduce la ansiedad',
+          languageService.getLocalizedText('benefit_increase_serotonin'),
+          languageService.getLocalizedText('benefit_improve_self_esteem'),
+          languageService.getLocalizedText('benefit_reduce_anxiety'),
         ],
       ),
       'Dormir mejor': PersonalizedRecommendation(
         type: RecommendationType.meditation,
-        title: 'Meditación para el sueño',
-        description:
-            'Técnicas de relajación específicas para mejorar la calidad del sueño',
+        title: languageService.getLocalizedText('goal_sleep_better_title'),
+        description: languageService.getLocalizedText(
+          'goal_sleep_better_description',
+        ),
         priority: Priority.medium,
-        actionText: 'Preparar para dormir',
-        estimatedTime: '15-20 minutos',
+        actionText: languageService.getLocalizedText('action_prepare_sleep'),
+        estimatedTime: '15-20 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Mejora la calidad del sueño',
-          'Reduce el insomnio',
-          'Aumenta la relajación',
+          languageService.getLocalizedText('benefit_improve_sleep_quality'),
+          languageService.getLocalizedText('benefit_reduce_insomnia'),
+          languageService.getLocalizedText('benefit_increase_relaxation'),
         ],
       ),
     };
@@ -442,61 +477,72 @@ class AIInsightsService {
     return goalRecommendations[goal] ??
         PersonalizedRecommendation(
           type: RecommendationType.wellness,
-          title: 'Plan personalizado para tu objetivo',
-          description:
-              'Hemos creado un plan específico para ayudarte a alcanzar: $goal',
+          title: languageService.getLocalizedText('goal_custom_plan_title'),
+          description: languageService
+              .getLocalizedText('goal_custom_plan_description')
+              .replaceFirst('{goal}', goal),
           priority: Priority.medium,
-          actionText: 'Ver plan',
-          estimatedTime: 'Variable',
-          benefits: ['Personalizado', 'Adaptable', 'Efectivo'],
+          actionText: languageService.getLocalizedText('action_view_plan'),
+          estimatedTime: languageService.getLocalizedText('time_variable'),
+          benefits: [
+            languageService.getLocalizedText('benefit_personal_growth'),
+            languageService.getLocalizedText('benefit_motivation'),
+            languageService.getLocalizedText('benefit_continuous_learning'),
+          ],
         );
   }
 
   // Crear recomendaciones basadas en intereses
   static PersonalizedRecommendation _createInterestBasedRecommendation(
     String interest,
+    LanguageService languageService,
   ) {
     final interestRecommendations = {
       'Meditación': PersonalizedRecommendation(
         type: RecommendationType.meditation,
-        title: 'Nueva técnica de meditación',
-        description:
-            'Explora esta nueva técnica que puede enriquecer tu práctica',
+        title: languageService.getLocalizedText('interest_meditation_title'),
+        description: languageService.getLocalizedText(
+          'interest_meditation_description',
+        ),
         priority: Priority.medium,
-        actionText: 'Aprender técnica',
-        estimatedTime: '15-20 minutos',
+        actionText: languageService.getLocalizedText('action_learn_technique'),
+        estimatedTime: '15-20 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Diversifica tu práctica',
-          'Aumenta la motivación',
-          'Mejora los resultados',
+          languageService.getLocalizedText('benefit_diversify_practice'),
+          languageService.getLocalizedText('benefit_increase_motivation'),
+          languageService.getLocalizedText('benefit_improve_results'),
         ],
       ),
       'Respiración': PersonalizedRecommendation(
         type: RecommendationType.meditation,
-        title: 'Ejercicio de respiración avanzado',
-        description:
-            'Técnica de respiración que puedes practicar en cualquier momento',
+        title: languageService.getLocalizedText('interest_breathing_title'),
+        description: languageService.getLocalizedText(
+          'interest_breathing_description',
+        ),
         priority: Priority.medium,
-        actionText: 'Practicar ahora',
-        estimatedTime: '5-10 minutos',
+        actionText: languageService.getLocalizedText('action_practice_now'),
+        estimatedTime: '5-10 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Reduce el estrés inmediatamente',
-          'Mejora la concentración',
-          'Regula el sistema nervioso',
+          languageService.getLocalizedText(
+            'benefit_immediate_stress_reduction',
+          ),
+          languageService.getLocalizedText('benefit_improve_focus'),
+          languageService.getLocalizedText('benefit_regulate_nervous_system'),
         ],
       ),
       'Gratitud': PersonalizedRecommendation(
         type: RecommendationType.journal,
-        title: 'Diario de gratitud',
-        description:
-            'Escribe sobre las cosas por las que te sientes agradecido hoy',
+        title: languageService.getLocalizedText('interest_gratitude_title'),
+        description: languageService.getLocalizedText(
+          'interest_gratitude_description',
+        ),
         priority: Priority.low,
-        actionText: 'Escribir gratitud',
-        estimatedTime: '5-10 minutos',
+        actionText: languageService.getLocalizedText('action_write_gratitude'),
+        estimatedTime: '5-10 ' + languageService.getLocalizedText('minutes'),
         benefits: [
-          'Aumenta la felicidad',
-          'Mejora la perspectiva',
-          'Reduce la ansiedad',
+          languageService.getLocalizedText('benefit_increase_happiness'),
+          languageService.getLocalizedText('benefit_improve_perspective'),
+          languageService.getLocalizedText('benefit_reduce_anxiety'),
         ],
       ),
     };
@@ -504,15 +550,19 @@ class AIInsightsService {
     return interestRecommendations[interest] ??
         PersonalizedRecommendation(
           type: RecommendationType.wellness,
-          title: 'Explora más sobre $interest',
-          description: 'Descubre nuevas formas de profundizar en $interest',
+          title: languageService
+              .getLocalizedText('interest_explore_title')
+              .replaceFirst('{interest}', interest),
+          description: languageService
+              .getLocalizedText('interest_explore_description')
+              .replaceFirst('{interest}', interest),
           priority: Priority.low,
-          actionText: 'Explorar',
-          estimatedTime: 'Variable',
+          actionText: languageService.getLocalizedText('action_explore'),
+          estimatedTime: languageService.getLocalizedText('time_variable'),
           benefits: [
-            'Aprendizaje continuo',
-            'Motivación',
-            'Crecimiento personal',
+            languageService.getLocalizedText('benefit_continuous_learning'),
+            languageService.getLocalizedText('benefit_motivation'),
+            languageService.getLocalizedText('benefit_personal_growth'),
           ],
         );
   }

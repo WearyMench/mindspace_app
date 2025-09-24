@@ -59,7 +59,10 @@ class _FeedbackOverlayState extends State<FeedbackOverlay>
   }
 
   void _showFeedback() {
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+      ;
+    }
 
     setState(() => _isVisible = true);
     _controller.forward();
@@ -72,7 +75,10 @@ class _FeedbackOverlayState extends State<FeedbackOverlay>
   }
 
   void _hideFeedback() {
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+      ;
+    }
 
     _controller.reverse().then((_) {
       if (mounted) {
@@ -95,21 +101,10 @@ class _FeedbackOverlayState extends State<FeedbackOverlay>
         widget.child,
         if (_isVisible && widget.message != null)
           Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
+            top: MediaQuery.of(context).padding.top + 20,
             left: 16,
             right: 16,
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: _buildFeedbackCard(),
-                  ),
-                );
-              },
-            ),
+            child: _buildFeedbackCard(),
           ),
       ],
     );
@@ -125,7 +120,7 @@ class _FeedbackOverlayState extends State<FeedbackOverlay>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: colors.backgroundColor.withOpacity(0.3),
+            color: colors.backgroundColor.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -150,7 +145,7 @@ class _FeedbackOverlayState extends State<FeedbackOverlay>
             onTap: _hideFeedback,
             child: Icon(
               Icons.close,
-              color: colors.textColor.withOpacity(0.6),
+              color: colors.textColor.withValues(alpha: 0.6),
               size: 18,
             ),
           ),

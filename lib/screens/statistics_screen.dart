@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
 import '../providers/mood_provider.dart';
 import '../providers/meditation_provider.dart';
@@ -25,16 +25,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.background,
-              Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-            ],
-          ),
-        ),
+        color: Theme.of(context).colorScheme.background,
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -76,7 +67,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           Row(
             children: [
               IconButton(
-                onPressed: () => context.go('/home'),
+                onPressed: () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // Si no hay páginas en el stack, ir al home
+                    context.go('/home');
+                  }
+                },
                 icon: const Icon(Icons.arrow_back),
                 color: Theme.of(context).colorScheme.onBackground,
               ),
@@ -129,7 +127,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             ],
           ),
         ],
-      ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.3),
+      ).animate().fadeIn(duration: 200.ms).slideY(begin: -0.1),
     );
   }
 
@@ -161,12 +159,16 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   languageService.getLocalizedText('journal_tab'),
                   2,
                 ),
-                _buildTabButton(context, 'Análisis Inteligente', 3),
+                _buildTabButton(
+                  context,
+                  languageService.getLocalizedText('smart_analysis'),
+                  3,
+                ),
               ],
             );
           },
         ),
-      ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: -0.2),
+      ).animate().fadeIn(duration: 200.ms, delay: 50.ms).slideY(begin: -0.1),
     );
   }
 
@@ -177,19 +179,24 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         onTap: () => setState(() => _selectedTab = index),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
           decoration: BoxDecoration(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: isSelected ? Colors.white : AppColors.textSecondary,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 12,
+                color: isSelected ? Colors.white : AppColors.textSecondary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
             ),
           ),
         ),
@@ -231,7 +238,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
         );
       },
-    ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 200.ms, delay: 100.ms).slideY(begin: 0.1);
   }
 
   Widget _buildMeditationStatistics(BuildContext context) {
@@ -253,7 +260,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
         );
       },
-    ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 200.ms, delay: 100.ms).slideY(begin: 0.1);
   }
 
   Widget _buildJournalStatistics(BuildContext context) {
@@ -275,7 +282,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
         );
       },
-    ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.2);
+    ).animate().fadeIn(duration: 200.ms, delay: 100.ms).slideY(begin: 0.1);
   }
 
   Widget _buildStatsCards(BuildContext context, Map<String, dynamic> stats) {
@@ -316,7 +323,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 600.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 200.ms, delay: 150.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -362,7 +369,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 600.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 200.ms, delay: 150.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -408,7 +415,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               ),
             ),
           ],
-        ).animate().fadeIn(duration: 600.ms, delay: 600.ms).slideY(begin: 0.2);
+        ).animate().fadeIn(duration: 200.ms, delay: 150.ms).slideY(begin: 0.1);
       },
     );
   }
@@ -569,7 +576,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   : BarChart(
                       BarChartData(
                         alignment: BarChartAlignment.spaceAround,
-                        maxY: 5,
+                        maxY: _calculateMaxY(sessions),
                         barTouchData: BarTouchData(enabled: false),
                         titlesData: const FlTitlesData(show: false),
                         borderData: FlBorderData(show: false),
@@ -623,7 +630,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   : BarChart(
                       BarChartData(
                         alignment: BarChartAlignment.spaceAround,
-                        maxY: 10,
+                        maxY: _calculateMaxYJournal(entries),
                         barTouchData: BarTouchData(enabled: false),
                         titlesData: const FlTitlesData(show: false),
                         borderData: FlBorderData(show: false),
@@ -848,6 +855,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     return spots;
   }
 
+  double _calculateMaxY(List sessions) {
+    final now = DateTime.now();
+    double maxCount = 0;
+
+    for (int i = 0; i < 7; i++) {
+      final date = now.subtract(Duration(days: 6 - i));
+      final daySessions = sessions.where((session) {
+        return session.date.year == date.year &&
+            session.date.month == date.month &&
+            session.date.day == date.day;
+      }).length;
+
+      if (daySessions > maxCount) {
+        maxCount = daySessions.toDouble();
+      }
+    }
+
+    // Asegurar que maxY sea al menos 1 y agregar un poco de padding
+    return (maxCount == 0 ? 1 : maxCount + 1).toDouble();
+  }
+
   List<BarChartGroupData> _generateMeditationBars(List sessions) {
     final bars = <BarChartGroupData>[];
     final now = DateTime.now();
@@ -877,6 +905,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       );
     }
     return bars;
+  }
+
+  double _calculateMaxYJournal(List entries) {
+    final now = DateTime.now();
+    double maxCount = 0;
+
+    for (int i = 0; i < 7; i++) {
+      final date = now.subtract(Duration(days: 6 - i));
+      final dayEntries = entries.where((entry) {
+        return entry.createdAt.year == date.year &&
+            entry.createdAt.month == date.month &&
+            entry.createdAt.day == date.day;
+      }).length;
+
+      if (dayEntries > maxCount) {
+        maxCount = dayEntries.toDouble();
+      }
+    }
+
+    // Asegurar que maxY sea al menos 1 y agregar un poco de padding
+    return (maxCount == 0 ? 1 : maxCount + 1).toDouble();
   }
 
   List<BarChartGroupData> _generateJournalBars(List entries) {
@@ -916,8 +965,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           child: AdvancedAnalyticsWidget(),
         )
         .animate()
-        .fadeIn(duration: 600.ms, delay: 200.ms)
-        .slideY(begin: 0.2)
+        .fadeIn(duration: 200.ms, delay: 50.ms)
+        .slideY(begin: 0.1)
         .scale(begin: const Offset(0.95, 0.95));
   }
 
@@ -927,13 +976,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Resumen Rápido',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
-          ).animate().fadeIn(duration: 600.ms).slideX(begin: 0.2),
+          Consumer<LanguageService>(
+            builder: (context, languageService, child) {
+              return Text(
+                languageService.getLocalizedText('quick_summary'),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            },
+          ).animate().fadeIn(duration: 200.ms).slideX(begin: 0.1),
           const SizedBox(height: 16),
           Consumer<MoodProvider>(
             builder: (context, moodProvider, child) {
@@ -944,42 +997,54 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Estado de Ánimo',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          Consumer<LanguageService>(
+                            builder: (context, languageService, child) {
+                              return Text(
+                                languageService.getLocalizedText('mood_state'),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            'Promedio: ${stats['averageMood'].toStringAsFixed(1)}',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.7),
-                                ),
+                          Consumer<LanguageService>(
+                            builder: (context, languageService, child) {
+                              return Text(
+                                '${languageService.getLocalizedText('average')}: ${stats['averageMood'].toStringAsFixed(1)}',
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withOpacity(0.7),
+                                    ),
+                              );
+                            },
                           ),
-                          Text(
-                            'Entradas: ${stats['totalEntries']}',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.7),
-                                ),
+                          Consumer<LanguageService>(
+                            builder: (context, languageService, child) {
+                              return Text(
+                                '${languageService.getLocalizedText('entries')}: ${stats['totalEntries']}',
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withOpacity(0.7),
+                                    ),
+                              );
+                            },
                           ),
                         ],
                       ),
                     ),
                   )
                   .animate()
-                  .fadeIn(duration: 600.ms, delay: 200.ms)
-                  .scale(begin: const Offset(0.95, 0.95));
+                  .fadeIn(duration: 200.ms, delay: 50.ms)
+                  .scale(begin: const Offset(0.98, 0.98));
             },
           ),
         ],

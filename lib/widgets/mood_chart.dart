@@ -99,7 +99,7 @@ class MoodChart extends StatelessWidget {
         horizontalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: AppColors.textTertiary.withOpacity(0.2),
+            color: AppColors.textTertiary.withValues(alpha: 0.2),
             strokeWidth: 1,
           );
         },
@@ -117,9 +117,9 @@ class MoodChart extends StatelessWidget {
             interval: 1,
             getTitlesWidget: (value, meta) {
               if (value.toInt() < moodEntries.length) {
-                final date = moodEntries[value.toInt()].date;
+                final entry = moodEntries[value.toInt()];
                 return Text(
-                  '${date.day}/${date.month}',
+                  '${entry.date.day}/${entry.date.month}',
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -172,7 +172,7 @@ class MoodChart extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: AppColors.primaryPurple.withOpacity(0.1),
+            color: AppColors.primaryPurple.withValues(alpha: 0.1),
           ),
         ),
       ],

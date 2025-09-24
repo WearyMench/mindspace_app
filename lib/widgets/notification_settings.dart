@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../services/notification_service.dart';
+import '../services/smart_notification_service.dart';
+import '../services/user_preferences_service.dart';
 import '../services/language_service.dart';
 import '../widgets/gradient_card.dart';
 
@@ -28,8 +30,24 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   }
 
   Future<void> _loadSettings() async {
-    // Cargar configuraciones guardadas
-    // En una implementación real, esto vendría de SharedPreferences
+    try {
+      final userPreferences = await UserPreferencesService.getUserPreferences();
+
+      setState(() {
+        _dailyReminders = userPreferences.notificationsEnabled;
+        _weeklyReports = userPreferences.weeklyReportsEnabled;
+        _reminderTime =
+            userPreferences.reminderHour != null &&
+                userPreferences.reminderMinute != null
+            ? TimeOfDay(
+                hour: userPreferences.reminderHour!,
+                minute: userPreferences.reminderMinute!,
+              )
+            : const TimeOfDay(hour: 20, minute: 0);
+      });
+    } catch (e) {
+      // Error silencioso en producción
+    }
   }
 
   @override
@@ -149,7 +167,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   languageService.getLocalizedText('daily_notifications'),
                   languageService.getLocalizedText('daily_notifications_desc'),
                   _dailyReminders,
-                  (value) => setState(() => _dailyReminders = value),
+                  (value) => _updateDailyReminders(value),
                   Icons.notifications_active,
                 );
               },
@@ -166,7 +184,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                     'weekly_reports_notifications_desc',
                   ),
                   _weeklyReports,
-                  (value) => setState(() => _weeklyReports = value),
+                  (value) => _updateWeeklyReports(value),
                   Icons.analytics,
                 );
               },
@@ -444,6 +462,45 @@ class _NotificationSettingsState extends State<NotificationSettings> {
     );
   }
 
+  Future<void> _updateDailyReminders(bool value) async {
+    setState(() {
+      _dailyReminders = value;
+    });
+
+    try {
+      final userPreferences = await UserPreferencesService.getUserPreferences();
+      final updatedPreferences = userPreferences.copyWith(
+        notificationsEnabled: value,
+      );
+      await UserPreferencesService.saveUserPreferences(updatedPreferences);
+
+      // Reprogramar notificaciones
+      if (value) {
+        await SmartNotificationService.scheduleSmartNotifications();
+      } else {
+        await SmartNotificationService.cancelAllNotifications();
+      }
+    } catch (e) {
+      print('Error actualizando notificaciones diarias: $e');
+    }
+  }
+
+  Future<void> _updateWeeklyReports(bool value) async {
+    setState(() {
+      _weeklyReports = value;
+    });
+
+    try {
+      final userPreferences = await UserPreferencesService.getUserPreferences();
+      final updatedPreferences = userPreferences.copyWith(
+        weeklyReportsEnabled: value,
+      );
+      await UserPreferencesService.saveUserPreferences(updatedPreferences);
+    } catch (e) {
+      print('Error actualizando reportes semanales: $e');
+    }
+  }
+
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -453,6 +510,37 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       setState(() {
         _reminderTime = picked;
       });
+
+      // Guardar la nueva hora
+      await _saveReminderTime(picked);
+    }
+  }
+
+  Future<void> _saveReminderTime(TimeOfDay time) async {
+    try {
+      final userPreferences = await UserPreferencesService.getUserPreferences();
+      final updatedPreferences = userPreferences.copyWith(
+        reminderHour: time.hour,
+        reminderMinute: time.minute,
+      );
+
+      await UserPreferencesService.saveUserPreferences(updatedPreferences);
+
+      // Reprogramar notificaciones con la nueva hora
+      await SmartNotificationService.scheduleSmartNotifications();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Recordatorio configurado para ${time.format(context)}',
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      // Error silencioso en producción
     }
   }
 

@@ -19,7 +19,9 @@ class DatabaseService {
   static const String journalTable = 'journal_entries';
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    if (_database != null) {
+    return _database!;;
+  }
     _database = await _initDatabase();
     return _database!;
   }
@@ -59,7 +61,7 @@ class DatabaseService {
       }
     } catch (e) {
       // Si falla la inicialización, usar una base de datos en memoria como fallback
-      print('Error initializing database: $e');
+      // print('Error initializing database: $e');
       return await openDatabase(
         ':memory:',
         version: _databaseVersion,
@@ -383,7 +385,9 @@ class DatabaseService {
   }
 
   Map<MoodCategory, int> _decodeCategoryRatings(String? encoded) {
-    if (encoded == null || encoded.isEmpty) return {};
+    if (encoded == null || encoded.isEmpty) {
+    return {};;
+  }
 
     // Implementación simple - en producción usar JSON
     final Map<MoodCategory, int> decoded = {};
@@ -397,7 +401,9 @@ class DatabaseService {
   }
 
   List<MoodTag> _decodeMoodTags(String? encoded) {
-    if (encoded == null || encoded.isEmpty) return [];
+    if (encoded == null || encoded.isEmpty) {
+    return [];;
+  }
     return encoded.split(',').map((name) {
       try {
         return MoodTag.values.firstWhere((tag) => tag.name == name);
@@ -412,7 +418,9 @@ class DatabaseService {
   }
 
   List<String> _decodeCustomTags(String? encoded) {
-    if (encoded == null || encoded.isEmpty) return [];
+    if (encoded == null || encoded.isEmpty) {
+    return [];;
+  }
     return encoded.split(',');
   }
 

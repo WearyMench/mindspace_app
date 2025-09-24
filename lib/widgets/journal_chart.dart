@@ -125,9 +125,9 @@ class JournalChart extends StatelessWidget {
             showTitles: true,
             getTitlesWidget: (value, meta) {
               if (value.toInt() < sortedEntries.length) {
-                final date = sortedEntries[value.toInt()].key;
+                final entry = sortedEntries[value.toInt()];
                 return Text(
-                  '${date.day}/${date.month}',
+                  '${entry.key.day}/${entry.key.month}',
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -161,7 +161,7 @@ class JournalChart extends StatelessWidget {
         horizontalInterval: 50,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: AppColors.textTertiary.withOpacity(0.2),
+            color: AppColors.textTertiary.withValues(alpha: 0.2),
             strokeWidth: 1,
           );
         },
@@ -171,7 +171,10 @@ class JournalChart extends StatelessWidget {
   }
 
   double _getMaxY(Iterable<int> values) {
-    if (values.isEmpty) return 100;
+    if (values.isEmpty) {
+      return 100;
+      ;
+    }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 50).toDouble();
   }
@@ -224,7 +227,7 @@ class JournalChart extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -445,7 +448,7 @@ class WritingStreakChart extends StatelessWidget {
                           gradient: LinearGradient(
                             colors: [
                               AppColors.accentOrange,
-                              AppColors.accentOrange.withOpacity(0.7),
+                              AppColors.accentOrange.withValues(alpha: 0.7),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,

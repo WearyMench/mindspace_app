@@ -34,7 +34,15 @@ void main() async {
     }
 
     // Inicializar el servicio de notificaciones
-    await NotificationService.initialize();
+    try {
+      await NotificationService.initialize();
+
+      // Programar notificaciones inteligentes
+      await NotificationService.scheduleSmartNotifications();
+    } catch (e) {
+      print('Error inicializando notificaciones: $e');
+      // Continuar sin notificaciones si hay error
+    }
 
     // Inicializar la base de datos
     final databaseService = DatabaseService();

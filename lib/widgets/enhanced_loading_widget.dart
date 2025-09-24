@@ -71,9 +71,9 @@ class _EnhancedLoadingWidgetState extends State<EnhancedLoadingWidget>
           const SizedBox(height: 16),
           Text(
             widget.message!,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: color),
             textAlign: TextAlign.center,
           ),
         ],
@@ -105,7 +105,7 @@ class _EnhancedLoadingWidgetState extends State<EnhancedLoadingWidget>
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: color.withOpacity(0.3), width: 3),
+              border: Border.all(color: color.withValues(alpha: 0.3), width: 3),
             ),
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(color),
@@ -161,7 +161,7 @@ class _EnhancedLoadingWidgetState extends State<EnhancedLoadingWidget>
             width: size,
             height: size,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -240,26 +240,12 @@ class LoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: EnhancedLoadingWidget(
-                  message: loadingMessage,
-                  type: loadingType,
-                  color: loadingColor,
-                ),
+              child: EnhancedLoadingWidget(
+                message: loadingMessage,
+                type: loadingType,
+                color: loadingColor,
               ),
             ),
           ),
@@ -333,10 +319,14 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
     final baseColor =
         widget.baseColor ??
-        Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3);
+        Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
     final highlightColor =
         widget.highlightColor ??
-        Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.6);
+        Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6);
 
     return AnimatedBuilder(
       animation: _animation,
