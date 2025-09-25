@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/mood_entry.dart';
@@ -20,8 +19,9 @@ class DatabaseService {
 
   Future<Database> get database async {
     if (_database != null) {
-    return _database!;;
-  }
+      return _database!;
+      ;
+    }
     _database = await _initDatabase();
     return _database!;
   }
@@ -386,8 +386,8 @@ class DatabaseService {
 
   Map<MoodCategory, int> _decodeCategoryRatings(String? encoded) {
     if (encoded == null || encoded.isEmpty) {
-    return {};;
-  }
+      return {};
+    }
 
     // Implementación simple - en producción usar JSON
     final Map<MoodCategory, int> decoded = {};
@@ -402,8 +402,8 @@ class DatabaseService {
 
   List<MoodTag> _decodeMoodTags(String? encoded) {
     if (encoded == null || encoded.isEmpty) {
-    return [];;
-  }
+      return [];
+    }
     return encoded.split(',').map((name) {
       try {
         return MoodTag.values.firstWhere((tag) => tag.name == name);
@@ -419,8 +419,8 @@ class DatabaseService {
 
   List<String> _decodeCustomTags(String? encoded) {
     if (encoded == null || encoded.isEmpty) {
-    return [];;
-  }
+      return [];
+    }
     return encoded.split(',');
   }
 

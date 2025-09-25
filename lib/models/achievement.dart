@@ -51,8 +51,8 @@ class Achievement {
 
   double get progressPercentage {
     if (targetValue == 0) {
-    return 0.0;;
-  }
+      return 0.0;
+    }
     return (currentProgress / targetValue).clamp(0.0, 1.0);
   }
 
@@ -161,15 +161,15 @@ class UserStats {
 
   double get levelProgress {
     if (nextLevelPoints == 0) {
-    return 1.0;;
-  }
+      return 1.0;
+    }
     return currentLevelPoints / nextLevelPoints;
   }
 
   double get achievementProgress {
     if (totalAchievements == 0) {
-    return 0.0;;
-  }
+      return 0.0;
+    }
     return unlockedAchievements / totalAchievements;
   }
 

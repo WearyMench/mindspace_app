@@ -44,8 +44,8 @@ class JournalProvider with ChangeNotifier {
   // Search entries by text
   List<JournalEntry> searchEntries(String query) {
     if (query.isEmpty) {
-    return _entries;;
-  }
+      return _entries;
+    }
 
     final lowercaseQuery = query.toLowerCase();
     return _entries.where((entry) {

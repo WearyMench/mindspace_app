@@ -176,7 +176,6 @@ class MeditationChart extends StatelessWidget {
   double _getMaxY(Iterable<int> values) {
     if (values.isEmpty) {
       return 10;
-      ;
     }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 5).toDouble();
@@ -421,7 +420,6 @@ class MeditationTypeChart extends StatelessWidget {
   double _getMaxY(Iterable<int> values) {
     if (values.isEmpty) {
       return 5;
-      ;
     }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 1).toDouble();

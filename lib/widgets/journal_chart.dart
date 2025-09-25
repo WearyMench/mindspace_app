@@ -173,7 +173,6 @@ class JournalChart extends StatelessWidget {
   double _getMaxY(Iterable<int> values) {
     if (values.isEmpty) {
       return 100;
-      ;
     }
     final max = values.reduce((a, b) => a > b ? a : b);
     return (max + 50).toDouble();

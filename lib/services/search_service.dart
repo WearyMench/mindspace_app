@@ -302,7 +302,6 @@ class SearchService {
   double _calculateMoodRelevance(MoodEntry entry, String query) {
     if (query.isEmpty) {
       return 1.0;
-      ;
     }
 
     double score = 0.0;
@@ -336,7 +335,6 @@ class SearchService {
   ) {
     if (query.isEmpty) {
       return 1.0;
-      ;
     }
 
     double score = 0.0;
@@ -424,7 +422,6 @@ class SearchService {
   Future<List<String>> getSuggestions(String query) async {
     if (query.length < 2) {
       return [];
-      ;
     }
 
     final suggestions = <String>{};

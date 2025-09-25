@@ -135,8 +135,8 @@ class JournalEntry {
 
   String get preview {
     if (content.length <= 100) {
-    return content;;
-  }
+      return content;
+    }
     return '${content.substring(0, 100)}...';
   }
 

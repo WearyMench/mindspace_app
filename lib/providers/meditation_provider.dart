@@ -173,13 +173,13 @@ class MeditationProvider with ChangeNotifier {
   // Get recommended meditation based on user history
   MeditationType? getRecommendedMeditation() {
     if (_sessions.isEmpty) {
-    return MeditationType.mindfulness;;
-  }
+      return MeditationType.mindfulness;
+    }
 
     final recentSessions = getSessionsForLastDays(7);
     if (recentSessions.isEmpty) {
-    return MeditationType.mindfulness;;
-  }
+      return MeditationType.mindfulness;
+    }
 
     // Find the least used type in recent sessions
     final typeCount = <MeditationType, int>{};

@@ -4,6 +4,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:developer' as developer;
 import '../models/mood_entry.dart';
 import '../models/meditation_session.dart';
 import '../models/journal_entry.dart';
@@ -62,7 +63,7 @@ class SmartNotificationService {
 
   static void _handleNotificationAction(Map<String, dynamic> data) {
     final type = data['type'] as String;
-    print('Notification tapped: $type');
+    developer.log('Notification tapped: $type');
 
     // Guardar información de navegación pendiente
     _saveNavigationAction(type);
@@ -101,39 +102,39 @@ class SmartNotificationService {
   // Programar notificaciones inteligentes basadas en patrones del usuario
   static Future<void> scheduleSmartNotifications() async {
     try {
-      print('=== INICIANDO PROGRAMACIÓN DE NOTIFICACIONES ===');
+      developer.log('=== INICIANDO PROGRAMACIÓN DE NOTIFICACIONES ===');
 
       // Verificar si el servicio está inicializado
       if (!_initialized) {
-        print('❌ SmartNotificationService no está inicializado');
+        developer.log('❌ SmartNotificationService no está inicializado');
         return;
       }
 
       // Obtener preferencias del usuario
       final userPreferences = await UserPreferencesService.getUserPreferences();
-      print(
+      developer.log(
         '📱 Notificaciones habilitadas: ${userPreferences.notificationsEnabled}',
       );
-      print(
+      developer.log(
         '⏰ Hora del recordatorio: ${userPreferences.reminderHour}:${userPreferences.reminderMinute}',
       );
 
       if (!userPreferences.notificationsEnabled) {
-        print('❌ Notificaciones deshabilitadas por el usuario');
+        developer.log('❌ Notificaciones deshabilitadas por el usuario');
         return;
       }
 
       // Verificar permisos de notificaciones
       final notificationsEnabled = await areNotificationsEnabled();
       if (!notificationsEnabled) {
-        print('❌ Notificaciones no están habilitadas en el sistema');
+        developer.log('❌ Notificaciones no están habilitadas en el sistema');
         return;
       }
 
       // Verificar permisos de alarmas exactas
       final canScheduleExact = await canScheduleExactAlarms();
       if (!canScheduleExact) {
-        print(
+        developer.log(
           '⚠️ No se pueden programar alarmas exactas, intentando solicitar permiso...',
         );
         await requestExactAlarmPermission();
@@ -141,23 +142,25 @@ class SmartNotificationService {
       }
 
       // Cancelar notificaciones existentes
-      print('🗑️ Cancelando notificaciones existentes...');
+      developer.log('🗑️ Cancelando notificaciones existentes...');
       await _notifications.cancelAll();
 
       // Programar recordatorios basados en horario preferido
-      print('⏰ Programando recordatorios basados en horario...');
+      developer.log('⏰ Programando recordatorios basados en horario...');
       await _scheduleTimeBasedNotifications(userPreferences);
 
       // Verificar notificaciones pendientes
       final pending = await getPendingNotifications();
-      print('✅ Notificaciones programadas: ${pending.length}');
+      developer.log('✅ Notificaciones programadas: ${pending.length}');
       for (var notification in pending) {
-        print('  - ID: ${notification.id}, Título: ${notification.title}');
+        developer.log(
+          '  - ID: ${notification.id}, Título: ${notification.title}',
+        );
       }
 
-      print('=== PROGRAMACIÓN COMPLETADA ===');
+      developer.log('=== PROGRAMACIÓN COMPLETADA ===');
     } catch (e) {
-      print('❌ Error programando notificaciones inteligentes: $e');
+      developer.log('❌ Error programando notificaciones inteligentes: $e');
     }
   }
 
@@ -174,7 +177,7 @@ class SmartNotificationService {
           hour: preferences.reminderHour!,
           minute: preferences.reminderMinute!,
         );
-        print(
+        developer.log(
           'Usando hora específica del recordatorio: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}',
         );
       } else {
@@ -193,20 +196,20 @@ class SmartNotificationService {
           default:
             reminderTime = const TimeOfDay(hour: 9, minute: 0);
         }
-        print(
+        developer.log(
           'Usando hora predefinida: ${reminderTime.hour}:${reminderTime.minute.toString().padLeft(2, '0')}',
         );
       }
 
       // Solo programar si las notificaciones están habilitadas
       if (!preferences.notificationsEnabled) {
-        print('Notificaciones deshabilitadas, no se programarán');
+        developer.log('Notificaciones deshabilitadas, no se programarán');
         return;
       }
 
       // Recordatorio de estado de ánimo
       final moodScheduledTime = _getNextScheduledTime(reminderTime);
-      print(
+      developer.log(
         'Programando recordatorio de estado de ánimo para: $moodScheduledTime',
       );
 
@@ -225,7 +228,7 @@ class SmartNotificationService {
         minute: reminderTime.minute,
       );
       final meditationScheduledTime = _getNextScheduledTime(meditationTime);
-      print(
+      developer.log(
         'Programando recordatorio de meditación para: $meditationScheduledTime',
       );
 
@@ -238,7 +241,7 @@ class SmartNotificationService {
         type: _meditationReminderType,
       );
     } catch (e) {
-      print('Error programando notificaciones basadas en tiempo: $e');
+      developer.log('Error programando notificaciones basadas en tiempo: $e');
     }
   }
 
@@ -265,7 +268,7 @@ class SmartNotificationService {
       // Guardar fecha de última notificación
       await prefs.setString(_lastNotificationDateKey, today.toIso8601String());
     } catch (e) {
-      print('Error programando notificaciones contextuales: $e');
+      developer.log('Error programando notificaciones contextuales: $e');
     }
   }
 
@@ -306,7 +309,7 @@ class SmartNotificationService {
         }
       }
     } catch (e) {
-      print('Error programando notificaciones motivacionales: $e');
+      developer.log('Error programando notificaciones motivacionales: $e');
     }
   }
 
@@ -373,15 +376,15 @@ class SmartNotificationService {
       time.minute,
     );
 
-    print('Hora actual: $now');
-    print('Hora programada inicial: $scheduled');
+    developer.log('Hora actual: $now');
+    developer.log('Hora programada inicial: $scheduled');
 
     if (scheduled.isBefore(now)) {
       scheduled = scheduled.add(const Duration(days: 1));
-      print('Hora programada ajustada al día siguiente: $scheduled');
+      developer.log('Hora programada ajustada al día siguiente: $scheduled');
     }
 
-    print('Hora final programada: $scheduled');
+    developer.log('Hora final programada: $scheduled');
     return scheduled;
   }
 
@@ -397,7 +400,7 @@ class SmartNotificationService {
       final cutoffDate = DateTime.now().subtract(Duration(days: days));
       return entries.where((entry) => entry.date.isAfter(cutoffDate)).toList();
     } catch (e) {
-      print('Error obteniendo entradas de mood: $e');
+      developer.log('Error obteniendo entradas de mood: $e');
       return [];
     }
   }
@@ -417,7 +420,7 @@ class SmartNotificationService {
           .where((session) => session.completedAt.isAfter(cutoffDate))
           .toList();
     } catch (e) {
-      print('Error obteniendo sesiones de meditación: $e');
+      developer.log('Error obteniendo sesiones de meditación: $e');
       return [];
     }
   }
@@ -435,7 +438,7 @@ class SmartNotificationService {
           .where((entry) => entry.createdAt.isAfter(cutoffDate))
           .toList();
     } catch (e) {
-      print('Error obteniendo entradas de journal: $e');
+      developer.log('Error obteniendo entradas de journal: $e');
       return [];
     }
   }
@@ -496,7 +499,7 @@ class SmartNotificationService {
       type: 'test_notification',
     );
 
-    print('Notificación de prueba programada para: $scheduledTime');
+    developer.log('Notificación de prueba programada para: $scheduledTime');
   }
 
   // Cancelar todas las notificaciones
