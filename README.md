@@ -1,52 +1,52 @@
 # MindSpace
 
-Aplicacion movil orientada al seguimiento del estado de animo, meditacion guiada y registro personal.
+Mobile app focused on mood tracking, guided meditation, and personal journaling.
 
 ![MindSpace Logo](https://via.placeholder.com/200x200/6B46C1/FFFFFF?text=MS)
 
-## Descripcion
+## Description
 
-MindSpace reune herramientas de bienestar personal en una sola aplicacion. El proyecto incluye funciones para registrar estados de animo, consultar metricas basicas, realizar sesiones de meditacion y guardar entradas de diario.
+MindSpace brings together personal wellness tools in a single app. The project includes features for tracking moods, reviewing basic metrics, completing meditation sessions, and saving journal entries.
 
-## Caracteristicas principales
+## Main Features
 
-### Seguimiento del estado de animo
+### Mood Tracking
 
-- Registro diario del estado emocional
-- Categorizacion por indicadores como energia, estres y felicidad
-- Visualizacion de tendencias y patrones
-- Sistema de rachas
+- Daily emotional state tracking
+- Categorization using indicators such as energy, stress, and happiness
+- Trend and pattern visualization
+- Streak system
 
-### Meditacion guiada
+### Guided Meditation
 
-- Tipos de meditacion como mindfulness, respiracion y gratitud
-- Diferentes niveles de dificultad
-- Duracion configurable entre 5 y 30 minutos
-- Seguimiento de progreso y estadisticas
+- Meditation types such as mindfulness, breathing, and gratitude
+- Multiple difficulty levels
+- Configurable duration between 5 and 30 minutes
+- Progress and statistics tracking
 
-### Diario digital
+### Digital Journal
 
-- Entradas categorizadas por tipo
-- Etiquetas de estado de animo
-- Busqueda y filtrado
-- Prompts de escritura
+- Entries categorized by type
+- Mood tags
+- Search and filtering
+- Writing prompts
 
-### Analisis y estadisticas
+### Analysis and Statistics
 
-- Panel con metricas principales
-- Graficos de tendencias temporales
-- Resumenes sobre patrones de bienestar
-- Sistema de logros y rachas
+- Dashboard with key metrics
+- Time-based trend charts
+- Summaries of wellness patterns
+- Achievements and streak system
 
-## Diseno y UX
+## Design and UX
 
-- Material Design 3 con tema personalizado
-- Gradientes y paleta de colores suaves
-- Animaciones con Flutter Animate
-- Interfaz adaptada a uso diario
-- Tema adaptativo
+- Material Design 3 with a custom theme
+- Gradients and a soft color palette
+- Animations with Flutter Animate
+- Interface designed for daily use
+- Adaptive theme
 
-## Tecnologias utilizadas
+## Technologies Used
 
 - Flutter 3.8+
 - Dart
@@ -57,7 +57,7 @@ MindSpace reune herramientas de bienestar personal en una sola aplicacion. El pr
 - SQLite
 - Lottie
 
-## Dependencias principales
+## Main Dependencies
 
 ```yaml
 dependencies:
@@ -74,44 +74,44 @@ dependencies:
   glassmorphism: ^3.0.0
 ```
 
-## Instalacion y configuracion
+## Installation and Setup
 
-### Prerrequisitos
+### Prerequisites
 
-- Flutter SDK 3.8 o superior
-- Dart SDK 3.0 o superior
-- Android Studio o VS Code
-- Android SDK para Android
-- Xcode para iOS
+- Flutter SDK 3.8 or later
+- Dart SDK 3.0 or later
+- Android Studio or VS Code
+- Android SDK for Android
+- Xcode for iOS
 
-### Pasos de instalacion
+### Installation Steps
 
-1. Clonar el repositorio
+1. Clone the repository
 
    ```bash
    git clone https://github.com/tu-usuario/mindspace-app.git
    cd mindspace-app
    ```
 
-2. Instalar dependencias
+2. Install dependencies
 
    ```bash
    flutter pub get
    ```
 
-3. Configurar la aplicacion
+3. Configure the application
 
-- Actualizar `applicationId` en `android/app/build.gradle.kts`
-- Configurar la firma digital para release
-- Personalizar iconos y splash screen
+- Update `applicationId` in `android/app/build.gradle.kts`
+- Configure digital signing for release
+- Customize icons and splash screen
 
-4. Ejecutar la aplicacion
+4. Run the application
 
    ```bash
    flutter run
    ```
 
-## Compilacion para produccion
+## Production Build
 
 ### Android (APK)
 
@@ -119,7 +119,7 @@ dependencies:
 flutter build apk --release
 ```
 
-### Android (AAB para Play Store)
+### Android (AAB for Play Store)
 
 ```bash
 flutter build appbundle --release
@@ -131,81 +131,81 @@ flutter build appbundle --release
 flutter build ios --release
 ```
 
-## Estado del proyecto
+## Project Status
 
-### Implementado
+### Implemented
 
-- [x] Arquitectura base de la aplicacion
-- [x] Navegacion con bottom navigation
-- [x] Pantalla de inicio con acciones rapidas
-- [x] Widgets reutilizables
-- [x] Sistema de temas
-- [x] Gestion de estado con Provider
-- [x] Modelos de datos
-- [x] Configuracion inicial para Play Store
+- [x] Base application architecture
+- [x] Bottom navigation
+- [x] Home screen with quick actions
+- [x] Reusable widgets
+- [x] Theme system
+- [x] State management with Provider
+- [x] Data models
+- [x] Initial Play Store setup
 
-### En desarrollo
+### In Development
 
-- [ ] Pantallas detalladas de meditacion
-- [ ] Editor de diario completo
-- [ ] Seguimiento avanzado del estado de animo
-- [ ] Sistema de notificaciones
-- [ ] Sincronizacion en la nube
-- [ ] Modo offline completo
+- [ ] Detailed meditation screens
+- [ ] Full journal editor
+- [ ] Advanced mood tracking
+- [ ] Notification system
+- [ ] Cloud sync
+- [ ] Full offline mode
 
-## Estructura del proyecto
+## Project Structure
 
 ```text
 lib/
-|-- constants/          # Colores, temas y constantes
-|-- models/             # Modelos de datos
-|-- providers/          # Gestion de estado
-|-- screens/            # Pantallas de la aplicacion
-|-- widgets/            # Widgets reutilizables
-|-- services/           # Servicios
-`-- utils/              # Utilidades y helpers
+|-- constants/          # Colors, themes, and constants
+|-- models/             # Data models
+|-- providers/          # State management
+|-- screens/            # Application screens
+|-- widgets/            # Reusable widgets
+|-- services/           # Services
+`-- utils/              # Utilities and helpers
 ```
 
-## Paleta de colores
+## Color Palette
 
-- Primario: purpura profundo (`#6B46C1`) a lavanda suave (`#9F7AEA`)
-- Secundario: azul (`#3B82F6`) a verde azulado (`#14B8A6`)
-- Acentos: naranja (`#F59E0B`) y rosa (`#EC4899`)
-- Neutros: grises para texto y fondos
+- Primary: deep purple (`#6B46C1`) to soft lavender (`#9F7AEA`)
+- Secondary: blue (`#3B82F6`) to teal (`#14B8A6`)
+- Accents: orange (`#F59E0B`) and pink (`#EC4899`)
+- Neutrals: grays for text and backgrounds
 
 ## Roadmap
 
 ### Version 1.1
 
-- [ ] Meditaciones guiadas con audio
-- [ ] Exportacion de datos
-- [ ] Temas personalizables
-- [ ] Widgets de escritorio
+- [ ] Guided meditations with audio
+- [ ] Data export
+- [ ] Customizable themes
+- [ ] Desktop widgets
 
 ### Version 1.2
 
-- [ ] Integracion con wearables
-- [ ] Analisis de sueno
-- [ ] Comunidad y compartir
-- [ ] IA para insights personalizados
+- [ ] Wearable integration
+- [ ] Sleep analysis
+- [ ] Community and sharing
+- [ ] AI-powered personalized insights
 
 ### Version 2.0
 
-- [ ] Terapia cognitivo-conductual
-- [ ] Coaching personalizado
-- [ ] Integracion con profesionales
-- [ ] Realidad virtual para meditacion
+- [ ] Cognitive behavioral therapy
+- [ ] Personalized coaching
+- [ ] Professional integration
+- [ ] Virtual reality for meditation
 
-## Contribucion
+## Contribution
 
-Las contribuciones pueden enviarse mediante pull requests:
+Contributions can be submitted through pull requests:
 
-1. Crear un fork del proyecto
-2. Crear una rama para el cambio
-3. Realizar y confirmar los cambios
-4. Enviar la rama al repositorio remoto
-5. Abrir un pull request
+1. Fork the project
+2. Create a branch for your change
+3. Make and commit your changes
+4. Push the branch to the remote repository
+5. Open a pull request
 
-## Licencia
+## License
 
-Este proyecto se distribuye bajo la licencia MIT. Ver `LICENSE` para mas detalles.
+This project is distributed under the MIT license. See `LICENSE` for more details.
