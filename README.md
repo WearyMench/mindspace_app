@@ -2,7 +2,7 @@
 
 Mobile app focused on mood tracking, guided meditation, and personal journaling.
 
-![MindSpace Logo](https://via.placeholder.com/200x200/6B46C1/FFFFFF?text=MS)
+![MindSpace Logo](assets/icons/app_icon.png)
 
 ## Description
 
