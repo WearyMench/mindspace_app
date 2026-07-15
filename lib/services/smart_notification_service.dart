@@ -131,15 +131,7 @@ class SmartNotificationService {
         return;
       }
 
-      // Verificar permisos de alarmas exactas
-      final canScheduleExact = await canScheduleExactAlarms();
-      if (!canScheduleExact) {
-        developer.log(
-          '⚠️ No se pueden programar alarmas exactas, intentando solicitar permiso...',
-        );
-        await requestExactAlarmPermission();
-        return;
-      }
+      // Las notificaciones se programarán sin alarmas exactas
 
       // Cancelar notificaciones existentes
       developer.log('🗑️ Cancelando notificaciones existentes...');
@@ -358,7 +350,7 @@ class SmartNotificationService {
       scheduledTime,
       details,
       payload: payload,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exact,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,

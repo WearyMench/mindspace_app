@@ -127,59 +127,70 @@ class _MeditationOptionsBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 24,
-          right: 24,
-          top: 24,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Consumer<LanguageService>(
+                    builder: (context, languageService, child) {
+                      return Text(
+                        languageService.getLocalizedText('choose_meditation'),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  _buildTypeSelector(),
+                  const SizedBox(height: 24),
+                  _buildDurationSelector(),
+                  const SizedBox(height: 24),
+                  _buildDifficultySelector(),
+                  const SizedBox(height: 24),
+                  _buildPreferencesToggles(),
+                  const SizedBox(height: 24),
+                  _buildActionButtons(),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            Consumer<LanguageService>(
-              builder: (context, languageService, child) {
-                return Text(
-                  languageService.getLocalizedText('choose_meditation'),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            _buildTypeSelector(),
-            const SizedBox(height: 24),
-            _buildDurationSelector(),
-            const SizedBox(height: 24),
-            _buildDifficultySelector(),
-            const SizedBox(height: 24),
-            _buildPreferencesToggles(),
-            const SizedBox(height: 24),
-            _buildActionButtons(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
